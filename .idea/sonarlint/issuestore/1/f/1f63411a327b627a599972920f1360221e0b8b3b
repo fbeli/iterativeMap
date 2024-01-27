@@ -1,0 +1,17 @@
+
+g	java:S112p"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8œœÒ¾Ô1
+h	java:S112°"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8œœÒ¾Ô1
+j
+java:S1192L"MDefine a constant instead of duplicating this literal "Content-Type" 3 times.(»ğÚ¸8œÒ¾Ô1
+~
+java:S26299"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(ÇàÎÔøÿÿÿÿ8 œÒ¾Ô1
+o	java:S116"SRename this field "auth_url" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÇŞŸù8ñœÒ¾Ô1
+P
+java:S2647M"3Use a more secure method than basic authentication.(ï‡É¶8¦Ò¾Ô1
+G	java:S106k"+Replace this use of System.out by a logger.(”ø‰â8¯Ò¾Ô1
+^
+java:S1854u"ARemove this useless assignment to local variable "loginResponse".(àğ”›8³Ò¾Ô1
+O
+java:S1481u"2Remove this unused "loginResponse" local variable.(àğ”›8³Ò¾Ô1
+M
+java:S1128"+Remove this unused import 'java.util.UUID'.(ÀãÄ£úÿÿÿÿ8ÆÒ¾Ô1

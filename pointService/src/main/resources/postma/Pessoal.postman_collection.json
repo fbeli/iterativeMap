@@ -1,0 +1,340 @@
+{
+	"info": {
+		"_postman_id": "cba0fe8f-12ee-4a37-b147-47131c2b9e0c",
+		"name": "Pessoal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8428335"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "GerarToken",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "xpto",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "xpto",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "grant_type",
+								"value": "authorization_code",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "frederico",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "auth.local:8082/oauth/token",
+							"host": [
+								"auth",
+								"local"
+							],
+							"port": "8082",
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GerarToken Authorization Code",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "authSeverXpto",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "xpto",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "frederico",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "BlMkxa",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:9000/index.html",
+									"type": "text"
+								},
+								{
+									"key": "atencao",
+									"value": "primeiro acessar o autorize e pegar o code",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "auth.local:8082/oauth/token",
+							"host": [
+								"auth",
+								"local"
+							],
+							"port": "8082",
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GerarTokenAutorize",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "xpto",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "xpto",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "frederico",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "auth.local:8082/oauth/token",
+							"host": [
+								"auth",
+								"local"
+							],
+							"port": "8082",
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GerarTokenRefreshToken",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "xpto",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "xpto",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "refresh_token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJmcmVkZXJpY28iLCJzY29wZSI6WyJ3cml0ZSIsInJlYWQiXSwiYXRpIjoiZDc5MzBlNjgtZTIwMC00MmQyLWE4YzEtZTAzNjIyN2FkNzNhIiwiZXhwIjoxNzA3ODQyNzAzLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImp0aSI6IjAwYmVhZGVkLTczYzYtNDZiNy1iMDQ4LWZlM2NhOWEzY2ZkYiIsImNsaWVudF9pZCI6InhwdG8ifQ.AMmwxN2rCw6PPk0zogaM6sJRecs9DubO5M_4JeKqdrY",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "auth.local:8082/oauth/token",
+							"host": [
+								"auth",
+								"local"
+							],
+							"port": "8082",
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CheckToken",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "xpto",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "xpto",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDU0MTQzMTQsInVzZXJfbmFtZSI6ImZyZWRlcmljbyIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwianRpIjoiN2RjYzQ1NmItMGNiMC00MGJlLTlkZWYtNTQxNDhmZDQxMWY2IiwiY2xpZW50X2lkIjoieHB0byIsInNjb3BlIjpbIndyaXRlIiwicmVhZCJdfQ.E3n6wiD8PPwJdHSmVc2nOHaS-YfV6M1x1Q9qUYzFlxE",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://auth.local:8082/oauth/check_token",
+							"protocol": "http",
+							"host": [
+								"auth",
+								"local"
+							],
+							"port": "8082",
+							"path": [
+								"oauth",
+								"check_token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "open_hello",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDU0MTQ5MzEsInVzZXJfbmFtZSI6ImZyZWRlcmljbyIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwianRpIjoiZjMzNThhNjAtNzczNy00YTU3LWEyYmUtZTM4ZDU5NDNhMWRkIiwiY2xpZW50X2lkIjoieHB0byIsInNjb3BlIjpbIndyaXRlIiwicmVhZCJdfQ.DagrVfafbk6Si7MXkf8TxwdDkcMGn9kcO9yWhlD836A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hello",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hello"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

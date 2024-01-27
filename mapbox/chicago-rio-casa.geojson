@@ -1,0 +1,69 @@
+{
+  "features": [
+    
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Jackson Park",
+        "description": "A lakeside park that was the site of the 1893 World's Fair"
+      },
+      "geometry": {
+        "coordinates": [-87.580389, 41.783185],
+        "type": "Point"
+      }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+          "title": "FRED",
+          "description": "Ponto do Fred deve ser uma esquina"
+        },
+        "geometry": {
+          "coordinates": [-87.737428, 41.625313],
+          "type": "Point"
+        }
+      },
+
+    
+
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Columbus Park",
+        "description": "A large park in Chicago's Austin neighborhood"
+      },
+      "geometry": {
+        "coordinates": [-87.769775, 41.873683],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Rio de Janeiro Point do Point",
+        "description": "Ponto no Rio"
+      },
+      "geometry": {
+        "coordinates": [-43.364696, -23.057019],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Casa",
+        "description": "Casa do  Fred na Conde de Baependi - Laranjeiros"
+      },
+      "geometry": {
+        "coordinates": [-43.182585396645806, -22.933508788727664],
+        "type": "Point"
+      }
+    }
+  ],
+
+
+  
+
+  "type": "FeatureCollection"
+}

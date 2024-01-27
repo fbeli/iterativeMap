@@ -1,0 +1,6 @@
+rodar com servidor
+python -m SimpleHTTPServer 9000
+ou
+python3 -m http.server 9000
+
+http://localhost:9000/index.html

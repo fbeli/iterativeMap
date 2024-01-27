@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Points on a map</title>
+    <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
+  
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+
+
+
+    <!--LOGIN-->
+    <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">  
+        <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">   
+        <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css"> 
+        <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">   
+        <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+        <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+        <link rel="stylesheet" type="text/css" href="css/util.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!--login-->
+
+     <style>
+        .modal_body{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgb(35 55 75 / 80%);
+            color: #fff;
+            padding: 6px 12px;
+            font-family: monospace;
+            z-index: 800;
+            display: block;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+           
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;      
+        }
+        li{
+            padding: 5px;
+            display: inline;
+            text-transform: uppercase;
+            font-family: Poppins-Medium;
+            font-size: 15px;
+            color: #fff;
+            line-height: 1.2;
+        }
+        select{
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+            font-size: 15px;
+            color: #555555;
+        }
+        .welcome_div{
+            font-size: 38px;
+            border: 0;
+            width: 100%;
+
+        }
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+           
+        }
+        .mapboxgl-canvas{
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        #sidebar {
+          background-color: rgb(35 55 75 / 90%);
+          color: #fff;
+          padding: 6px 12px;
+          font-family: monospace;
+          z-index: 1;
+          position: absolute;
+          top: 0;
+          left: 0;
+         
+          
+          width: 95%;
+        }
+        #login_div {
+          
+          
+          padding: 6px 12px;
+          font-family: monospace;
+          z-index: 1;
+          position: relative;
+          top: 75px;
+          left: 0;
+        }
+        .form-div{
+            
+            color:  rgb(35 55 75 / 90%);;
+        }
+        .formulario {
+            height: calc(3.5rem + calc(var(--bs-border-width) * 2));
+            min-height: calc(3.5rem + calc(var(--bs-border-width) * 2));
+            line-height: 1.25;
+            border-radius:  0.5rem;
+        }
+        label {
+            position: relative;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            height: 100%;
+            padding: -1rem;
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+            font-size: 15px;
+            color: #555555;
+
+        }
+
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+.container .info span .fa {
+  color: #EF3B3A;
+}
+    </style>
+   
+</head>
+
+<body onload="fly_back()">
+
+            <div id='map'>
+              <div id="sidebar" >
+               
+                <ul>
+                    <li><a href="#" onclick="fly_back()">Back Home</a></li>
+                    <li id="li_login"><a href="#" onclick="login()">Login</a></li>
+
+                </ul>
+              </div>
+
+                <div id='starting' class="modal_body"  style="display: block">
+
+                </div>
+              
+                <div class="wrap-login100" id="login_div" style="display: none;">
+                    <form class="login100-form validate-form">
+                        <span class="login100-form-title p-b-26">
+                            Welcome
+                        </span>
+                
+                        <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+                            <input class="input100" type="text" id="login_email">
+                            <span class="focus-input100" data-placeholder="Email"></span>
+                        </div>
+    
+                        <div class="wrap-input100 validate-input" data-validate="Enter password">
+                            <span class="btn-show-pass">
+                                <i class="zmdi zmdi-eye"></i>
+                            </span>
+                            <input class="input100" type="password" id="login_password">
+                            <span class="focus-input100" data-placeholder="Password"></span>
+                        </div>
+    
+                        <div class="container-login100-form-btn">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <button class="login100-form-btn"  id="btn-login-get-token" onclick="execute_login()">
+                                    Login
+                                </button>
+                            </div>
+                        </div>
+    
+                        <div class="text-center p-t-25">
+                            <span class="txt1">
+                                Don’t have an account?
+                            </span>
+    
+                            <a class="txt2" onclick="sign_up()">
+                                Sign Up
+                            </a>
+                        </div>
+                        <div class="text-center p-t-25">
+                            <a class="txt2" onclick="fechar_divs()" href="#">
+                                Close
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            
+            
+                <div class="wrap-login100" id="sign_up_div" style="display: none;">
+                    <form class="login100-form validate-form">
+                        <span class="login100-form-title p-b-26">
+                            Welcome
+                        </span>
+                        <div class="wrap-input100 validate-input" >
+                            <input class="input100" type="text" id="sign_up_name">
+                            <span class="focus-input100" data-placeholder="Name"></span>
+                        </div>
+                        <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+                            <input class="input100" type="text" id="sign_up_email">
+                            <span class="focus-input100" data-placeholder="Email"></span>
+                        </div>
+    
+                        <div class="wrap-input100 validate-input" data-validate="Enter password">
+                            <span class="btn-show-pass">
+                                <i class="zmdi zmdi-eye"></i>
+                            </span>
+                            <input class="input100" type="password" id="sign_up_password">
+                            <span class="focus-input100" data-placeholder="Password"></span>
+                        </div>
+
+                        <div class="wrap-input100 validate-input">
+                            <input class="input100" type="text" id="sign_up_phone">
+                            <span class="focus-input100" data-placeholder="Phone"></span>
+                        </div>
+
+                        <div class="wrap-input100 validate-input" data-validate="Country">
+                            <label  for="sign_up_country">Country:</label>
+                            <select name="country" id="sign_up_country">
+                            <option value="" disabled selected>Select a country...</option>
+                                <script>
+                                    var countries = [
+                                        'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia',
+                                        'Czech Republic', 'Denmark', 'Egypt', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'India', 'Indonesia',
+                                        'Ireland', 'Israel', 'Italy', 'Japan', 'Malaysia', 'Mexico', 'Morocco', 'Netherlands', 'New Zealand', 'Norway',
+                                        'Peru', 'Philippines', 'Poland', 'Portugal', 'Romania', 'Russia', 'Saudi Arabia', 'Singapore', 'South Africa',
+                                        'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates',
+                                        'United Kingdom', 'United States', 'Vietnam', 'Other'];
+
+                                    let selectOptions = "";
+                                    for (let i = 0; i < countries.length; i++) {
+                                        selectOptions += `<option value="${countries[i]}">${countries[i]}</option>`;
+                                    }
+
+                                    const selectElement = document.getElementById("sign_up_country");
+                                        selectElement.innerHTML = selectOptions;
+                                </script>
+                             </select>
+                        </div>
+                        <div class="container-login100-form-btn">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <button class="login100-form-btn" onclick="execute_sign_in()">
+                                    Sign Up
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="text-center p-t-25">
+                            <a class="txt2" onclick="fechar_divs()" href="#">
+                                Close
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class=" wrap-login100" id="welcome_div_id"  style="display: none;">
+                    <div class=" welcome_div validate-input" >
+                        <span class="welcome_div login100-form-title p-b-26">
+                            Welcome,
+                        </span>
+                    </div>
+                    <div class=" validate-input" >
+                        <span class="login100-form-title p-b-36" id="welcome_name">
+                            Jojo Todinho
+                        </span>
+                    </div>
+                    <div class=" validate-input" >
+                         <span class="welcome_div login100-form-title p-b-26" >
+                           You are logged in!
+                        </span>
+
+                    </div>
+                    <div class="text-center p-t-25">
+                        <a class="txt2" onclick="fechar_divs()" href="#">
+                            Close
+                        </a>
+                    </div>
+                </div>
+                <div class="wrap-login100" id="cadastro_div" style="display: none;">
+                    <form class="login100-form validate-form">
+                        <span class="login100-form-title p-b-26">
+                            Novo Cadastro
+                        </span>
+                
+                       
+                        <div class="wrap-input100 validate-input" >
+                            <input class="input100" type="text" name="cadastro_ponto" id="cadastro_ponto" readonly=“true”>
+                            <span class="focus-input100" ></span>
+                        </div>
+                        <div class="wrap-input100 validate-input" >
+                            <input class="input100" type="text" name="email">
+                            <span class="focus-input100" data-placeholder="Título"></span>
+                        </div>
+    
+                        <div class="wrap-input100 validate-input" >
+                            <input class="input100" type="text" name="description">
+                            <span class="focus-input100" data-placeholder="Description"></span>
+                        </div>
+                        <div class="text-center p-t-25">
+                            <span class="txt1">
+                                <input class="input100" type="checkbox" name="colab">
+                            </span>
+    
+                            <a class="txt2" href="#">
+                                Sign Up
+                            </a>
+                        </div>
+                        <div class="container-login100-form-btn">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <button class="login100-form-btn">
+                                    Sign Up
+                                </button>
+                            </div>
+                        </div>
+    
+                        
+                        <div class="text-center p-t-25">
+                            <a class="txt2" onclick="fechar_divs()" href="#">
+                                Close
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+
+            <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+            <script src="javascript/posicao.js">   </script>
+            <script src="javascript/maps_actions.js">   </script>
+            <script src="javascript/form.js">   </script>
+            <script src="javascript/divs_actions.js">   </script>
+
+
+
+</body>
+
+</html>

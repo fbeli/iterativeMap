@@ -1,0 +1,87 @@
+version: '1.0'
+# to run lambda uses docker-compose run --service-ports lambda
+services:
+  lambda:
+    build:
+      context: ../receiveNewPoint
+      dockerfile: ../receiveNewPoint/Dockerfile
+    ports:
+      - "9001:8080"
+    environment:
+      # Declare which aws services will be used in localstack
+      # These variables are needed for localstack
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+      - LAMBDA_EXECUTOR=local
+      - ENVIRONMENT=docker
+      - AWS_REGION=us-east-1
+    depends_on:
+      - awscli
+      - sqs
+      - process_new_point
+      - point_service
+
+  point_service:
+    build:
+      context: ../pointService
+      dockerfile: ../pointService/Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      # Declare which aws services will be used in localstack
+      # These variables are needed for localstack
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+      - LAMBDA_EXECUTOR=local
+      - ENVIRONMENT=docker
+      - AWS_REGION=us-east-1
+      - AUTH_SERVER_URL=http://localhost:8082
+
+  process_new_point:
+    build:
+      context: ../processNewPoint
+      dockerfile: ../processNewPoint/Dockerfile
+    environment:
+        # Declare which aws services will be used in localstack
+        # These variables are needed for localstack
+        - AWS_DEFAULT_REGION=us-east-1
+        - AWS_ACCESS_KEY_ID=testUser
+        - AWS_SECRET_ACCESS_KEY=testAccessKey
+        - LAMBDA_EXECUTOR=local
+        - ENVIRONMENT=docker
+        - AWS_REGION=us-east-1
+
+
+  sqs:
+    image: roribio16/alpine-sqs
+    platform: linux/amd64
+    ports:
+      - "9324:9324"
+      - "9325:9325"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./config/elasticmq.conf:/opt/custom/elasticmq.conf
+
+  awscli:
+    image: garland/aws-cli-docker:latest
+    platform: linux/amd64
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_PAGER=""
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_SESSION_TOKEN=test
+
+    entrypoint: sh -c "tail -f /dev/null"
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    platform: linux/amd64
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config/dynamodb:/home/dynamodblocal/data
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
