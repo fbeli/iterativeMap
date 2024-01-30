@@ -58,8 +58,9 @@ public class AuthorizationService {
                 return loginResponse;
 
             } else {
-                loginResponse.setError(""+responseCode);
+                loginResponse.setError("Email or password invalid.");
                 loginResponse.setStatus(responseCode);
+                return loginResponse;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,41 +77,6 @@ public class AuthorizationService {
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         connection.setRequestProperty("Authorization", "Basic " + clientAuth);
         return connection;
-    }
-
-    public String addUsuarioAuthServer(LoginDto loginDto) {
-        try {
-            HttpURLConnection connection = getConnection(auth_url+"/cadastro");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            String params =
-                    "email=" + loginDto.getEmail() + "&password=" + loginDto.getPassword()+ "&name=" + loginDto.getName() + "&telefone=" + loginDto.getPhone();
-            byte[] postData = params.getBytes(StandardCharsets.UTF_8);
-            try (OutputStream outputStream = connection.getOutputStream()) {
-                outputStream.write(postData);
-            }
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                JSONObject jsonResponse = new JSONObject(response.toString());
-
-                return jsonResponse.getString("id");
-            }else {
-                System.out.println("Erro ao gerar access key");
-                return null;
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public String adicionarUsuario(LoginDto loginDto) throws UsuarioAlreadyExistsException {
