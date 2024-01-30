@@ -1,27 +1,6 @@
 version: '1.0'
 # to run lambda uses docker-compose run --service-ports lambda
 services:
-  lambda:
-    build:
-      context: ../receiveNewPoint
-      dockerfile: ../receiveNewPoint/Dockerfile
-    ports:
-      - "9001:8080"
-    environment:
-      # Declare which aws services will be used in localstack
-      # These variables are needed for localstack
-      - AWS_DEFAULT_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=testUser
-      - AWS_SECRET_ACCESS_KEY=testAccessKey
-      - LAMBDA_EXECUTOR=local
-      - ENVIRONMENT=docker
-      - AWS_REGION=us-east-1
-    depends_on:
-      - awscli
-      - sqs
-      - process_new_point
-      - point_service
-
   point_service:
     build:
       context: ../pointService
@@ -38,6 +17,12 @@ services:
       - ENVIRONMENT=docker
       - AWS_REGION=us-east-1
       - AUTH_SERVER_URL=http://localhost:8082
+    depends_on:
+      - awscli
+      - sqs
+      - process_new_point
+      - dynamodb
+
 
   process_new_point:
     build:
@@ -46,13 +31,13 @@ services:
     environment:
         # Declare which aws services will be used in localstack
         # These variables are needed for localstack
+        # yamllint disable-line rule:indentation
         - AWS_DEFAULT_REGION=us-east-1
         - AWS_ACCESS_KEY_ID=testUser
         - AWS_SECRET_ACCESS_KEY=testAccessKey
         - LAMBDA_EXECUTOR=local
         - ENVIRONMENT=docker
-        - AWS_REGION=us-east-1
-
+        - AWS_REGION=us-east-1x
 
   sqs:
     image: roribio16/alpine-sqs

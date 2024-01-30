@@ -55,3 +55,15 @@ Q
 !mapbox/javascript/divs_actions.js,4/1/41fcd7f42aa6f888aa79a4564d01d097a0023319
 L
 mapbox/javascript/posicao.js,1/c/1c21f64da742ff21105c0ee6ce94bcf065d8dfc7
+U
+%receiveNewPoint/config/elasticmq.conf,a/0/a0591e892e6088821cef50d0861980bb077f9c8c
+G
+receiveNewPoint/pom.xml,9/c/9c877c4621e71dfc3b3a9af9078942c2a6dab159
+l
+<receiveNewPoint/src/main/java/com/becb/client/SQSClient.java,c/c/cc9d2a02bfc776af5fe4ad960f64569776619c00
+P
+ receiveNewPoint/pointService.iml,d/4/d4e539d77fb91e2cd6cd11db426d0c93754dbfc6
+o
+?receiveNewPoint/src/main/java/com/becb/services/SqsService.java,e/a/eabd52a9e1c37198f606359023792390a159e716
+p
+@receiveNewPoint/src/main/java/com/becb/handler/HandlerClass.java,2/4/242b30aab26fce35acb7916359753a92a17a0f4e

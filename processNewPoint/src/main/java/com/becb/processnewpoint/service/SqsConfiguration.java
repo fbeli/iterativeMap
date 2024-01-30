@@ -1,4 +1,4 @@
-package com.becb.processnewpoint.Service;
+package com.becb.processnewpoint.service;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
@@ -7,6 +7,7 @@ import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.config.QueueMessageHandlerFactory;
 import org.springframework.cloud.aws.messaging.listener.QueueMessageHandler;
 import org.springframework.cloud.aws.messaging.listener.SimpleMessageListenerContainer;
@@ -30,11 +31,13 @@ public class SqsConfiguration {
 
     private final ObjectMapper objectMapper;
 
+    @Value("${sqs.queue.url}")
+    String endpoint;
     @Bean
     public AmazonSQSAsync amazonSQS() {
         return AmazonSQSAsyncClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(new AnonymousAWSCredentials()))
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://sqs:9324", "elasticmq"))
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, "elasticmq"))
                 .build();
     }
 

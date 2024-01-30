@@ -8,8 +8,7 @@
   
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <!--LOGIN-->
     <!--===============================================================================================-->
@@ -20,158 +19,25 @@
         <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">   
         <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
         <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+
         <link rel="stylesheet" type="text/css" href="css/util.css">
         <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!--login-->
+        <link rel="stylesheet" type="text/css" href="css/inicio.css">
 
-     <style>
-        .modal_body{
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: rgb(35 55 75 / 80%);
-            color: #fff;
-            padding: 6px 12px;
-            font-family: monospace;
-            z-index: 800;
-            display: block;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-           
-            font-family: "Roboto", sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;      
-        }
-        li{
-            padding: 5px;
-            display: inline;
-            text-transform: uppercase;
-            font-family: Poppins-Medium;
-            font-size: 15px;
-            color: #fff;
-            line-height: 1.2;
-        }
-        select{
-            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-            font-size: 15px;
-            color: #555555;
-        }
-        .welcome_div{
-            font-size: 38px;
-            border: 0;
-            width: 100%;
-
-        }
-        #map {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-           
-        }
-        .mapboxgl-canvas{
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-        #sidebar {
-          background-color: rgb(35 55 75 / 90%);
-          color: #fff;
-          padding: 6px 12px;
-          font-family: monospace;
-          z-index: 1;
-          position: absolute;
-          top: 0;
-          left: 0;
-         
-          
-          width: 95%;
-        }
-        #login_div {
-          
-          
-          padding: 6px 12px;
-          font-family: monospace;
-          z-index: 1;
-          position: relative;
-          top: 75px;
-          left: 0;
-        }
-        .form-div{
-            
-            color:  rgb(35 55 75 / 90%);;
-        }
-        .formulario {
-            height: calc(3.5rem + calc(var(--bs-border-width) * 2));
-            min-height: calc(3.5rem + calc(var(--bs-border-width) * 2));
-            line-height: 1.25;
-            border-radius:  0.5rem;
-        }
-        label {
-            position: relative;
-            top: 0;
-            left: 0;
-            z-index: 2;
-            height: 100%;
-            padding: -1rem;
-            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-            font-size: 15px;
-            color: #555555;
-
-        }
-
-
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: 300px;
-  margin: 0 auto;
-}
-.container:before, .container:after {
-  content: "";
-  display: block;
-  clear: both;
-}
-.container .info {
-  margin: 50px auto;
-  text-align: center;
-}
-.container .info h1 {
-  margin: 0 0 15px;
-  padding: 0;
-  font-size: 36px;
-  font-weight: 300;
-  color: #1a1a1a;
-}
-.container .info span {
-  color: #4d4d4d;
-  font-size: 12px;
-}
-.container .info span a {
-  color: #000000;
-  text-decoration: none;
-}
-.container .info span .fa {
-  color: #EF3B3A;
-}
-    </style>
-   
+        <script src="javascript/form.js">   </script>
 </head>
 
 <body onload="fly_back()">
 
             <div id='map'>
               <div id="sidebar" >
-               
                 <ul>
-                    <li><a href="#" onclick="fly_back()">Back Home</a></li>
-                    <li id="li_login"><a href="#" onclick="login()">Login</a></li>
-
+                    <li id="li_login"><a href="#" id="li_login_a_link" onclick="login()">Login</a>
+                        <ul id="login_opt_ul" class="vertical" style="display: none">
+                            <li><a id="a_create_points" onclick="option_create_points()">Create Points</a></li>
+                            <li><a href="#" onclick="logout()">Logout</a></li>
+                        </ul>
+                   </li>
                 </ul>
               </div>
 
@@ -201,17 +67,13 @@
                         <div class="container-login100-form-btn">
                             <div class="wrap-login100-form-btn">
                                 <div class="login100-form-bgbtn"></div>
-                                <button class="login100-form-btn"  id="btn-login-get-token" onclick="execute_login()">
+                                <a class="login100-form-btn"  id="btn-login-get-token" onclick="execute_login()">
                                     Login
-                                </button>
+                                </a>
                             </div>
                         </div>
     
                         <div class="text-center p-t-25">
-                            <span class="txt1">
-                                Don’t have an account?
-                            </span>
-    
                             <a class="txt2" onclick="sign_up()">
                                 Sign Up
                             </a>
@@ -223,8 +85,6 @@
                         </div>
                     </form>
                 </div>
-            
-            
                 <div class="wrap-login100" id="sign_up_div" style="display: none;">
                     <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
@@ -278,9 +138,9 @@
                         <div class="container-login100-form-btn">
                             <div class="wrap-login100-form-btn">
                                 <div class="login100-form-bgbtn"></div>
-                                <button class="login100-form-btn" onclick="execute_sign_in()">
+                                <a class="login100-form-btn" onclick="execute_sign_in()">
                                     Sign Up
-                                </button>
+                                </a>
                             </div>
                         </div>
 
@@ -292,7 +152,20 @@
                         </div>
                     </form>
                 </div>
-
+              <!-- Erro Modal-->
+                <div class="wrap-login100" id="erro_alert_div" style="display: none;">
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Error!</h4>
+                        <p id="erro_alert_text" class="p.erro"></p><br/>
+                        <hr>
+                        <p class="mb-0">Please check date and try again.</p>
+                    </div>
+                    <div class="text-center p-t-25">
+                        <a class="txt2" onclick="close_error_div()" href="#">
+                            Close
+                        </a>
+                    </div>
+                </div>
                 <div class=" wrap-login100" id="welcome_div_id"  style="display: none;">
                     <div class=" welcome_div validate-input" >
                         <span class="welcome_div login100-form-title p-b-26">
@@ -321,46 +194,65 @@
                         <span class="login100-form-title p-b-26">
                             Novo Cadastro
                         </span>
-                
-                       
                         <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text" name="cadastro_ponto" id="cadastro_ponto" readonly=“true”>
+                            <input class="input100" type="text"  id="cadastro_lngLat" readonly=“true”>
                             <span class="focus-input100" ></span>
                         </div>
                         <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text" name="email">
-                            <span class="focus-input100" data-placeholder="Título"></span>
+                            <input class="input100" type="text" id="cadastro_titulo">
+                            <span class="focus-input100" data-placeholder="Title"></span>
                         </div>
     
                         <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text" name="description">
+                            <input class="input100" type="text" id="cadastro_description">
                             <span class="focus-input100" data-placeholder="Description"></span>
                         </div>
-                        <div class="text-center p-t-25">
-                            <span class="txt1">
-                                <input class="input100" type="checkbox" name="colab">
-                            </span>
-    
-                            <a class="txt2" href="#">
-                                Sign Up
-                            </a>
-                        </div>
+
                         <div class="container-login100-form-btn">
                             <div class="wrap-login100-form-btn">
                                 <div class="login100-form-bgbtn"></div>
-                                <button class="login100-form-btn">
-                                    Sign Up
+                                <button class="login100-form-btn" onclick="create_new_point()">
+                                    Create Point
                                 </button>
                             </div>
                         </div>
-    
-                        
                         <div class="text-center p-t-25">
                             <a class="txt2" onclick="fechar_divs()" href="#">
                                 Close
                             </a>
                         </div>
                     </form>
+                </div>
+
+                <div class="create_point wrap-login100" id="create_points_warning" style="display: none;">
+                    <div class="alert alert-danger" role="alert">
+                        <p  class="title alert-heading">Now You Can Create New Point</p>
+                        <p  class="p.erro">From now you are a Guide!</p><br/>
+                        <hr>
+                        <p class="mb-0">When you zoom near a point ( >16.5 ) and know about it, you can add infos and
+                            make
+                            money. Each time a not free user click on it and your comment shows you get points and
+                            can change for money</p>
+                    </div>
+                    <div class="text-center p-t-25">
+                        <a class="txt2" onclick="fechar_divs()" href="#">
+                            Close
+                        </a>
+                    </div>
+                </div>
+                <div class="create_point wrap-login100" id="info_div" style="display: none;">
+                    <div class="alert alert-danger" role="alert">
+                        <p  class="title alert-heading" id="info_title">New point added</p>
+                        <p  class="p.erro" id="info_highlight"></p><br/>
+                        <hr>
+                        <p class="mb-0" id="info_info">This point will be reviwed and add after it. It can take some
+                        minutes, hours or day</p>
+                    </div>
+                    <div class="text-center p-t-25">
+                        <a class="txt2" onclick="fechar_divs()" href="#">
+                            Close
+                        </a>
+                    </div>
                 </div>
 
 
@@ -370,7 +262,7 @@
             <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
             <script src="javascript/posicao.js">   </script>
             <script src="javascript/maps_actions.js">   </script>
-            <script src="javascript/form.js">   </script>
+
             <script src="javascript/divs_actions.js">   </script>
 
 

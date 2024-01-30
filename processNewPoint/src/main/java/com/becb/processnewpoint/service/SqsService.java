@@ -1,12 +1,10 @@
-package com.becb.processnewpoint.Service;
+package com.becb.processnewpoint.service;
 
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.messaging.handler.annotation.Headers;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -14,7 +12,6 @@ import java.util.Map;
 @Slf4j
 @Component
 public class SqsService {
-
 
     private static final String queueName ="new-point-queue";
 

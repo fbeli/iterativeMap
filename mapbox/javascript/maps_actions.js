@@ -7,10 +7,19 @@ const map = new mapboxgl.Map({
     container: 'map',
     // Replace YOUR_STYLE_URL with your style URL.
     style: 'mapbox://styles/fbeli/clr407wxw018b01r5bt6oht1o',
-    center: [ -29.249271785242797, 8.702314954617066],
-    zoom: 10
-});
+    center: [  -9.22, 30.71],
+    zoom: 10,
+    hash: true,
 
+
+});
+map.addControl(new mapboxgl.GeolocateControl({
+    positionOptions: {
+        enableHighAccuracy: true
+    },
+    trackUserLocation: true,
+    showUserHeading: true
+}),"bottom-right");
 
 var point;
 
@@ -28,10 +37,10 @@ map.on('click', (event) => {
 
     if (!features.length) {
 
-        if(map.getZoom() >  16.5){
+        if(map.getZoom() > zoom_to_create_point && create_point){
             cadastro();
             point = event.lngLat;
-            document.getElementById("cadastro_ponto").value = point;
+            document.getElementById("cadastro_lngLat").value = "longitude: "+point.lng+", Latitude"+point.lat;
         }
 
     } else {
@@ -45,3 +54,8 @@ map.on('click', (event) => {
             .addTo(map);
     }
 });
+
+map.on('move',() => {
+    zoom = map.getZoom();
+})
+

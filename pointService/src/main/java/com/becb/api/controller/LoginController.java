@@ -1,4 +1,4 @@
-package com.becb.api;
+package com.becb.api.controller;
 
 import com.becb.api.dto.LoginDto;
 import com.becb.api.dto.LoginResponse;
@@ -26,7 +26,7 @@ public class LoginController   {
 	@Autowired
 	AuthorizationService authorizationService;
 
-	@PreAuthorize("hasAuthority('HELLO')")
+	@PreAuthorize("hasAuthority('GUIDE')")
 	@GetMapping("/hello")
 //	@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 	@ResponseBody
@@ -55,7 +55,11 @@ public class LoginController   {
 	@ResponseBody
 	public LoginResponse login(@RequestBody LoginDto loginDto, HttpServletResponse response)  {
 
-		return authorizationService.login(loginDto);
+		LoginResponse loginResponse = authorizationService.login(loginDto);
+		if(loginResponse.getStatus() != HttpServletResponse.SC_OK){
+			response.setStatus(loginResponse.getStatus());
+		}
+		return loginResponse;
 
 	}
 
@@ -66,6 +70,9 @@ public class LoginController   {
 		String id;
 		try {
 			id = authorizationService.adicionarUsuario(loginDto);
+			if(id == null){
+				return internalServerError(response, "Erro to add user.");
+			}
 		}catch (UsuarioAlreadyExistsException e){
 			response.setStatus(HttpServletResponse.SC_CONFLICT);
 
@@ -74,14 +81,17 @@ public class LoginController   {
 			loginResponse.setStatus(HttpServletResponse.SC_CONFLICT);
 			return loginResponse;
 		} catch (Exception e){
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			LoginResponse loginResponse = new LoginResponse();
-			loginResponse.setError(e.getMessage());
-			loginResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return loginResponse;
+			return internalServerError(response, e.getMessage());
 		}
 
 		return authorizationService.login(loginDto);
 
+	}
+	private LoginResponse internalServerError(HttpServletResponse response, String exception ){
+		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		LoginResponse loginResponse = new LoginResponse();
+		loginResponse.setError(exception);
+		loginResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		return loginResponse;
 	}
 }
