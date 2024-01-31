@@ -54,7 +54,7 @@ public class PointController {
         JSONObject jsonObject = new JSONObject(payload);
 
        pointDto.setUser_id(jsonObject.getString("usuario_id"));
-       pointDto.setEmail(jsonObject.getString("user_name"));
+       pointDto.setUser_email(jsonObject.getString("user_name"));
        pointDto.setUser_name(jsonObject.getString("nome_completo"));
 
         return pointDto.toString();

@@ -40,7 +40,8 @@ map.on('click', (event) => {
         if(map.getZoom() > zoom_to_create_point && create_point){
             cadastro();
             point = event.lngLat;
-            document.getElementById("cadastro_lngLat").value = "longitude: "+point.lng+", Latitude"+point.lat;
+            document.getElementById("cadastro_lng").value = "Longitude: "+point.lng;
+            document.getElementById("cadastro_lat").value = "Latitude: "+point.lat;
         }
 
     } else {

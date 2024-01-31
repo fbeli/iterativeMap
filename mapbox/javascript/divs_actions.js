@@ -51,7 +51,6 @@ function fechar_divs(){
     document.getElementById("welcome_div_id").style.display = 'none';
     document.getElementById("starting").style.display = 'none';
     document.getElementById("create_points_warning").style.display = 'none';
-
     document.getElementById("login_opt_ul").style.display = 'none';
     document.getElementById("info_div").style.display = 'none';
 

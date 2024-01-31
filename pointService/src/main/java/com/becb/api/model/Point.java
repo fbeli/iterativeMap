@@ -7,8 +7,12 @@ public class Point {
 
 
     private String title;
-    private String lngLat;
+    private String latitude;
+    private String longitude;
+
     private String description;
     private String s3Voice;
+    private int starts;
+    private int votes;
 
 }

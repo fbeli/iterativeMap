@@ -108,7 +108,8 @@ function logout(){
 }
 function create_new_point(){
     let data = {
-        lngLat: document.getElementById("cadastro_lngLat").value,
+        longitude: document.getElementById("cadastro_lng").value,
+        latitude: document.getElementById("cadastro_lat").value,
         title: document.getElementById("cadastro_titulo").value,
         description: document.getElementById("cadastro_description").value
     };

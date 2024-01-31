@@ -1,4 +1,4 @@
-package com.becb.processnewpoint.service;
+package com.becb.processnewpoint.service.sqs;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
