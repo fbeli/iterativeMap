@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDateTime;
 
@@ -24,6 +25,7 @@ import java.util.Base64;
 import java.util.logging.Logger;
 
 @Controller
+@RequestMapping( produces = "application/json;charset=UTF-8")
 public class PointController {
 
     private static final Logger logger = Logger.getLogger(PointController.class.getName());
