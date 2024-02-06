@@ -1,5 +1,5 @@
 version: '1.0'
-# to run lambda uses docker-compose run --service-ports lambda
+
 services:
   point_service:
     build:
@@ -15,7 +15,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=testAccessKey
       - LAMBDA_EXECUTOR=local
       - ENVIRONMENT=docker
-      - AWS_REGION=us-east-1
+      - AWS_REGION=us-west-2
       - AUTH_SERVER_URL=http://localhost:8082
     depends_on:
       - awscli
@@ -37,7 +37,7 @@ services:
         - AWS_SECRET_ACCESS_KEY=testAccessKey
         - LAMBDA_EXECUTOR=local
         - ENVIRONMENT=docker
-        - AWS_REGION=us-east-1x
+        - AWS_REGION=us-west-2
 
   sqs:
     image: roribio16/alpine-sqs
@@ -51,24 +51,28 @@ services:
       - ./config/elasticmq.conf:/opt/custom/elasticmq.conf
 
   awscli:
-    image: garland/aws-cli-docker:latest
+    image: amazon/aws-cli
+    container_name: awscli
     platform: linux/amd64
     environment:
-      - AWS_DEFAULT_REGION=us-east-1
-      - AWS_PAGER=""
-      - AWS_ACCESS_KEY_ID=test
-      - AWS_SECRET_ACCESS_KEY=test
-      - AWS_SESSION_TOKEN=test
-
-    entrypoint: sh -c " aws dynamodb create-table --table-name points --attribute-definitions AttributeName=pointId,AttributeType=S --key-schema  AttributeName=pointId,KeyType=HASH --provisioned-throughput       ReadCapacityUnits=1,WriteCapacityUnits=1 --endpoint-url http://dynamodb:8000
-                        && aws dynamodb update-table --table-name points --attribute-definitions AttributeName=aprovado,AttributeType=B --global-secondary-index-updates \"[{\"Create\":{\"IndexName\": \"aprovado-index\",\"KeySchema\":[{\"AttributeName\":\"aprovado\" , \"KeyType\":\"HASH\"}],\"ProvisionedThroughput\": { \"ReadCapacityUnits\": 10, \"WriteCapacityUnits\": 5 }, \"Projection\":{\"ProjectionType\":\"KEYS_ONLY\"}}}]\"
-                        && tail -f /dev/null"
+      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+      REGION: 'us-west-2'
+    depends_on:
+      - dynamodb
+      - sqs
+    entrypoint: sh -c "tail -f /dev/null"
+      # entrypoint: sh -c "  aws dynamodb create-table --table-name points --attribute-definitions
+    #AttributeName=pointId,AttributeType=S --key-schema  AttributeName=pointId,KeyType=HASH --provisioned-throughput
+     #   ReadCapacityUnits=1,WriteCapacityUnits=1 --endpoint-url http://dynamodb:8000 --region us-west-2
+      #                 && tail -f /dev/null"
 
   dynamodb:
-    image: amazon/dynamodb-local
-    platform: linux/amd64
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb
     ports:
       - "8000:8000"
     volumes:
-      - ./config/dynamodb:/home/dynamodblocal/data
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal

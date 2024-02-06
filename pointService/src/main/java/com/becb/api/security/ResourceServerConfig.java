@@ -1,6 +1,7 @@
 package com.becb.api.security;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,8 +28,10 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("api/*").hasAuthority("HELLO")
                 .antMatchers("/config").hasAuthority("CONFIG")
                 .and()*/
-
-                .csrf().disable() // para colocar a auth no método, ver /hello
+                .csrf().disable()// para colocar a auth no método, ver /hello
+                .authorizeRequests()
+                    .antMatchers(HttpMethod.GET, "/aprovar/*")
+                .permitAll().and()
                 .cors().and()
                 .oauth2ResourceServer()
                     .jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());

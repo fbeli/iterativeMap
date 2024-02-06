@@ -113,7 +113,8 @@ function create_new_point(){
         title: document.getElementById("cadastro_titulo").value,
         description: document.getElementById("cadastro_description").value
     };
-
+    alert(document.getElementById("cadastro_titulo").value);
+    alert(data.title);
     fetch(config.cadastro_url, {
         method: "POST",
         headers: {

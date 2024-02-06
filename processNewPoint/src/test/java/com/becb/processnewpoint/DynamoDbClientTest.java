@@ -1,16 +1,19 @@
 package com.becb.processnewpoint;
 
-import com.amazonaws.services.dynamodbv2.document.ItemCollection;
-import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
+import com.becb.processnewpoint.domain.Point;
+import com.becb.processnewpoint.domain.User;
+import com.becb.processnewpoint.service.AprovedEnum;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
 
 @SpringBootTest
+@ComponentScan({"com.becb.processnewpoint", "com.becb.processnewpoint.service", "com.becb.processnewpoint.domain"})
 public class DynamoDbClientTest{
 
     @Autowired
@@ -20,26 +23,30 @@ public class DynamoDbClientTest{
     }
 
 
+    @Test
     public void getNotApproved() {
-        ItemCollection<ScanOutcome> items =  client.getPointsNotAproved();
 
-        items.iterator().forEachRemaining(System.out::println);
-        Assert.notEmpty((Collection<?>) items);
+        client.getPointsByAproved(AprovedEnum.asFalse.toString());
     }
 
 
     public void setNotApproved(){
         String id = "01HNG094DXF7A4HQPD8QKWHCBW";
-        System.out.println(client.getPoint(id).toString());
+        Point point = new Point();
+        point.setPointId(id);
 
-        client.updateNotApprovedPoint(id, "fred.belisario@gmail.com");
+        client.updatePointToAproved(point, AprovedEnum.asFalse.toString());
         System.out.println(client.getPoint(id).toString());
     }
 
     //@Test
     public void setPointAproved(){
         System.out.println(client.getPoint("01HNG094DXF7A4HQPD8QKWHCBW").toString());
-        client.updatePointToAproved("01HNG094DXF7A4HQPD8QKWHCBW", "fred.belisario@gmail.com");
+        Point point = new Point();
+        point.setPointId("01HNG094DXF7A4HQPD8QKWHCBW");
+        point.setUser(new User());
+        point.getUser().setUserEmail("fred.belisario@gmail.com");
+        client.updatePointToAproved(point, AprovedEnum.asTrue.toString());
         System.out.println(client.getPoint("01HNG094DXF7A4HQPD8QKWHCBW").toString());
     }
 }

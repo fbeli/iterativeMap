@@ -25,8 +25,7 @@ public class ProcessNewPointApplication {
 	@Value("${dynamodb.point.table}")
 	private String pointTable;
 	@Bean("dynamoDbClient")
-	public DynamoDbClient getDynamoDbClient(//@Value("${spring.profiles.active}")String activeProfile,
-											@Value("${dynamodb.host}")String dynamoDbHost) {
+	public DynamoDbClient getDynamoDbClient(@Value("${dynamodb.host}")String dynamoDbHost) {
 		AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
 		logger.info("DynamoDbHost: {}", dynamoDbHost);
