@@ -22,7 +22,11 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
-
+Docker/mysql/*
+Docker/docker/*
+Docker/config/*
+sonarlint/*
+mapbox/temp/*
 .idea/*
 */.idea/*
 iterativeMap/.idea/*
