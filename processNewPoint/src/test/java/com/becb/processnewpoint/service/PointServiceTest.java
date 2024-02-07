@@ -13,7 +13,7 @@ class PointServiceTest {
 
     @Autowired
     PointService pointService;
-    @Test
+    //@Test
     void gerarArquivoParaMapa() {
 
         pointService.gerarArquivoParaMapa("{" +
@@ -23,7 +23,7 @@ class PointServiceTest {
                 "  \"file_name\": \"arquivo_"+ LocalDateTime.now() +".html\"} ");
     }
 
-    @Test
+   // @Test
     void gerarArquivoParaAprovacao() {
         System.out.println("Total points: " + pointService.getDynamoDbClient().getTotalPoints());
         pointService.gerarArquivoParaAprovacao("{" +

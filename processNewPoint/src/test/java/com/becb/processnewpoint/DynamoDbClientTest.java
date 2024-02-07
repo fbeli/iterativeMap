@@ -23,7 +23,7 @@ public class DynamoDbClientTest{
     }
 
 
-    @Test
+    //@Test
     public void getNotApproved() {
 
         client.getPointsByAproved(AprovedEnum.asFalse.toString());

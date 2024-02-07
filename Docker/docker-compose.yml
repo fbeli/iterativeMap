@@ -1,7 +1,18 @@
 version: '1.0'
 
 services:
+  html:
+    image: fbeli/becb_html:0.1.4
+    container_name: points
+    ports:
+      - "80:80"
+    volumes:
+      - files:/usr/share/nginx/html
+    depends_on:
+      - point_service
+
   point_service:
+    container_name: point_service
     build:
       context: ../pointService
       dockerfile: ../pointService/Dockerfile
@@ -16,30 +27,35 @@ services:
       - LAMBDA_EXECUTOR=local
       - ENVIRONMENT=docker
       - AWS_REGION=us-west-2
-      - AUTH_SERVER_URL=http://localhost:8082
+      - AUTH_SERVER_URL=http://auth:8082
+      - FILE_ENDPOINT=http://html/
+      - QUEUE_HOST=https://sqs:9324/queue/
     depends_on:
       - awscli
       - sqs
       - process_new_point
       - dynamodb
-
+      - auth
 
   process_new_point:
+    container_name: process_new_point
     build:
       context: ../processNewPoint
       dockerfile: ../processNewPoint/Dockerfile
     environment:
-        # Declare which aws services will be used in localstack
-        # These variables are needed for localstack
-        # yamllint disable-line rule:indentation
-        - AWS_DEFAULT_REGION=us-east-1
-        - AWS_ACCESS_KEY_ID=testUser
-        - AWS_SECRET_ACCESS_KEY=testAccessKey
-        - LAMBDA_EXECUTOR=local
-        - ENVIRONMENT=docker
-        - AWS_REGION=us-west-2
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+      - LAMBDA_EXECUTOR=local
+      - ENVIRONMENT=docker
+      - AWS_REGION=us-west-2
+      - QUEUE_HOST=http://sqs:9324
+      - DYANMODB_HOST=http://dynamodb:8000
+      - SERVICE_ENDPOINT=http://point_service:8080
+      - FILE_DIRECTORY=./
 
   sqs:
+    container_name: sqs
     image: roribio16/alpine-sqs
     platform: linux/amd64
     ports:
@@ -61,9 +77,8 @@ services:
     depends_on:
       - dynamodb
       - sqs
-    entrypoint: sh -c "  aws dynamodb create-table --table-name xpto --endpoint-url http://dynamodb:8000  
-      --region us-west-2 --attribute-definitions AttributeName=pointId,AttributeType=S AttributeName=aprovado,AttributeType=S --key-schema AttributeName=pointId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2 --global-secondary-indexes "{\"IndexName\":\"aprovado-index\",\"KeySchema\":[{\"AttributeName\":\"aprovado\",\"KeyType\":\"HASH\"}],\"Projection\":{\"ProjectionType\":\"ALL\"},\"ProvisionedThroughput\":{\"ReadCapacityUnits\":5,\"WriteCapacityUnits\":5}}"
-      && tail -f /dev/null"
+    entrypoint: sh -c '  aws dynamodb create-table --table-name points --endpoint-url http://dynamodb:8000  --region us-west-2 --attribute-definitions AttributeName=pointId,AttributeType=S AttributeName=aprovado,AttributeType=S --key-schema AttributeName=pointId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2 --global-secondary-indexes "{\"IndexName\":\"aprovado-index\",\"KeySchema\":[{\"AttributeName\":\"aprovado\",\"KeyType\":\"HASH\"}],\"Projection\":{\"ProjectionType\":\"ALL\"},\"ProvisionedThroughput\":{\"ReadCapacityUnits\":5,\"WriteCapacityUnits\":5}}"
+      && tail -f /dev/null'
 
   dynamodb:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
@@ -74,3 +89,31 @@ services:
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
+
+  auth:
+    image: fbeli/becb_auth:0.1
+    container_name: auth
+    ports:
+      - "8082:8082"
+    environment:
+      - DB_URL=mysql:3306
+    depends_on:
+      - mysql
+    command: ["/wait-for-it.sh", "mysql:3306", "-t", "180", "--", "/entrypoint.sh"]
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.2.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_DATABASE=auth
+      - MYSQL_USER=teste
+      - MYSQL_PASSWORD=123
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+volumes:
+  files:
+    driver: local

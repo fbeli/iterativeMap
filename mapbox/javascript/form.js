@@ -1,8 +1,4 @@
-const config = {
-    login_url: "http://localhost:8081/login",
-    sign_in_url: "http://localhost:8081/signin",
-    cadastro_url: "http://localhost:8081/point"
-}
+
 
 let accessToken = null;
 let previous_div = null;
@@ -113,12 +109,11 @@ function create_new_point(){
         title: document.getElementById("cadastro_titulo").value,
         description: document.getElementById("cadastro_description").value
     };
-    alert(document.getElementById("cadastro_titulo").value);
-    alert(data.title);
+
     fetch(config.cadastro_url, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
             "Authorization": accessToken
         },
         body: JSON.stringify(data)
