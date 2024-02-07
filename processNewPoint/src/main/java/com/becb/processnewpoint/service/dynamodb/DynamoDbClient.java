@@ -1,14 +1,9 @@
 package com.becb.processnewpoint.service.dynamodb;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.document.*;
-import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
-import com.amazonaws.services.dynamodbv2.document.utils.NameMap;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 
 
@@ -21,11 +16,8 @@ import lombok.Setter;
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class DynamoDbClient {
@@ -61,7 +53,7 @@ public class DynamoDbClient {
 
         dynamoDB.getTable(pointTable).putItem(itemSpec);
 
-        dynamoDB.getTable(pointTable).scan().iterator().forEachRemaining(System.out::println);
+        //dynamoDB.getTable(pointTable).scan().iterator().forEachRemaining(System.out::println);
        // getPointsNotAproved().iterator();
        //  getAuditData(point.getLatitude());
 

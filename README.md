@@ -9,7 +9,8 @@ docker-compose run --service-ports point_service
 Startar o html executar os comandos python dentro da pasta mapbox 
 python -m SimpleHTTPServer 8000 ou python3 -m http.server 8000
 
-
+Criar tabela no dynamo db:
+aws dynamodb create-table --table-name points --endpoint-url http://dynamodb:8000  --region us-west-2 --attribute-definitions AttributeName=pointId,AttributeType=S AttributeName=aprovado,AttributeType=S --key-schema AttributeName=pointId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2 --global-secondary-indexes "{\"IndexName\":\"aprovado-index\",\"KeySchema\":[{\"AttributeName\":\"aprovado\",\"KeyType\":\"HASH\"}],\"Projection\":{\"ProjectionType\":\"ALL\"},\"ProvisionedThroughput\":{\"ReadCapacityUnits\":5,\"WriteCapacityUnits\":5}}"
 
 
 aws dynamodb update index in dynamo db:

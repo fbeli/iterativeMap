@@ -12,24 +12,23 @@ import java.util.logging.Logger;
 
 public class SQSClient {
     private final String queueUrl;
-    private final String sqsServiceEndpoint = "http://localhost:9324/queue/";
 
     private static final Logger logger = Logger.getLogger(SQSClient.class.getName());
 
     private final AmazonSQS sqs = this.defaultClient();
-    private final SendMessageRequest sendMessageRequest = new SendMessageRequest();
-    private ReceiveMessageRequest receiveMessageRequest;
 
     public SQSClient(String queueName) {
-        String env = System.getenv("ENVIRONMENT");
-        if ( env.equals("docker") || env.equals("dev") ) {
-            this.queueUrl = sqsServiceEndpoint + queueName;
-        } else {
-            this.queueUrl = this.sqs.getQueueUrl(queueName).getQueueUrl();
-        }
+
+        this.queueUrl = this.sqs.getQueueUrl(queueName).getQueueUrl();
         logger.info("Queue URL: " + this.queueUrl);
     }
 
+    public SQSClient(String queueName, String sqsServiceEndpoint){
+
+        this.queueUrl = sqsServiceEndpoint + queueName;
+        logger.info("Queue URL: " + this.queueUrl);
+
+    }
     public AmazonSQS defaultClient() {
         return AmazonSQSClientBuilder.defaultClient();
     }

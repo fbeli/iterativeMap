@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -128,11 +127,10 @@ public class PointController {
     @ResponseBody
     public PointResponse cadastro(@RequestBody PointDto pointDto, HttpServletRequest request) {
 
-
         String formatedPoint = configPoint(pointDto,  request);
         logger.info("Point to Add: "+formatedPoint);
         try{
-            SqsService  sqsService = new SqsService();
+            //SqsService  sqsService = new SqsService();
             sqsService.sendMessage(formatedPoint);
         }catch (Exception e){
             logger.severe("Error to add point: "+e.getMessage());
