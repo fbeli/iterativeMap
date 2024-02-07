@@ -1,11 +1,37 @@
 # iterativeMap
 Interesting point on map.
 
+
+## How to run ##
+
+First of all, you need to have docker and docker-compose installed in your machine.
+You can download docker from [here](https://www.docker.com/products/docker-desktop) and docker-compose from [here](https://docs.docker.com/compose/install/).
+
+You have 2 docker-compose.yml, firs to run with your code, you need build it and create jar files using maven:
+``` 
+into folders pointService and processNewPoint 
+run: mvn compile package dependency:copy-dependencies -DincludeScope=runtime
+
+go to dir /Docker and run: docker-compose build and docker-compose up
+```
+
+If you want run stable version:
+
+```
+you can use the docker-compose.yml in /Docker/stable/docker-compose.yml
+run: docker-compose up
+```
+
+
+
+## Extra information
+
 Compile with maven command for each project before run docker-compose
-```mvn compile package dependency:copy-dependencies -DincludeScope=runtime
+```
+mvn compile package dependency:copy-dependencies -DincludeScope=runtime
 docker-compose build
 docker-compose run --service-ports point_service   
-
+```
 Startar o html executar os comandos python dentro da pasta mapbox 
 python -m SimpleHTTPServer 8000 ou python3 -m http.server 8000
 
