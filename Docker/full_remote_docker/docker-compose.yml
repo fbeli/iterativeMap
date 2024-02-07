@@ -1,4 +1,4 @@
-version: '1.0'
+﻿version: '1.0'
 
 services:
   html:
@@ -13,9 +13,7 @@ services:
 
   point_service:
     container_name: point_service
-    build:
-      context: ../pointService
-      dockerfile: ../pointService/Dockerfile
+    image: fbeli/becb-point-service:0.0.1
     ports:
       - "8081:8081"
     environment:
@@ -39,9 +37,7 @@ services:
 
   process_new_point:
     container_name: process_new_point
-    build:
-      context: ../processNewPoint
-      dockerfile: ../processNewPoint/Dockerfile
+    image: fbeli/becb-process-new-point:0.0.1
     environment:
       - AWS_DEFAULT_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=testUser
@@ -92,7 +88,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - "./docker/dynamodb:/home/dynamodblocal/data"
+      - "./dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
 
   auth:

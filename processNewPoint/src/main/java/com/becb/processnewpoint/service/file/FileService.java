@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class FileService {
@@ -40,7 +41,7 @@ public class FileService {
         logger.info("Map file created : "+file.getAbsolutePath());
 
     }
-    public void createNotApprovedFile(ArrayList<Point> points, String fileName) throws IOException {
+    public void createNotApprovedFile(List<Point> points, String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(getHeadHtml());
         for (Point point: points) {
@@ -58,6 +59,7 @@ public class FileService {
         String filePath = fileDir + File.separator + fileName;
         File file = new File(filePath);
 
+        logger.info("Creating file: "+filePath);
         try {
             if (file.createNewFile()) {
                 System.out.println("File created successfully.");
@@ -67,12 +69,12 @@ public class FileService {
                 writer.write(sb.toString());
                 writer.close();
 
-                System.out.println("Content written to the file.");
+                logger.info("Content written to the file.");
             } else {
-                System.out.println("File already exists.");
+                logger.info("File already exists.");
             }
         } catch (IOException e) {
-            System.out.println("An error occurred while creating the file.");
+            logger.info("An error occurred while creating the file.");
             e.printStackTrace();
         }
 
