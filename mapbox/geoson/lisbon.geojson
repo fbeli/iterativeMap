@@ -1,0 +1,71 @@
+{
+  "features": [
+    
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Praça do Comércio",
+        "description": "Também conhecido como Terreiro do Paço. Tem muitas histórias, a que mais me marcou foi quando após o terremoto os Lisboetas foram para a praça tentando se proteger o que acabou fazendo com que fossem arrastados pelo tissuname que veio logo depois."
+        "pointId": "1"
+      },
+      "geometry": {
+        "coordinates": [38.70754004069025, -9.13648013215419],
+        "type": "Point"
+      }
+    },
+
+    {
+        "type": "Feature",
+        "properties": {
+          "title": "Observatório Astronómico de Lisboa",
+          "description": "A hora legal para Portugal é actualmente determinada electronicamente por cinco relógios atómicos que estão protegidos num bunker no Observatório Astronómico de Lisboa."
+          "pointId": "1"
+        },
+        "geometry": {
+          "coordinates": [38.710510617484346, -9.187434827231641],
+          "type": "Point"
+        }
+      },
+
+    
+
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Columbus Park",
+        "description": "A large park in Chicago's Austin neighborhood"
+      },
+      "geometry": {
+        "coordinates": [-87.769775, 41.873683],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Rio de Janeiro Point do Point",
+        "description": "Ponto no Rio"
+      },
+      "geometry": {
+        "coordinates": [-43.364696, -23.057019],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Casa",
+        "description": "Casa do  Fred na Conde de Baependi - Laranjeiros"
+      },
+      "geometry": {
+        "coordinates": [-43.182585396645806, -22.933508788727664],
+        "type": "Point"
+      }
+    }
+  ],
+
+
+  
+
+  "type": "FeatureCollection"
+}
