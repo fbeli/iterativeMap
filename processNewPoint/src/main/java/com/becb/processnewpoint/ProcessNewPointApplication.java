@@ -36,7 +36,8 @@ public class ProcessNewPointApplication {
 		DynamoDbClient dynamoDbClient = new DynamoDbClient();
 		dynamoDbClient.setDynamoDB(new DynamoDB(client));
 		dynamoDbClient.setPointTable(pointTable);
-		//dynamoDbClient.setReconAuditTable(reconAuditTable);
 		return dynamoDbClient;
 	}
+
+
 }

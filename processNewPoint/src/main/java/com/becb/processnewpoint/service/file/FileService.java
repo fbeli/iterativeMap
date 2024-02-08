@@ -3,12 +3,15 @@ package com.becb.processnewpoint.service.file;
 import com.becb.processnewpoint.domain.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,14 +24,15 @@ public class FileService {
 
     @Value("${file.directory}")
     String fileDir;
-
     @Value("${app.endpoint}")
     String appEndpoint;
-
     @Value("${service.endpoint}")
     String serviceEndpoint;
 
-    public void createFileToMap(ArrayList<Point> points, String fileName) throws IOException {
+    @Autowired
+    AmazonS3Service amazonS3Service;
+
+    public void createFileToMap(List<Point> points, String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(getHeadJson());
         for (Point point: points) {
@@ -37,8 +41,8 @@ public class FileService {
         sb.append(bottonJson());
 
         File file = createFile(fileName, sb);
-
-        logger.info("Map file created : "+file.getAbsolutePath());
+        if(file != null)
+            logger.info("Map file created : "+file.getAbsolutePath());
 
     }
     public void createNotApprovedFile(List<Point> points, String fileName) throws IOException {
@@ -50,11 +54,34 @@ public class FileService {
         sb.append(bottonHtml());
 
         File file = createFile(fileName, sb);
-        logger.info("File to import in map created : "+file.getAbsolutePath());
+        if(file != null)
+            logger.info("File to import in map created : "+file.getAbsolutePath());
 
     }
 
     private File createFile(String fileName, StringBuilder sb){
+        File file = null;
+        String env = System.getenv("ENVIRONMENT");
+        /*if ( env.equals("docker") || env.equals("dev") ) {
+           file = createLocalFile(fileName, sb);
+           return file;
+        }else {*/
+
+            amazonS3Service.saveAdminFile( fileName, createTempFile(fileName, sb));
+        //}
+        return file;
+    }
+
+
+    private InputStream createTempFile(String fileName, StringBuilder sb)
+    {
+
+            InputStream inputStream = new ByteArrayInputStream(sb.toString().getBytes());
+            return inputStream;
+
+    }
+
+        private File createLocalFile(String fileName, StringBuilder sb){
 
         String filePath = fileDir + File.separator + fileName;
         File file = new File(filePath);
@@ -62,7 +89,7 @@ public class FileService {
         logger.info("Creating file: "+filePath);
         try {
             if (file.createNewFile()) {
-                System.out.println("File created successfully.");
+                logger.info("File created successfully.");
 
                 // Write content to the file
                 FileWriter writer = new FileWriter(file);
@@ -85,7 +112,9 @@ public class FileService {
         return  new SimpleDateFormat("dd-MM-yyyy-hh_mm_ss").format(new Date());
     }
     public String getHeadHtml(){
-        return "<head>  <script src=\""+ appEndpoint +"javascript/point.js\">   </script> </head> " +
+        return "<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "<script src=\""+ appEndpoint +"javascript/point.js\">   </script> \n" +
+                "</head> " +
                 "<style>tr{border:1}</style><body><div style='width=100%'><table>"+
                 "<tr><th>aprove</th><th>block</th><th>Id</th><th>Titulo</th><th>Descrição</th><th>Latitude</th><th" +
                 ">Longitude</th><th>audio</th><th" +

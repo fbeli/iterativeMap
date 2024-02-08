@@ -28,7 +28,7 @@ services:
       - ENVIRONMENT=docker
       - AWS_REGION=us-east-1
       - AUTH_SERVER_URL=http://auth:8082
-      - FILE_ENDPOINT=http://localhost/
+      - FILE_ENDPOINT=https://guidemapper-points-dev.s3.eu-central-1.amazonaws.com/file/
       - QUEUE_HOST=http://sqs:9324/queue/
     depends_on:
       - awscli

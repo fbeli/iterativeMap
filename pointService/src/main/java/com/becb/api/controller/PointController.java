@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.logging.Logger;
 
@@ -130,7 +131,6 @@ public class PointController {
         String formatedPoint = configPoint(pointDto,  request);
         logger.info("Point to Add: "+formatedPoint);
         try{
-            //SqsService  sqsService = new SqsService();
             sqsService.sendMessage(formatedPoint);
         }catch (Exception e){
             logger.severe("Error to add point: "+e.getMessage());
@@ -180,6 +180,8 @@ public class PointController {
         return arquivoDto.toString();
     }
     private String getFileName(String name){
-        return name+"_"+ LocalDateTime.now() +".html";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+
+        return name+"_"+ formatter.format(LocalDateTime.now()) +".html";
     }
 }
