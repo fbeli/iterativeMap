@@ -5,20 +5,20 @@ import com.becb.api.dto.LoginResponse;
 import com.becb.api.exception.UsuarioAlreadyExistsException;
 import com.becb.api.security.AuthSecurity;
 import com.becb.api.service.AuthorizationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Controller
+@RestController
 //@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 public class LoginController   {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	AuthSecurity authSecurity;
@@ -26,12 +26,13 @@ public class LoginController   {
 	@Autowired
 	AuthorizationService authorizationService;
 
+	private static String authEndpoint;
+
 	@PreAuthorize("hasAuthority('GUIDE')")
 	@GetMapping("/hello")
 //	@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 	@ResponseBody
 	public String hello() {
-
 
 		return "Hello, "+authSecurity.getName();
 	}
@@ -42,23 +43,35 @@ public class LoginController   {
 	@ResponseBody
 	public String autorizado() {
 
-
 		return "autorizado, "+authSecurity.getName();
 	}
+
 	@GetMapping("/config")
 	@ResponseBody
 	public String config() {
 		return "{ \"nome\": \"Fulano de Tal\", \"idade\": 30, \"endereco\": \"Rua Exemplo, 123\", \"telefone\": \"(00) 1234-5678\" }";
 	}
 
+	@GetMapping("set_endpoint/{endpoint}")
+	public void setauthEndpoint(@PathVariable  String endpoint) {
+		this.authEndpoint = endpoint;
+	}
+
 	@PostMapping("/login")
 	@ResponseBody
 	public LoginResponse login(@RequestBody LoginDto loginDto, HttpServletResponse response)  {
 
+		logger.info("endpoint {}",  authorizationService.toString());
+
 		LoginResponse loginResponse = authorizationService.login(loginDto);
 		if(loginResponse.getStatus() != HttpServletResponse.SC_OK){
 			response.setStatus(loginResponse.getStatus());
+			response.setHeader("Access-Control-Allow-Origin", "cloudfront.net");
+			response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS, PUT, POST");
+			response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+			response.setHeader("Access-Control-Allow-Credentials", "true");
 		}
+
 		return loginResponse;
 
 	}
@@ -87,6 +100,7 @@ public class LoginController   {
 		return authorizationService.login(loginDto);
 
 	}
+
 	private LoginResponse internalServerError(HttpServletResponse response, String exception ){
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		LoginResponse loginResponse = new LoginResponse();

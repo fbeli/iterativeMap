@@ -3,32 +3,25 @@ package com.becb.api.controller;
 import com.becb.api.dto.ArquivoDto;
 import com.becb.api.dto.PointDto;
 import com.becb.api.dto.PointResponse;
+import com.becb.api.service.ArquivoService;
 import com.becb.api.service.sqs.SqsService;
 import org.json.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import java.time.LocalDateTime;
-
-
+import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.logging.Logger;
 
-@Controller
+
+@RestController
 @RequestMapping( produces = "application/json;charset=UTF-8")
 public class PointController {
 
-    private static final Logger logger = Logger.getLogger(PointController.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     SqsService  sqsService;
@@ -51,6 +44,9 @@ public class PointController {
     @Value("${file.endpoint}")
     String fileEndpoint;
 
+    @Autowired
+    ArquivoService arquivoService;
+
     @GetMapping("/aprovar/{id}/{user_mail}")
     //@PreAuthorize("isAuthenticated()")
     @ResponseBody
@@ -61,8 +57,8 @@ public class PointController {
         try{
             sqsService.sendMessage(formatedPoint, aproveQueueName);
         }catch (Exception e){
-            logger.severe("Error to add point: "+e.getMessage());
-            return new PointResponse("500", "Error to add point");
+            logger.error("Erro ao aprovar ponto point: "+e.getMessage());
+            return new PointResponse("500", "Erro para aprovar ponto"+e.getMessage());
         }
 
         return new PointResponse("Point added successfully");
@@ -78,8 +74,8 @@ public class PointController {
         try{
             sqsService.sendMessage(formatedPoint, bloquearQueueName);
         }catch (Exception e){
-            logger.severe("Error to add point: "+e.getMessage());
-            return new PointResponse("500", "Error to add point");
+            logger.error("Erro  ao bloquear ponto: "+e.getMessage());
+            return new PointResponse("500", "Error para bloquear ponto" + e.getMessage());
         }
 
         return new PointResponse("Point added successfully");
@@ -91,32 +87,31 @@ public class PointController {
     @ResponseBody
     public PointResponse gerarArquivoAprovacao(HttpServletRequest request){
 
-        String fileName = getFileName("pointNaoCadastrado");
-        String formatedPoint = this.configArquivo(new ArquivoDto(), request, fileName);
+        String formatedPoint = arquivoService.configArquivo(new ArquivoDto(), request, arquivoService.getFileName("pointNaoCadastrado"));
 
         try{
             sqsService.sendMessage(formatedPoint, this.notApprovedQueueName);
         }catch (Exception e){
-            logger.severe("Erro para gerar Arquivo de aprovacao: "+e.getMessage());
-            return new PointResponse("500", "Error to add point");
+            logger.error("Erro para gerar Arquivo de aprovacao: "+e.getMessage());
+            return new PointResponse("500", "Erro para gerar arquivo de aprovacao: " + e.getMessage());
         }
-        return new PointResponse("Arquivo solicitado com sucesso: "+fileEndpoint+fileName);
+        return new PointResponse("Arquivo solicitado com sucesso: "+fileEndpoint+arquivoService.getFileName("pointNaoCadastrado"));
     }
 
     @GetMapping("/gerarArquivoParaMapa")
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public PointResponse gerarArquivoParaMapa(HttpServletRequest request){
-        String fileName = getFileName("mapFile");
-        String formatedPoint = this.configArquivo(new ArquivoDto(), request, fileName);
+
+        String formatedPoint = arquivoService.configArquivo(new ArquivoDto(), request, arquivoService.getFileName("mapFile"));
 
         try{
             sqsService.sendMessage(formatedPoint, newFileToMapQueueName);
         }catch (Exception e){
-            logger.severe("Erro para gerar Arquivo para mapa: "+e.getMessage());
-            return new PointResponse("500", "Error to add point");
+            logger.error("Erro para gerar Arquivo para mapa: {}", e.getMessage());
+            return new PointResponse("500", "Erro para gerar Arquivo para mapa : "+e.getMessage());
         }
-        return new PointResponse("Arquivo solicitado com sucesso: "+fileEndpoint+fileName);
+        return new PointResponse("Arquivo solicitado com sucesso: "+fileEndpoint+arquivoService.getFileName("mapFile"));
 
     }
 
@@ -133,8 +128,8 @@ public class PointController {
         try{
             sqsService.sendMessage(formatedPoint);
         }catch (Exception e){
-            logger.severe("Error to add point: "+e.getMessage());
-            return new PointResponse("500", "Error to add point");
+            logger.error("Error to add point: {}", e.getMessage());
+            return new PointResponse("500", "Error to add point" + e.getMessage());
         }
 
         return new PointResponse("Point added successfully");
@@ -164,24 +159,5 @@ public class PointController {
         return pointDto.toString();
     }
 
-    private String configArquivo(ArquivoDto arquivoDto, HttpServletRequest request, String fileName) {
 
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-
-        String[] chunks = token.split("\\.");
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String payload = new String(decoder.decode(chunks[1]));
-        JSONObject jsonObject = new JSONObject(payload);
-
-        arquivoDto.setUser_id(jsonObject.getString("usuario_id"));
-        arquivoDto.setUser_email(jsonObject.getString("user_name"));
-        arquivoDto.setUser_name(jsonObject.getString("nome_completo"));
-        arquivoDto.setFile_name(fileName);
-        return arquivoDto.toString();
-    }
-    private String getFileName(String name){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-
-        return name+"_"+ formatter.format(LocalDateTime.now()) +".html";
-    }
 }

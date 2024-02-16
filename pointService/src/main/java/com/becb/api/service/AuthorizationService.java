@@ -4,6 +4,7 @@ import com.becb.api.dto.LoginDto;
 
 import com.becb.api.dto.LoginResponse;
 import com.becb.api.exception.UsuarioAlreadyExistsException;
+import lombok.Setter;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,10 @@ import java.util.Base64;
 
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
+@Setter
 public class AuthorizationService {
 
     @Value("${auth.server.url}")
@@ -33,12 +34,24 @@ public class AuthorizationService {
         LoginResponse loginResponse = new LoginResponse();
         try {
 
+            logger.info("URL_CONNECTION: " + auth_url) ;
+
             HttpURLConnection connection = getConnection(auth_url+"/oauth/token");
 
             String params = "grant_type=password&username=" + loginDto.getEmail() + "&password=" + loginDto.getPassword();
             byte[] postData = params.getBytes(StandardCharsets.UTF_8);
-            try (OutputStream outputStream = connection.getOutputStream()) {
+
+            try{
+                OutputStream outputStream = connection.getOutputStream() ;
                 outputStream.write(postData);
+            }catch (Exception e){
+                logger.severe(e.getMessage());
+                logger.severe("Stack erro to get Authentication to: "+loginDto.getPassword()+ "\nErro stack:\n"+e.getStackTrace().toString());
+
+                loginResponse.setError(e.getMessage());
+                loginResponse.setError("500");
+                 return loginResponse;
+
             }
 
             int responseCode = connection.getResponseCode();
@@ -63,9 +76,12 @@ public class AuthorizationService {
                 return loginResponse;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            loginResponse.setError(e.getMessage());
+            logger.severe(e.getMessage());
+            logger.severe("Stack erro to get Authentication to: "+loginDto.getPassword()+ "\nErro stack:\n"+e.getStackTrace().toString());
+
         }
-        return null;
+        return loginResponse;
     }
 
     private HttpURLConnection getConnection(String urlConnection) throws IOException {
@@ -80,10 +96,11 @@ public class AuthorizationService {
     }
 
     public String adicionarUsuario(LoginDto loginDto) throws UsuarioAlreadyExistsException {
-        LoginResponse loginResponse = new LoginResponse();
+
         try {
             // Specify the URL of the REST API endpoint
-            URL url = new URL(auth_url+"/cadastro");
+            String fullUrl = auth_url+"/cadastro";
+            URL url = new URL(fullUrl);
 
             // Open a connection to the URL
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -142,5 +159,9 @@ public class AuthorizationService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public String toString(){
+        return auth_url;
     }
 }
