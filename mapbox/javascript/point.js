@@ -1,10 +1,15 @@
 function aprovarPoint(url){
-    fetch(url)
+    fetch(url , {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
         .then(response => response.json())
         .then(data => {
-            // Handle the response data here
+           console.log(data);
         })
         .catch(error => {
-            // Handle any errors here
+            console.log(error);
         });
 }

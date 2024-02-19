@@ -36,7 +36,11 @@ Startar o html executar os comandos python dentro da pasta mapbox
 python -m SimpleHTTPServer 8000 ou python3 -m http.server 8000
 
 Criar tabela no dynamo db:
-aws dynamodb create-table --table-name points --endpoint-url http://dynamodb:8000  --region us-west-2 --attribute-definitions AttributeName=pointId,AttributeType=S AttributeName=aprovado,AttributeType=S --key-schema AttributeName=pointId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2 --global-secondary-indexes "{\"IndexName\":\"aprovado-index\",\"KeySchema\":[{\"AttributeName\":\"aprovado\",\"KeyType\":\"HASH\"}],\"Projection\":{\"ProjectionType\":\"ALL\"},\"ProvisionedThroughput\":{\"ReadCapacityUnits\":5,\"WriteCapacityUnits\":5}}"
+aws dynamodb create-table --table-name points --endpoint-url http://dynamodb:8000  --region ue-central-1 
+--attribute-definitions AttributeName=pointId,AttributeType=S AttributeName=aprovado,AttributeType=S 
+--key-schema AttributeName=pointId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2 
+--global-secondary-indexes "{\"IndexName\":\"aprovado-index\",\"KeySchema\":[{\"AttributeName\":\"aprovado\",\"KeyType\":\"HASH\"}],
+\"Projection\":{\"ProjectionType\":\"ALL\"},\"ProvisionedThroughput\":{\"ReadCapacityUnits\":5,\"WriteCapacityUnits\":5}}"
 
 
 aws dynamodb update index in dynamo db:
@@ -51,10 +55,7 @@ aws dynamodb query \
  --expression-attribute-values "{\":aprovado\":{\"S\":\"false\"}}" \
  --endpoint-url http://dynamodb:8000  --region us-west-2
 
-aws dynamodb query \
-    --table-name points \
-    --key-condition-expression "aprovado = :name" \
-    --expression-attribute-values  '{":name":{"S":"false"}}' \
+aws dynamodb query --table-name points --key-condition-expression "aprovado = :name" --expression-attribute-values  '{":name":{"S":"false"}}' \
  --endpoint-url http://dynamodb:8000  --region us-west-2
 
 aws dynamodb scan    --table-name points --endpoint-url http://dynamodb:8000  --region us-west-2
