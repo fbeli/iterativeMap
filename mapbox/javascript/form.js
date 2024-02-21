@@ -49,8 +49,8 @@ function execute_login(){
             }
         })
         .catch(error => {
-           console.log(error);
-           alert("Erro to login.");
+            document.getElementById("erro_alert_text").innerHTML = data.error;
+            error_div_event("login_div");
         });
 }
 function setToken(receicedToken){
@@ -78,16 +78,17 @@ function execute_sign_in(){
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            if(data.status == "200") {
+            if (data.status == "200") {
                 setToken(data.token);
                 afterLogin();
-            }if(data.status == "409") {
+            }else{
+            if (data.status == "409") {
                 document.getElementById("erro_alert_text").innerHTML = "Email already registered.";
                 error_div_event("sign_up_div");
-            }else{
+            } else {
                 alert("Erro to sign in.");
             }
-
+        }
         })
         .catch(error => {
             console.log(error);
@@ -107,7 +108,8 @@ function create_new_point(){
         longitude: document.getElementById("cadastro_lng").value,
         latitude: document.getElementById("cadastro_lat").value,
         title: document.getElementById("cadastro_titulo").value,
-        description: document.getElementById("cadastro_description").value
+        description: document.getElementById("cadastro_description").value,
+        audio: document.getElementById("cadastro_audio").value
     };
 
     fetch(config.cadastro_url, {

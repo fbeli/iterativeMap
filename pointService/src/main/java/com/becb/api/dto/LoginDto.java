@@ -9,9 +9,8 @@ import lombok.Setter;
 public class LoginDto {
     private String email;
     private String password;
-
     private String country;
-
     private String phone;
     private String name;
+    private String userId;
 }

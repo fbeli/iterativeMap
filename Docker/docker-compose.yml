@@ -1,4 +1,4 @@
-version: '1.0'
+version: '2.2'
 
 services:
   html:
@@ -62,7 +62,6 @@ services:
   sqs:
     container_name: sqs
     image: roribio16/alpine-sqs
-    platform: linux/amd64
     ports:
       - "9324:9324"
       - "9325:9325"
@@ -74,7 +73,6 @@ services:
   awscli:
     image: amazon/aws-cli
     container_name: awscli
-    platform: linux/amd64
     environment:
       AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'

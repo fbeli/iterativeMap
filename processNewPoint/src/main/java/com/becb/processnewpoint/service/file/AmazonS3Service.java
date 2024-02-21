@@ -28,30 +28,39 @@ public class AmazonS3Service {
     @Autowired
     private StorageProperties storageProperties;
 
-    public void saveAdminFile(String fileName, InputStream file)  {
+    public void saveAdminFile(String fileName, InputStream file) {
         saveFile(bucket, directoryFile, file, fileName);
     }
+
     /**
-     *
      * @param bucket
      * @param directory path do arquivo no s3
      * @param file
      */
-    public void saveFile(String bucket, String directory, InputStream inputStream, String fileName)  {
+    public void saveFile(String bucket, String directory, InputStream inputStream, String fileName) {
 
-       try {
-           String filePath = getFilePath(fileName, directory);
+        logger.info("Sending file {} to S3 in {}: ", fileName, amazonS3.getRegion());
 
-           var objectMetadata = new ObjectMetadata();
+        try {
+            String filePath = getFilePath(fileName, directory);
 
-           amazonS3.putObject(bucket, filePath, inputStream, objectMetadata);
-       } catch (Exception e) {
-           logger.error("não foi possível salvar arquivo no S3: " + e.getMessage());
-       }
+            var objectMetadata = new ObjectMetadata();
+            if (fileName.contains("map")){
+                objectMetadata.setContentType("application/json");
+            } else {
+                objectMetadata.setContentType("text/html");
+            }
+            objectMetadata.setContentEncoding("UTF-8");
+
+            amazonS3.putObject(bucket, filePath, inputStream, objectMetadata);
+
+        } catch (Exception e) {
+            logger.error("não foi possível salvar arquivo no S3: " + e.getMessage());
+        }
     }
 
     private String getFilePath(String fileName, String directory) {
-        return String.format("%s/%s",directory, fileName);
+        return String.format("%s/%s", directory, fileName);
     }
 
 }

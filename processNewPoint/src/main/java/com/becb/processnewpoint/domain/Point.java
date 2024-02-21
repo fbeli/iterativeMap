@@ -3,16 +3,19 @@ package com.becb.processnewpoint.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import com.github.f4b6a3.ulid.UlidCreator;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 @DynamoDBTable(tableName = "points")
+@Setter
+@Getter
 public class Point {
 
 
     @DynamoDBHashKey(attributeName = "pointId")
-    private String pointId = UlidCreator.getUlid().toString();;
+    private String pointId;
 
     private String title;
     private String latitude;
@@ -23,7 +26,7 @@ public class Point {
 
     @DynamoDBAttribute(attributeName="aprovado")
     private String aproved;
-    private String language;
+    private LanguageEnum language = LanguageEnum.PT;
 
     private User user;
 

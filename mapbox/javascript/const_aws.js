@@ -1,5 +1,7 @@
 ﻿const config = {
-    login_url: "http://LB-point-service-1961554682.eu-central-1.elb.amazonaws.com:8081/login",
-    sign_in_url: "http://LB-point-service-1961554682.eu-central-1.elb.amazonaws.com:8081/signin",
-    cadastro_url: "http://LB-point-service-1961554682.eu-central-1.elb.amazonaws.com:8081/point"
+    login_url: "https://webservice.guidemapper.com:8081/login",
+    sign_in_url: "https://webservice.guidemapper.com:8081/signin",
+    cadastro_url: "https://webservice.guidemapper.com:8081/point",
+    gerar_geo_file_url:"https://webservice.guidemapper.com:8081/gerarArquivoParaMapa",
+    gerar_arquivo_to_aprove_url: "https://webservice.guidemapper.com:8081/gerarArquivoAprovacao"
 }

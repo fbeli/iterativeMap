@@ -12,9 +12,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,31 +32,42 @@ public class FileService {
     public void createFileToMap(List<Point> points, String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(getHeadJson());
+        logger.info("received {} points to create json file. File will be uploaded", points.size());
+        int x = 1;
+
         for (Point point: points) {
             sb.append(getBodyJson(point));
+            if( x < points.size() )
+                sb.append(",");
+            x++;
         }
+
         sb.append(bottonJson());
 
         File file = createFile(fileName, sb);
         if(file != null)
             logger.info("Map file created : "+file.getAbsolutePath());
-
     }
     public void createNotApprovedFile(List<Point> points, String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(getHeadHtml());
+        logger.info("received {} points to be reviewd", points.size());
         for (Point point: points) {
             sb.append(getBodyHtml(point));
         }
         sb.append(bottonHtml());
 
+
+
         File file = createFile(fileName, sb);
         if(file != null)
-            logger.info("File to import in map created : "+file.getAbsolutePath());
+            logger.info("File to approve created : "+file.getAbsolutePath());
 
     }
 
     private File createFile(String fileName, StringBuilder sb){
+
+
         File file = null;
         String env = System.getenv("ENVIRONMENT");
         /*if ( env.equals("docker") || env.equals("dev") ) {
@@ -101,27 +109,26 @@ public class FileService {
                 logger.info("File already exists.");
             }
         } catch (IOException e) {
-            logger.info("An error occurred while creating the file.");
-            e.printStackTrace();
+            logger.info("An error occurred while creating the file: {}", e.getMessage());
         }
 
         return file;
     }
 
-    private String getDateTime(){
-        return  new SimpleDateFormat("dd-MM-yyyy-hh_mm_ss").format(new Date());
-    }
     public String getHeadHtml(){
-        return "<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-                "<script src=\""+ appEndpoint +"javascript/point.js\">   </script> \n" +
+        return "<!DOCTYPE html>\n" +
+                "<html lang=\"pt-br\"> <html>\n" +
+
+                "    <title>GuideMapper</title> " +
+                "<meta charset=\"utf-8\"> \n <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "<script src=\"../javascript/point.js\">   </script> \n" +
                 "</head> " +
-                "<style>tr{border:1}</style><body><div style='width=100%'><table>"+
-                "<tr><th>aprove</th><th>block</th><th>Id</th><th>Titulo</th><th>Descrição</th><th>Latitude</th><th" +
+                "<table>    <tr><th>aprove</th><th>block</th><th>Id</th><th>Titulo</th><th>Descrição</th><th>Latitude</th><th" +
                 ">Longitude</th><th>audio</th><th" +
                 ">Usuário</th><th>Email</th></tr>";
     }
     public String getBodyHtml(Point point){
-        return "<tr><td><a href='#' onclick=\"aprovarPoint('"+ serviceEndpoint +"aprovar/"+point.getPointId()+"/"+point.getUser().getUserEmail()+"')" +
+        return "\n<tr><td><a href='#' onclick=\"aprovarPoint('"+ serviceEndpoint +"aprovar/"+point.getPointId()+"/"+point.getUser().getUserEmail()+"')" +
                 "\">aprove" +
                 "</a></td><td><a href='#' onclick=\"aprovarPoint('"+ serviceEndpoint +"bloquear/"+point.getPointId()+
                 "/"+point.getUser().getUserEmail()+"')" +
@@ -129,10 +136,10 @@ public class FileService {
 
     }
     public String bottonHtml(){
-        return "</table></div></body>";
+        return "</table></body></html>";
     }
     private String bottonJson(){
-        return  "  ]\n" +
+        return  "  ],\n" +
                 "\"type\": \"FeatureCollection\"\n" +
                 "}";
     }
@@ -142,20 +149,19 @@ public class FileService {
                 "  \"features\": [\n";
     }
     private String getBodyJson(Point point){
-        return "{\n" +
+        return "\n{\n" +
                 "    \"type\": \"Feature\",\n" +
                 "    \"properties\": {\n" +
                 "      \"title\": \""+point.getTitle()+"\",\n" +
                 "      \"shortDescription\": \""+point.getShortDescription()+"\",\n" +
-                "       \"description\": \""+point.getDescription()+"\",\n" +
+                "      \"description\": \""+point.getDescription()+"\",\n" +
+                "      \"pointId\": \""+point.getPointId()+"\"\n" +
                 "    },\n" +
                 "    \"geometry\": {\n" +
                 "      \"type\": \"Point\",\n" +
-                "      \"coordinates\": ["+point.getLatitude().trim()+","+point.getLongitude().trim()+"]\n" +
+                "      \"coordinates\": ["+point.getLongitude().trim()+","+point.getLatitude().trim()+"]\n" +
                 "    }\n" +
-                "  },\n";
+                "  }\n";
     }
-
-
 
 }

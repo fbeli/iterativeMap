@@ -13,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 //@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -25,8 +28,6 @@ public class LoginController   {
 
 	@Autowired
 	AuthorizationService authorizationService;
-
-	private static String authEndpoint;
 
 	@PreAuthorize("hasAuthority('GUIDE')")
 	@GetMapping("/hello")
@@ -52,11 +53,6 @@ public class LoginController   {
 		return "{ \"nome\": \"Fulano de Tal\", \"idade\": 30, \"endereco\": \"Rua Exemplo, 123\", \"telefone\": \"(00) 1234-5678\" }";
 	}
 
-	@GetMapping("set_endpoint/{endpoint}")
-	public void setauthEndpoint(@PathVariable  String endpoint) {
-		this.authEndpoint = endpoint;
-	}
-
 	@PostMapping("/login")
 	@ResponseBody
 	public LoginResponse login(@RequestBody LoginDto loginDto, HttpServletResponse response)  {
@@ -75,6 +71,8 @@ public class LoginController   {
 		return loginResponse;
 
 	}
+
+
 
 	@PostMapping("/signin")
 	@ResponseBody

@@ -1,5 +1,9 @@
 package com.becb.processnewpoint;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +21,19 @@ import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 @SpringBootApplication
 public class ProcessNewPointApplication {
 
+
+	@Value("${becb.sqs.access-key}")
+	String sqsAccessKey;
+
+	@Value("${becb.sqs.secret-key}")
+	String sqsSecretKey;
+
+	@Value("${becb.sqs.region}")
+	String region;
+
+	@Value("${env}")
+	String env;
+
 	public static void main(String[] args) {
 		SpringApplication.run(ProcessNewPointApplication.class, args);
 	}
@@ -24,15 +41,22 @@ public class ProcessNewPointApplication {
 
 	@Value("${dynamodb.point.table}")
 	private String pointTable;
+
 	@Bean("dynamoDbClient")
 	public DynamoDbClient getDynamoDbClient(@Value("${dynamodb.host}")String dynamoDbHost) {
-		AmazonDynamoDBClient client = new AmazonDynamoDBClient();
+		AmazonDynamoDBClient client ;
 
-		logger.info("DynamoDbHost: {}", dynamoDbHost);
-		//TODO: created docker, need check it to run.
-		//if ("local".equals(activeProfile) || "docker".equals(activeProfile)) { //Is it correct?
+
+		if ( env.equals("docker") || env.equals("dev") ) {
+			client = new AmazonDynamoDBClient();
+			logger.info("DynamoDbHost: {}", dynamoDbHost);
 			client.setEndpoint(dynamoDbHost);
-//		}
+		}else {
+			final AWSCredentials credentials = new BasicAWSCredentials(sqsAccessKey, sqsSecretKey);
+			final AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+			client = (AmazonDynamoDBClient) AmazonDynamoDBClient.builder().withCredentials(credentialsProvider).build();
+
+		}
 		DynamoDbClient dynamoDbClient = new DynamoDbClient();
 		dynamoDbClient.setDynamoDB(new DynamoDB(client));
 		dynamoDbClient.setPointTable(pointTable);

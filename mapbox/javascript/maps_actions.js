@@ -7,7 +7,7 @@ const map = new mapboxgl.Map({
     container: 'map',
     // Replace YOUR_STYLE_URL with your style URL.
     style: 'mapbox://styles/fbeli/clr407wxw018b01r5bt6oht1o',
-    center: [  -9.22, 30.71],
+    center: [ 38.69162, -9.2158],
     zoom: 10,
     hash: true,
 
@@ -30,7 +30,7 @@ Add an event listener that runs
 map.on('click', (event) => {
     // If the user clicked on one of your markers, get its information.
     const features = map.queryRenderedFeatures(event.point, {
-        layers: ['chicago-rio-casa'] // replace with your layer name
+        layers: ['WorldTurism'] // replace with your layer name
 
     });
 

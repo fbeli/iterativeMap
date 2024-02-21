@@ -1,7 +1,6 @@
 package com.becb.api.controller;
 
 import com.becb.api.dto.ArquivoDto;
-import com.becb.api.dto.PointResponse;
 import com.becb.api.service.ArquivoService;
 import org.json.JSONException;
 import org.json.JSONObject;

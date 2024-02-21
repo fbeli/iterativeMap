@@ -32,7 +32,7 @@ public class DynamoDbClient {
         this.dynamoDB = dynamoDB;
     }
 
-    public void savePoint(Point point) {
+    public Item savePoint(Point point) {
         logger.info("Saving Point: {} ", point);
 
         Item item = new Item()
@@ -46,23 +46,16 @@ public class DynamoDbClient {
                 .withString("user_name", point.getUser().getUserName())
                 .withString("user_email", point.getUser().getUserEmail())
                 .withString("aprovado", AprovedEnum.asFalse.getValue())
-                .withString("language", "Portuguese");
+                .withString("language", point.getLanguage().getValue());
 
         PutItemSpec itemSpec = new PutItemSpec();
         itemSpec.withItem(item);
 
-        dynamoDB.getTable(pointTable).putItem(itemSpec);
-
-        //dynamoDB.getTable(pointTable).scan().iterator().forEachRemaining(System.out::println);
-       // getPointsNotAproved().iterator();
-       //  getAuditData(point.getLatitude());
-
-
-
+        PutItemOutcome putItem = dynamoDB.getTable(pointTable).putItem(itemSpec);
+        return putItem.getItem();
     }
 
     public Item getPoint(String pointId) {
-        logger.info("Getting Value from DynamoDb ");
 
         Table table = dynamoDB.getTable(pointTable);
 
@@ -70,7 +63,7 @@ public class DynamoDbClient {
 
     }
     public long getTotalPoints() {
-        logger.info("Getting Value from DynamoDb ");
+
 
         Table table = dynamoDB.getTable("points");
 
@@ -82,38 +75,19 @@ public class DynamoDbClient {
 
         dynamoDB.getTable(pointTable).scan().iterator().forEachRemaining(System.out::println);
     }
-    public boolean updateNotApprovedPoint(String pointId, String userEmail){
-
-        logger.info("Updating aproved point {}",pointId);
-
-        UpdateItemOutcome updateItemOutcome = dynamoDB.getTable(pointTable)
-                .updateItem(
-                        new UpdateItemSpec().withPrimaryKey("pointId", pointId)
-                                .withUpdateExpression("SET aprovado = :val0, usuario_aprovador = :val1")
-                                .withValueMap(new ValueMap().with(":val1", userEmail)
-                                        .with(":val0", AprovedEnum.asForget.getValue()))
-                                .withReturnValues(ReturnValue.ALL_NEW)
-                );
-        if(!updateItemOutcome.getItem().get("aprovado").equals("forget")){
-            logger.error("Error updating point {} to aproved", pointId);
-            throw new RuntimeException("Error updating point to aproved");
-        }
-        return true;
-    }
 
     public boolean updatePointToAproved(Point point, String aprovedValue) {
-        logger.info("Updating aproved point {}",point.getPointId());
+        logger.info("Updating aproved as {} point {}",aprovedValue, point.getPointId());
 
-        UpdateItemOutcome updateItemOutcome = dynamoDB.getTable(pointTable)
-                .updateItem(
-                        new UpdateItemSpec().withPrimaryKey("pointId", point.getPointId())
-                                .withUpdateExpression("SET aprovado = :val0, usuario_aprovador = :val1 " )
-                                //+ "usuario_aprovador_id = :val2")
-                                .withValueMap(new ValueMap().with(":val1", point.getUser().getUserEmail())
-                                    .with(":val0", aprovedValue))
-                                    //.with("val2", point.getUser().getUserId()))
-                                .withReturnValues(ReturnValue.ALL_NEW)
-                );
+        UpdateItemSpec updateItemSpec =  new UpdateItemSpec().withPrimaryKey("pointId", point.getPointId())
+                .withUpdateExpression("SET aprovado = :val0, usuario_aprovador = :val1 " )
+                .withValueMap(new ValueMap()
+                        .with(":val1", point.getUser().getUserEmail())
+                        .with(":val0", aprovedValue))
+                .withReturnValues(ReturnValue.ALL_NEW);
+        Table table = dynamoDB.getTable(pointTable);
+        UpdateItemOutcome updateItemOutcome = table.updateItem(updateItemSpec);
+
         if(!updateItemOutcome.getItem().get("aprovado").equals(aprovedValue)){
             logger.error("Error updating point {} to aproved", point.getPointId());
             throw new RuntimeException("Error updating point to aproved");
@@ -129,12 +103,10 @@ public class DynamoDbClient {
         ativoMap.put(":ativo", atributeValue);
 
         return new DynamoDBQueryExpression<Point>()
-                //.withHashKeyValues(ativoOpt)
                 .withIndexName("ativo-index")
                 .withKeyConditionExpression(ativoValue)
                 .withExpressionAttributeValues(ativoMap)
                 .withConsistentRead(false);
-                //.withLimit(pPageSize);
     }
 
 
@@ -142,8 +114,6 @@ public class DynamoDbClient {
         Table table = dynamoDB.getTable(pointTable);
         Map<String, Object> expressionMap = new HashMap<>();
         expressionMap.put(":ativo", aprovado);
-        //ItemCollection<QueryOutcome> query = table.query("aprovado","false");
-       // table.scan("aprovado = :ativo",null,null,  expressionMap).iterator().forEachRemaining(System.out::println);
         ItemCollection<ScanOutcome> outcome =  table.scan("aprovado = :ativo",null,null,  expressionMap);
         return outcome;
     }

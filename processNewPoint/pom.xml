@@ -40,12 +40,7 @@
 			<artifactId>aws-java-sdk-s3</artifactId>
 			<version>${aws-version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/dynamodb
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>dynamodb</artifactId>
-			<version>2.23.12</version>
-		</dependency>-->
+
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -54,6 +49,19 @@
 		</dependency>
 
 
+
+
+		<dependency>
+			<groupId>com.github.f4b6a3</groupId>
+			<artifactId>ulid-creator</artifactId>
+			<version>5.2.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20231013</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -66,15 +74,12 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.github.f4b6a3</groupId>
-			<artifactId>ulid-creator</artifactId>
-			<version>5.2.3</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20231013</version>
-		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>
