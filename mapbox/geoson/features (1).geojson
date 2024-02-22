@@ -1,0 +1,176 @@
+{
+  "features": [
+   
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Humboldt Park",
+        "description": "A large park on Chicago's northwest side"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.70199,
+          41.905423
+        ],
+        "type": "Point"
+      },
+      "id": "1b910bc621aee342879989a4c5d09527"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Grant Park",
+        "description": "A downtown park that is the site of many of Chicago's favorite festivals and events"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.619185,
+          41.876367
+        ],
+        "type": "Point"
+      },
+      "id": "25b5cfaf2159a81a4547576665e0a303"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Lincoln Park",
+        "description": "A northside park that is home to the Lincoln Park Zoo"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.637596,
+          41.940403
+        ],
+        "type": "Point"
+      },
+      "id": "404704264be97bb4f8a21fba5046629b"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Jackson Park",
+        "description": "A lakeside park that was the site of the 1893 World's Fair"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.580389,
+          41.783185
+        ],
+        "type": "Point"
+      },
+      "id": "4e6ebcb37176c13607fd946c64e54186"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Millennium Park",
+        "description": "A downtown park known for its art installations and unique architecture"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.622554,
+          41.882534
+        ],
+        "type": "Point"
+      },
+      "id": "61eb51027c087c87a6a6df61443a98d7"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Calumet Park",
+        "description": "A park on the Illinois-Indiana border featuring a historic fieldhouse"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.530221,
+          41.715515
+        ],
+        "type": "Point"
+      },
+      "id": "6ee739dbe829722b441416628ef8f355"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Douglas Park",
+        "description": "A large park near in Chicago's North Lawndale neighborhood"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.699329,
+          41.860092
+        ],
+        "type": "Point"
+      },
+      "id": "a1b4b7192cf7b2bf2ba81db7561b92d4"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Burnham Park",
+        "description": "A lakefront park on Chicago's south side"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.603735,
+          41.829985
+        ],
+        "type": "Point"
+      },
+      "id": "aae1dad63f6d3b3e33e2d9cea6b977d2"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Primeiro Quadrado",
+        "description": "Quadrado em Chicago"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -87.625278,
+              41.883854
+            ],
+            [
+              -87.624697,
+              41.883873
+            ],
+            [
+              -87.624721,
+              41.883348
+            ],
+            [
+              -87.62529,
+              41.883339
+            ],
+            [
+              -87.625278,
+              41.883854
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "cc0ce22e8255f504712030d4b25ad085"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Columbus Park",
+        "description": "A large park in Chicago's Austin neighborhood"
+      },
+      "geometry": {
+        "coordinates": [
+          -87.769775,
+          41.873683
+        ],
+        "type": "Point"
+      },
+      "id": "e46b6f940772262e239ad0ecb242cce6"
+    }
+  ],
+  "type": "FeatureCollection"
+}

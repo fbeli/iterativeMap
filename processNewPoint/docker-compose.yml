@@ -1,0 +1,38 @@
+version: '2.2'
+
+services:
+  process_new_point:
+    container_name: process_new_point
+    image: fbeli/becb-process-new-point:0.0.5
+    environment:
+      - APP_ENDPOINT=www.guidemapper.com
+      - AWS_ACCESS_KEY_ID=AKIATCKAQNCUAHAN6S5M
+      - AWS_REGION=eu-central-1
+      - AWS_SECRET_ACCESS_KEY=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
+      - BECB_SQS_ACCESS_KEY=AKIATCKAQNCUAHAN6S5M
+      - BECB_SQS_SECRET_KEY=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
+      - BECB_STORAGE_S3_ACCESS_KEY=AKIATCKAQNCUAHAN6S5M
+      - BECB_STORAGE_S3_BUCKET=guidemapper-points-dev
+      - BECB_STORAGE_S3_DIRECTORY_FILE=file
+      - BECB_STORAGE_S3_REGION=eu-central-1
+      - BECB_STORAGE_S3_SECRET_KEY=+3lIbQzurFbYwep2Xe8RDKND/WSUkT3a15/ctzgX
+      - ENVIRONMENT=prod
+      - QUEUE_HOST=https://sqs.eu-central-1.amazonaws.com/211125561512/
+      - SERVICE_ENDPOINT=https://webservice.guidemapper.com:8081/
+      - AWS_DEFAULT_REGION=eu-central-1
+      - DYNAMODB_HOST=http://dynamodb:8000
+      -
+      -
+      -
+      -
+      -
+      -
+
+      -
+      -
+
+
+
+
+
+    command: ["java", "-jar", "app.jar"]

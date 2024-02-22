@@ -1,0 +1,22 @@
+version: '2.2'
+
+services:
+
+  point_service:
+    container_name: point_service
+    image: fbeli/becb-point-service:0.0.19
+    ports:
+      - "8081:8081"
+    environment:
+      # Declare which aws services will be used in localstack
+      # These variables are needed for localstack
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+      - LAMBDA_EXECUTOR=local
+      - ENVIRONMENT=docker
+      - AWS_REGION=us-east-1
+      - AUTH_SERVER_URL=http://auth:8082
+      - FILE_ENDPOINT=https://guidemapper-points-dev.s3.eu-central-1.amazonaws.com/file/
+      - QUEUE_HOST=http://sqs:9324/queue/
+

@@ -1,0 +1,1 @@
+{"timestamp":"2024-02-10T18:16:36.678+0000","status":405,"error":"Method Not Allowed","message":"Request method 'GET' not supported","path":"/cadastro"}
