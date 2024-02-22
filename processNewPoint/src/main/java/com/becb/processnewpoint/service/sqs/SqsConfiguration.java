@@ -1,7 +1,9 @@
 package com.becb.processnewpoint.service.sqs;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
@@ -33,12 +35,35 @@ public class SqsConfiguration {
 
     @Value("${sqs.queue.url}")
     String endpoint;
+
+    @Value("${becb.sqs.access-key}")
+    String sqsAccessKey;
+
+    @Value("${becb.sqs.secret-key}")
+    String sqsSecretKey;
+
+    @Value("${becb.sqs.region}")
+    String region;
+
+    @Value("${env}")
+    String env;
+
     @Bean
     public AmazonSQSAsync amazonSQS() {
-        return AmazonSQSAsyncClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(new AnonymousAWSCredentials()))
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, "elasticmq"))
-                .build();
+        if (env.equals("docker") || env.equals("dev")) {
+            return AmazonSQSAsyncClientBuilder.standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(new AnonymousAWSCredentials()))
+                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, "elasticmq"))
+                    .build();
+        } else {
+            final AWSCredentials credentials = new BasicAWSCredentials(sqsAccessKey, sqsSecretKey);
+            final AWSStaticCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+            return AmazonSQSAsyncClientBuilder.standard()
+                    .withCredentials(credentialsProvider)
+                    //.withRegion(region)
+                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region))
+                    .build();
+        }
     }
 
     @Bean
@@ -50,11 +75,6 @@ public class SqsConfiguration {
         messageConverter.setSerializedPayloadClass(String.class);
         messageConverter.setObjectMapper(objectMapper);
 
-        /*
-         * https://cloud.spring.io/spring-cloud-aws/spring-cloud-aws.html
-         * Because AWS messages does not contain the mime-type header, the Jackson message converter has to be configured
-         * with the strictContentTypeMatch property false to also parse message without the proper mime type.
-         */
         messageConverter.setStrictContentTypeMatch(false);
 
         List<MessageConverter> messageConverterList = new ArrayList<>();

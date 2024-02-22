@@ -30,8 +30,9 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter{
                 .and()*/
                 .csrf().disable()// para colocar a auth no método, ver /hello
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.GET, "/aprovar/*")
-                .permitAll().and()
+                    .antMatchers(HttpMethod.GET, "/aprovar/*").permitAll()
+                    .antMatchers(HttpMethod.GET, "/bloquear/*").permitAll()
+                .and()
                 .cors().and()
                 .oauth2ResourceServer()
                     .jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());

@@ -9,6 +9,7 @@ import com.becb.processnewpoint.domain.User;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
 import com.github.f4b6a3.ulid.UlidCreator;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,34 +33,43 @@ public class PointService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public Item savePoint(String message){
+    public Item savePoint(String message) {
         Point point = new Point();
         JSONObject jsonObject = new JSONObject(message);
 
-         if(jsonObject.isNull("pointId")){
-             point.setPointId(UlidCreator.getUlid().toString());
-         }else{
-             point.setPointId(jsonObject.getString("pointId"));
-         }
-        point.setTitle( jsonObject.getString("title"));
-        point.setDescription(jsonObject.getString("description"));
-        point.setLongitude(jsonObject.getString("longitude"));
-        point.setLatitude(jsonObject.getString("latitude"));
-        point.setUser(new User());
-        point.getUser().setUserId(jsonObject.getString("user_id"));
-        point.getUser().setUserName(jsonObject.getString("user_name"));
-        point.getUser().setUserEmail(jsonObject.getString("user_email"));
+        if (!jsonObject.has("pointId") || jsonObject.isNull("pointId") || jsonObject.getString("pointId").isBlank() ) {
+            point.setPointId(UlidCreator.getUlid().toString());
+        } else {
+            point.setPointId(jsonObject.getString("pointId"));
+        }
+        try {
+            point.setTitle(jsonObject.getString("title"));
+            point.setDescription(jsonObject.getString("description"));
+            point.setLongitude(jsonObject.getString("longitude"));
+            point.setLatitude(jsonObject.getString("latitude"));
+            point.setUser(new User());
+            point.getUser().setUserId(jsonObject.getString("user_id"));
+            point.getUser().setUserName(jsonObject.getString("user_name"));
+            point.getUser().setUserEmail(jsonObject.getString("user_email"));
+        } catch (JSONException jsonException) {
+            logger.error("Essential field not present: \n{}", jsonException.getMessage());
+        }
+        if (jsonObject.has("audio") && !jsonObject.getString("audio").isEmpty() ) {
+            point.setAudio(jsonObject.getString("audio"));
+        }
 
         return savePoint(point);
     }
-    public Item savePoint(Point point){
+
+    public Item savePoint(Point point) {
         return dynamoDbClient.savePoint(point);
     }
-    public void aprovePoint(String message, String aprovedValue){
-        dynamoDbClient.updatePointToAproved(getUpdatePointValue(message), aprovedValue) ;
+
+    public void aprovePoint(String message, String aprovedValue) {
+        dynamoDbClient.updatePointToAproved(getUpdatePointValue(message), aprovedValue);
     }
 
-    private Point getUpdatePointValue(String message){
+    private Point getUpdatePointValue(String message) {
         Point point = new Point();
         JSONObject jsonObject = new JSONObject(message);
         point.setPointId(jsonObject.getString("pointId"));
@@ -70,7 +80,7 @@ public class PointService {
     }
 
 
-    public void gerarArquivoParaMapa(String message){
+    public void gerarArquivoParaMapa(String message) {
 
         Point point = new Point();
         JSONObject jsonObject = new JSONObject(message);
@@ -79,7 +89,7 @@ public class PointService {
         point.getUser().setUserName(jsonObject.getString("user_name"));
         point.getUser().setUserEmail(jsonObject.getString("user_email"));
 
-        ArrayList<Point>  points =
+        ArrayList<Point> points =
                 convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
 
         try {
@@ -92,15 +102,15 @@ public class PointService {
 
     }
 
-    public void gerarArquivoParaAprovacao(String message){
+    public void gerarArquivoParaAprovacao(String message) {
 
         JSONObject jsonObject = new JSONObject(message);
 
 
-        ArrayList<Point>  points =
+        ArrayList<Point> points =
                 convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asFalse.getValue()));
 
-        logger.info("File :  {} is been created with {} points",jsonObject.getString("file_name"),points.size());
+        logger.info("File :  {} is been created with {} points", jsonObject.getString("file_name"), points.size());
         try {
             fileService.createNotApprovedFile(points, jsonObject.getString("file_name"));
         } catch (Exception e) {
@@ -110,7 +120,7 @@ public class PointService {
         }
     }
 
-    public ArrayList<Point> convertItemsToPoints(ItemCollection<ScanOutcome> ic)  {
+    public ArrayList<Point> convertItemsToPoints(ItemCollection<ScanOutcome> ic) {
         ArrayList<Point> points = new ArrayList<Point>();
 
         ic.iterator().forEachRemaining(item -> {
@@ -120,8 +130,8 @@ public class PointService {
         return points;
     }
 
-    public Point convertItemToPoint(Item item){
-        Point   point = new Point();
+    public Point convertItemToPoint(Item item) {
+        Point point = new Point();
         point.setPointId(item.getString("pointId"));
         point.setTitle(item.getString("point_title"));
         point.setDescription(item.getString("point_description"));
@@ -133,9 +143,11 @@ public class PointService {
         point.getUser().setUserName(item.getString("user_name"));
         point.getUser().setUserEmail(item.getString("user_email"));
         point.setAproved(item.getString("aprovado"));
-        if(item.getString("language") != null)
-            point.setLanguage(Enum.valueOf(LanguageEnum.class,item.getString("language")));
+        point.setAudio(item.getString("audio"));
+        if (item.getString("language") != null)
+            point.setLanguage(Enum.valueOf(LanguageEnum.class, item.getString("language")));
         return point;
+
 
     }
 }

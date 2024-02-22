@@ -104,6 +104,12 @@ function logout(){
 
 }
 function create_new_point(){
+
+    // teste se ainda está gravando
+    if(document.getElementById("btn_gravar").textContent === "Stop"){
+        gravar();
+    }
+
     let data = {
         longitude: document.getElementById("cadastro_lng").value,
         latitude: document.getElementById("cadastro_lat").value,
@@ -122,8 +128,8 @@ function create_new_point(){
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            if(data.status == "200") {
+
+            if(data.status === "200") {
                 fechar_divs();
                 document.getElementById("info_info").innerHTML = "This point will be reviwed and add after it. It" +
                     " can take some minutes, hours or day";

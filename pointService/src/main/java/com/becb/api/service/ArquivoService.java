@@ -42,6 +42,9 @@ public class ArquivoService {
     public String getFileName(String name){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
 
+        if(name.equals("mapFile"))
+            return name+"_"+ formatter.format(LocalDateTime.now()) +".json";
+
         return name+"_"+ formatter.format(LocalDateTime.now()) +".html";
     }
 }

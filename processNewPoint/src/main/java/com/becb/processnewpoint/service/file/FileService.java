@@ -17,6 +17,8 @@ import java.util.List;
 @Service
 public class FileService {
 
+
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${file.directory}")
@@ -132,7 +134,7 @@ public class FileService {
                 "\">aprove" +
                 "</a></td><td><a href='#' onclick=\"aprovarPoint('"+ serviceEndpoint +"bloquear/"+point.getPointId()+
                 "/"+point.getUser().getUserEmail()+"')" +
-                "\">block</a></td><td>"+point.getPointId()+"</td><td>"+point.getTitle()+"</td><td>"+point.getDescription()+"</td><td>"+point.getLatitude()+"</td><td>"+point.getLongitude()+"</td><td>"+point.getAudio()+"</td><td>"+point.getUser().getUserName()+"</td><td>"+point.getUser().getUserEmail()+"</td></tr>";
+                "\">block</a></td><td>"+point.getPointId()+"</td><td>"+point.getTitle()+"</td><td>"+point.getDescription()+"</td><td>"+point.getLatitude()+"</td><td>"+point.getLongitude()+"</td><td><audio controls><source src=\""+appEndpoint+"/"+point.getAudio()+"\"type=\"audio/mpeg\"></audio></td><td>"+point.getUser().getUserName()+"</td><td>"+point.getUser().getUserEmail()+"</td></tr>";
 
     }
     public String bottonHtml(){
@@ -156,6 +158,7 @@ public class FileService {
                 "      \"shortDescription\": \""+point.getShortDescription()+"\",\n" +
                 "      \"description\": \""+point.getDescription()+"\",\n" +
                 "      \"pointId\": \""+point.getPointId()+"\"\n" +
+                "      \"audio\": \""+appEndpoint+point.getAudio()+"\"\n" +
                 "    },\n" +
                 "    \"geometry\": {\n" +
                 "      \"type\": \"Point\",\n" +

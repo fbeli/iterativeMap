@@ -3,6 +3,7 @@ package com.becb.api.controller;
 import com.becb.api.dto.PointDto;
 import com.becb.api.dto.PointResponse;
 import com.becb.api.service.ArquivoService;
+import com.becb.api.service.file.FileService;
 import com.becb.api.service.sqs.SqsService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.github.f4b6a3.ulid.UlidCreator;
@@ -53,7 +54,8 @@ public class PointController {
     @Autowired
     ArquivoService arquivoService;
 
-
+    @Autowired
+    FileService fileService;
 
     /**
      * Cadastrar um ponto
@@ -62,10 +64,18 @@ public class PointController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @RequestMapping(value = "/point", method = RequestMethod.POST)
-    public PointResponse cadastro(@RequestBody PointDto pointDto, HttpServletRequest request) throws UnsupportedEncodingException {
+    public PointResponse cadastro(@RequestBody PointDto pointDto, HttpServletRequest request) throws UnsupportedEncodingException, InterruptedException {
 
         if(pointDto.getPointId() == null)
             pointDto.setPointId(UlidCreator.getUlid().toString());
+
+        if(pointDto.getAudio() != null && !pointDto.getAudio().isEmpty()) {
+
+            String filePath = fileService.saveAudio(pointDto.getAudio().replace("data:audio/ogg code=opus;base64,",""),
+                    pointDto.getPointId());
+
+            pointDto.setAudio(filePath);
+        }
         String formatedPoint = configPoint(pointDto,  request);
 
 

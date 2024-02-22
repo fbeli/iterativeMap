@@ -23,6 +23,7 @@
         <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
 
         <link rel="stylesheet" type="text/css" href="css/util.css">
+        <link rel="stylesheet" type="text/css" href="css/button.css">
         <link rel="stylesheet" type="text/css" href="css/main.css">
         <link rel="stylesheet" type="text/css" href="css/inicio.css">
 
@@ -41,7 +42,7 @@
                         </ul>
                    </li>
                 </ul>
-              </div>
+              </div>s
 
                 <div id='starting' class="modal_body"  style="display: block">
 
@@ -212,6 +213,11 @@
                         <div class="wrap-input100 validate-input" >
                             <input class="input100" type="text" id="cadastro_description">
                             <span class="focus-input100" data-placeholder="Description"></span>
+
+                        </div>
+                        <div>
+                            <button type="button" class="button-53"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
+                            <input style="display:none" type="text" id="cadastro_audio">
                         </div>
 
                         <div class="container-login100-form-btn">
@@ -267,6 +273,7 @@
             <script src="/javascript/posicao.js">   </script>
             <script src="/javascript/maps_actions.js">   </script>
             <script src="/javascript/divs_actions.js">   </script>
+            <script src="/javascript/save_audio.js">   </script>
 
 </body>
 

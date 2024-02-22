@@ -47,10 +47,15 @@ map.on('click', (event) => {
     } else {
         const feature = features[0];
 
-        const popup = new mapboxgl.Popup({ offset: [0, -15] })
+        let insideHtml = `<h3>${feature.properties.title}</h3>`;
+        if(feature.properties.audio !== undefined){
+            insideHtml += `<div ><audio class="audio"  controls><source src="${feature.properties.audio}" type="audio/mpeg"/>Your browser does not support the audio element.</audio></div>`;
+        }
+        insideHtml += `<p>${feature.properties.description}</p><br/>`;
+        const popup = new mapboxgl.Popup({offset: [0, -15]})
             .setLngLat(feature.geometry.coordinates)
             .setHTML(
-                `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
+                insideHtml
             )
             .addTo(map);
     }

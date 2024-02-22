@@ -61,6 +61,19 @@ class PointServiceTest {
     }
 
     @Test
+    void savePointAudioEmpty() {
+        when(dynamodbClient.savePoint(any())).thenReturn(new Item());
+        Assert.assertNotNull(pointService.savePoint(getMessageFromStackAudioEmpty()));
+
+    }
+
+    @Test
+    void savePointWithAudio() {
+        when(dynamodbClient.savePoint(any())).thenReturn(new Item());
+        Assert.assertNotNull(pointService.savePoint(getMessageFromStackWithAudio()));
+    }
+
+    @Test
     void savePointWrongJson() {
         when(dynamodbClient.savePoint(any())).thenReturn(new Item());
         assertThrows(Exception.class,
@@ -106,5 +119,38 @@ class PointServiceTest {
         "\"user_id\": \"335254e4-73e6-4c9d-a271-904cb3bf320a\","+
         "\"user_name\": \"Frederico\""+
         "}" ;
+    }
+
+    private String getMessageFromStackWithAudio(){
+
+        return "{"+
+                "\"description\": \"Marquês de Pombal era muito bom\","+
+                "\"latitude\": \"Latitude: 38.72524959265044\","+
+                "\"lngLat\": null,"+
+                "\"longitude\": \"Longitude: -9.15007687024712\","+
+                "\"pointId\": XXXXXX,"+
+                "\"s3Voice\": null,"+
+                "\"title\": \"Marqu\u00E9s de Pombal\","+
+                "\"user_email\": \"frederico@gmail.com\","+
+                "\"user_id\": \"335254e4-73e6-4c9d-a271-904cb3bf320a\","+
+                "\"user_name\": \"Frederico\","+
+                "\"audio\": \"AUDIOHER\""+
+                "}" ;
+    }
+    private String getMessageFromStackAudioEmpty(){
+
+        return "{"+
+                "\"description\": \"Marquês de Pombal era muito bom\","+
+                "\"latitude\": \"Latitude: 38.72524959265044\","+
+                "\"lngLat\": null,"+
+                "\"longitude\": \"Longitude: -9.15007687024712\","+
+                "\"pointId\": null,"+
+                "\"s3Voice\": null,"+
+                "\"title\": \"Marqus de Pombal\","+
+                "\"user_email\": \"frederico@gmail.com\","+
+                "\"user_id\": \"335254e4-73e6-4c9d-a271-904cb3bf320a\","+
+                "\"user_name\": \"Frederico\","+
+                "\"audio\": \"\""+
+                "}" ;
     }
 }

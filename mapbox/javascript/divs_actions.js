@@ -53,6 +53,7 @@ function fechar_divs(){
     document.getElementById("create_points_warning").style.display = 'none';
     document.getElementById("login_opt_ul").style.display = 'none';
     document.getElementById("info_div").style.display = 'none';
+    document.getElementById("cadastro_audio").value = null;
 
 }
 function cadastro(){
