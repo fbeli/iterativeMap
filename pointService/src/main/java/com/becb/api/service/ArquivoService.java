@@ -43,7 +43,7 @@ public class ArquivoService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
 
         if(name.equals("mapFile"))
-            return name+"_"+ formatter.format(LocalDateTime.now()) +".json";
+            return name+"_.geojson";
 
         return name+"_"+ formatter.format(LocalDateTime.now()) +".html";
     }
