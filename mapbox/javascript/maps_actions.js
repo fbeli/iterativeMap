@@ -13,6 +13,27 @@ const map = new mapboxgl.Map({
 
 
 });
+
+map.on('load', () => {
+    map.addSource('earthquakes', {
+        type: 'geojson',
+        // Use a URL for the value for the data property.
+        data: 'https://www.guidemapper.com/file/mapFile_.geojson'
+    });
+
+    map.addLayer({
+        'id': 'WorldTurism2',
+        'type': 'symbol',
+        'layout': {
+            'icon-image': 'marker-editor',
+            'icon-size': 1
+        },
+        'source': 'earthquakes'
+
+    });
+
+});
+
 map.addControl(new mapboxgl.GeolocateControl({
     positionOptions: {
         enableHighAccuracy: true
@@ -30,7 +51,7 @@ Add an event listener that runs
 map.on('click', (event) => {
     // If the user clicked on one of your markers, get its information.
     const features = map.queryRenderedFeatures(event.point, {
-        layers: ['WorldTurism'] // replace with your layer name
+        layers: ['WorldTurism', 'WorldTurism2' ] // replace with your layer name
 
     });
 
@@ -48,7 +69,7 @@ map.on('click', (event) => {
         const feature = features[0];
 
         let insideHtml = `<h3>${feature.properties.title}</h3>`;
-        if(feature.properties.audio !== undefined){
+        if(feature.properties.audio !== undefined && feature.properties.audio.length > 2){
             insideHtml += `<div ><audio class="audio"  controls><source src="${feature.properties.audio}" type="audio/mpeg"/>Your browser does not support the audio element.</audio></div>`;
         }
         insideHtml += `<p>${feature.properties.description}</p><br/>`;

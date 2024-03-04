@@ -2,7 +2,8 @@ function welcome_div_show(){
     show_div("welcome_div_id");
 }
 
-function error_div_event(used_div){
+function error_div_event(used_div, erro_message){
+    document.getElementById("erro_alert_text").innerHTML = erro_message;
     if(document.getElementById("erro_alert_div").style.display == 'block'){
         document.getElementById("erro_alert_div").style.display = 'none';
         if(previous_div != null){
@@ -57,7 +58,6 @@ function fechar_divs(){
 
 }
 function cadastro(){
-
     show_div("cadastro_div");
 }
 function login(){
@@ -70,5 +70,4 @@ function sign_up(){
 function show_div(el){
     fechar_divs();
     document.getElementById(el).style.display = 'block';
-
 }

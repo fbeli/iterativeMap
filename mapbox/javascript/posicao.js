@@ -6,12 +6,9 @@ function fly_back(){
    latitude = getLatitude();
    longitude = getLongitude();
 
-
     if(timeoutLocation()){
       map.flyTo({center: [longitude, latitude], zoom: 14});
   }
-
-
 }
 
 function fly_back_map(){

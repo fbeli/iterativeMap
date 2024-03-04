@@ -30,15 +30,26 @@ li{
     line-height: 1.2;
 }
 select{
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    font-size: 15px;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    font-family: Poppins-Regular;
+    font-size: 12px;
     color: #555555;
+    padding: 0.675em 6em 0.675em 1em;
+    background-color: #fff;
+    border: 1px solid #caced1;
+    border-radius: 0.25rem;
+    cursor: pointer;
 }
 .welcome_div{
     font-size: 38px;
     border: 0;
     width: 100%;
 
+}
+.div_btn{
+    margin: 15px;
 }
 #map {
     position: absolute;
@@ -74,16 +85,16 @@ select{
     flex-direction: column;
 }
 
-#login_div {
-
+.to_front {
 
     padding: 6px 12px;
     font-family: monospace;
     z-index: 1;
     position: relative;
-    top: 75px;
+    top: 40px;
     left: 0;
 }
+
 .form-div{
 
     color:  rgb(35 55 75 / 90%);;

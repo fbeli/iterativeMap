@@ -25,12 +25,12 @@
 
 
 	</style>
-	<body>
+	<body onload="init()">
 	<section class="ftco-section">
 		<div class="container" id="login_div">
 			<div class="rowL justify-content-center">
 				<div class="col-md-6 text-center mb-5">
-					<h2 class="heading-section">Login #08</h2>
+					<h2 class="heading-section">Login</h2>
 				</div>
 			</div>
 			<div class="rowL justify-content-center">
@@ -66,9 +66,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="container" id="after_login_div" style="display: block;">
+		<div class="container" id="after_login_div" style="display: none ;">
 
-				<div class="row" id="div_message">
+				<div class="row" id="div_message" style="display: block">
 
 				</div>
 				<div class=" row  position_bt" style="position: relative">
@@ -77,18 +77,7 @@
 				<div class=" row  position_bt"  style="position: relative">
 	            	<a href="#" onclick="gerar_arquivo('geo')" class="btn btn-primary rounded submit p-3 px-5">Gerar Arquivo de criação de pontos</a>
 	            </div>
-				<div class=" row  position_bt"  style="position: relative" style="display: block" id="div_bt_gravar">
-					<button type="button"  onclick="gravar()" id="btn_gravar" >Gravar</button>
-				</div>
 
-				<div class=" row  position_bt"  style="position: relative" style="display: block" id="play">
-					<audio controls>
-
-						<source src="http://www.guidemapper.com/audio/01HQ6HP2ETPVA6MDRW7BE0M922.mp3" type="audio/mpeg">
-						Your browser does not support the audio element.
-					</audio>
-
-				</div>
 
 		</div>
 

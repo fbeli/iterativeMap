@@ -5,7 +5,7 @@
 
 
     <title>Points on a map</title>
-    <script src="/javascript/const.js"></script>
+    <script src="./javascript/const.js"></script>
     <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
@@ -48,32 +48,27 @@
 
                 </div>
               
-                <div class="wrap-login100" id="login_div" style="display: none;">
+                <div class="wrap-login100 to_front" id="login_div" style="display: none;">
                     <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Welcome
                         </span>
                 
                         <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                            <input class="input100" type="text" id="login_email">
-                            <span class="focus-input100" data-placeholder="Email"></span>
+                            <input class="input100" type="text" id="login_email" value="Email" onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Email'" >
                         </div>
     
                         <div class="wrap-input100 validate-input" data-validate="Enter password">
-                            <span class="btn-show-pass">
+                            <span class="btn-show-pass" onclick="tipo_pass = document.getElementById('login_password'); if(tipo_pass.type=='text') {tipo_pass.type='login_password'}else tipo_pass.type='text' ">
                                 <i class="zmdi zmdi-eye"></i>
                             </span>
-                            <input class="input100" type="password" id="login_password">
-                            <span class="focus-input100" data-placeholder="Password"></span>
+                            <label for="login_password">Password (min 8 digits)</label>
+                            <input class="input100" type="password" id="login_password" minlength="8" >
                         </div>
-    
-                        <div class="container-login100-form-btn">
-                            <div class="wrap-login100-form-btn">
-                                <div class="login100-form-bgbtn"></div>
-                                <a class="login100-form-btn"  id="btn-login-get-token" onclick="execute_login()">
-                                    Login
-                                </a>
-                            </div>
+
+                        <div class="div_btn">
+                            <button type="button" class="button-53"  onclick="execute_login()" id="btn-login-get-token" >Login</button>
                         </div>
     
                         <div class="text-center p-t-25">
@@ -88,39 +83,51 @@
                         </div>
                     </form>
                 </div>
-                <div class="wrap-login100" id="sign_up_div" style="display: none;">
+                <div class="wrap-login100 to_front" id="sign_up_div" style="display: none;">
                     <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Welcome
                         </span>
                         <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text" id="sign_up_name">
-                            <span class="focus-input100" data-placeholder="Name"></span>
+                            <input class="input100" type="text" id="sign_up_name" minlength="8" value="Name" onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Name'" >
                         </div>
                         <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                            <input class="input100" type="text" id="sign_up_email">
-                            <span class="focus-input100" data-placeholder="Email"></span>
+                            <input class="input100" type="text" id="sign_up_email" value="Email" onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Email'" >
                         </div>
     
                         <div class="wrap-input100 validate-input" data-validate="Enter password">
-                            <span class="btn-show-pass">
+                            <span class="btn-show-pass" onclick="tipo_pass = document.getElementById('sign_up_password'); if(tipo_pass.type=='text') {tipo_pass.type='password'}else tipo_pass.type='text' ">
                                 <i class="zmdi zmdi-eye"></i>
                             </span>
-                            <input class="input100" type="password" id="sign_up_password">
-                            <span class="focus-input100" data-placeholder="Password"></span>
+                            <label for="sign_up_password">Password (min 8 digits)</label>
+                            <input class="input100" type="password" id="sign_up_password" minlength="8"  >
                         </div>
 
                         <div class="wrap-input100 validate-input">
-                            <input class="input100" type="text" id="sign_up_phone">
-                            <span class="focus-input100" data-placeholder="Phone"></span>
+                            <input class="input100" type="text" id="sign_up_phone" value="Phone (+xxx xxxxxxxxx)" onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Phone'" >
+                        </div>
+                        <div class="wrap-input100 validate-input">
+                            <input class="input100" type="text" id="sign_up_description" value="Descript Yourself" onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Descript Yourself'" >
+                        </div>
+
+                        <div class="wrap-input100 validate-input">
+                            <input class="input100" type="text" id="sign_up_instagram" value="Instagram" onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Instagram'" >
+                        </div>
+                        <div class="wrap-input100 validate-input">
+                            <input class="input100" type="date" id="sign_up_born_date" minlength="6">
                         </div>
 
                         <div class="wrap-input100 validate-input" data-validate="Country">
-                            <label  for="sign_up_country">Country:</label>
+
                             <select name="country" id="sign_up_country">
                             <option value="" disabled selected>Select a country...</option>
                                 <script>
-                                    var countries = [
+                                    var countries = ['Country',
                                         'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia',
                                         'Czech Republic', 'Denmark', 'Egypt', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'India', 'Indonesia',
                                         'Ireland', 'Israel', 'Italy', 'Japan', 'Malaysia', 'Mexico', 'Morocco', 'Netherlands', 'New Zealand', 'Norway',
@@ -138,15 +145,18 @@
                                 </script>
                              </select>
                         </div>
-                        <div class="container-login100-form-btn">
-                            <div class="wrap-login100-form-btn">
-                                <div class="login100-form-bgbtn"></div>
-                                <a class="login100-form-btn" onclick="execute_sign_in()">
-                                    Sign Up
-                                </a>
-                            </div>
+                        <div class="wrap-input100 validate-input">
+                            <div><input type="checkbox"  id="sign_up_guide" >
+                            <label for="sign_up_guide" >I'm a guide</label></div>
+
+                            <input  type="checkbox"  id="sign_up_share">
+                            <label for="sign_up_guide" >I accept share my data with users</label>
                         </div>
 
+
+                        <div class="div_btn">
+                            <button type="button" class="button-53"  onclick="execute_sign_in()"  >Sign Up</button>
+                        </div>
 
                         <div class="text-center p-t-25">
                             <a class="txt2" onclick="fechar_divs()" href="#">
@@ -156,12 +166,12 @@
                     </form>
                 </div>
               <!-- Erro Modal-->
-                <div class="wrap-login100" id="erro_alert_div" style="display: none;">
+                <div class="wrap-login100 to_front" id="erro_alert_div" style="display: none;">
                     <div class="alert alert-danger" role="alert">
                         <h4 class="alert-heading">Error!</h4>
                         <p id="erro_alert_text" class="p.erro"></p><br/>
                         <hr>
-                        <p class="mb-0">Please check date and try again.</p>
+                        <p class="mb-0">Please check data and try again.</p>
                     </div>
                     <div class="text-center p-t-25">
                         <a class="txt2" onclick="close_error_div()" href="#">
@@ -169,7 +179,7 @@
                         </a>
                     </div>
                 </div>
-                <div class=" wrap-login100" id="welcome_div_id"  style="display: none;">
+                <div class=" wrap-login100 to_front" id="welcome_div_id"  style="display: none;">
                     <div class=" welcome_div validate-input" >
                         <span class="welcome_div login100-form-title p-b-26">
                             Welcome,
@@ -192,42 +202,51 @@
                         </a>
                     </div>
                 </div>
-                <div class="wrap-login100" id="cadastro_div" style="display: none;">
+                <div class="wrap-login100 to_front" id="cadastro_div" style="display: none;">
                     <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Novo Cadastro
                         </span>
                         <div class="wrap-input100 validate-input" >
                             <input class="input100" type="text"  id="cadastro_lng" readonly=“true”>
-                            <span class="focus-input100" ></span>
                         </div>
                         <div class="wrap-input100 validate-input" >
                             <input class="input100" type="text"  id="cadastro_lat" readonly=“true”>
-                            <span class="focus-input100" ></span>
                         </div>
                         <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text" id="cadastro_titulo">
-                            <span class="focus-input100" data-placeholder="Title"></span>
+                            <input class="input100" type="text" id="cadastro_titulo" value='Title' onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Title'" >
                         </div>
-    
-                        <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text" id="cadastro_description">
-                            <span class="focus-input100" data-placeholder="Description"></span>
 
+                        <div class="wrap-input100 validate-input" >
+                            <input class="input100" type="text" id="cadastro_description" value='Description' onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Description'" >
                         </div>
-                        <div>
+
+                        <div class="wrap-input100 validate-input" data-validate="Country">
+                            <select name="cadastro_language" id="cadastro_language">
+                                <option class="fa-optin-monster" value="" disabled selected>Select a Language...</option>
+                                <script>
+                                    var language = ['Language',
+                                        'English', 'Português', 'Español', 'Other'];
+                                    let selectLanguageOptions = "";
+                                    for (let i = 0; i < language.length; i++) {
+                                        selectLanguageOptions += `<option value="${language[i]}">${language[i]}</option>`;
+                                    }
+
+                                    const selectLanguageElement = document.getElementById("cadastro_language");
+                                    selectLanguageElement.innerHTML = selectLanguageOptions;
+                                </script>
+                            </select>
+                        </div>
+                        <div class="div_btn">
                             <button type="button" class="button-53"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
                             <input style="display:none" type="text" id="cadastro_audio">
                         </div>
-
-                        <div class="container-login100-form-btn">
-                            <div class="wrap-login100-form-btn">
-                                <div class="login100-form-bgbtn"></div>
-                                <button class="login100-form-btn" onclick="create_new_point()">
-                                    Create Point
-                                </button>
-                            </div>
+                        <div class="div_btn">
+                            <button type="button" class="button-53"  onclick="create_new_point()" id="btn_criar_ponto" >Create Point</button>
                         </div>
+
                         <div class="text-center p-t-25">
                             <a class="txt2" onclick="fechar_divs()" href="#">
                                 Close
@@ -236,7 +255,7 @@
                     </form>
                 </div>
 
-                <div class="create_point wrap-login100" id="create_points_warning" style="display: none;">
+                <div class="create_point wrap-login100 to_front" id="create_points_warning" style="display: none;">
                     <div class="alert alert-danger" role="alert">
                         <p  class="title alert-heading">Now You Can Create New Point</p>
                         <p  class="p.erro">From now you are a Guide!</p><br/>
@@ -252,7 +271,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="create_point wrap-login100" id="info_div" style="display: none;">
+                <div class="create_point wrap-login100 to_front" id="info_div" style="display: none;">
                     <div class="alert alert-danger" role="alert">
                         <p  class="title alert-heading" id="info_title">New point added</p>
                         <p  class="p.erro" id="info_highlight"></p><br/>

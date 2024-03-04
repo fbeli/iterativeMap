@@ -6,6 +6,11 @@ let create_point = false;
 let zoom_to_create_point = 16.5;
 let zoom = 10;
 
+function init() {
+    if(accessToken !== null){
+        afterLogin();
+    }
+}
 function afterLogin(){
     document.getElementById("after_login_div").style.display = 'block';
 }
@@ -13,7 +18,7 @@ function afterLogin(){
 
 
 function fechar_divs(){
-    document.getElementById("login_div").style.display = 'none';   
+    document.getElementById("login_div").style.display = 'none';
 }
 
 
