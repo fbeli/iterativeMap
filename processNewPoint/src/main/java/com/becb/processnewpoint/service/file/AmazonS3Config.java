@@ -1,7 +1,7 @@
 package com.becb.processnewpoint.service.file;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.becb.processnewpoint.storage.StorageProperties;
@@ -15,9 +15,12 @@ public class AmazonS3Config {
     @Autowired
     private StorageProperties storageProperties;
 
+    @Autowired
+    private AWSCredentials credentials;
+
     @Bean
     public AmazonS3 amazonS3() {
-        var credentials = new BasicAWSCredentials(storageProperties.getAccessKey(), storageProperties.getSecretKey());
+        //var credentials = new BasicAWSCredentials(storageProperties.getAccessKey(), storageProperties.getSecretKey());
         return AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(storageProperties.getRegion())

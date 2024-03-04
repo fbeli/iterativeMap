@@ -2,7 +2,6 @@ package com.becb.processnewpoint.service.file;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.becb.processnewpoint.storage.StorageProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 @Service
 public class AmazonS3Service {
@@ -19,14 +20,14 @@ public class AmazonS3Service {
     @Autowired
     private AmazonS3 amazonS3;
 
+    @Autowired
+    private CloudFrontService cloudFrontService;
+
     @Value("${becb.storage.s3.bucket}")
     private String bucket;
 
     @Value("${becb.storage.s3.directory-files}")
     private String directoryFile;
-
-    @Autowired
-    private StorageProperties storageProperties;
 
     public void saveAdminFile(String fileName, InputStream file) {
         saveFile(bucket, directoryFile, file, fileName);
@@ -35,7 +36,8 @@ public class AmazonS3Service {
     /**
      * @param bucket
      * @param directory path do arquivo no s3
-     * @param file
+     * @param inputStream
+     * @param fileName
      */
     public void saveFile(String bucket, String directory, InputStream inputStream, String fileName) {
 
@@ -47,6 +49,7 @@ public class AmazonS3Service {
             var objectMetadata = new ObjectMetadata();
             if (fileName.contains("map")){
                 objectMetadata.setContentType("application/json");
+                cloudFrontService.invalidateCache();
             } else {
                 objectMetadata.setContentType("text/html");
             }
@@ -55,7 +58,11 @@ public class AmazonS3Service {
             amazonS3.putObject(bucket, filePath, inputStream, objectMetadata);
 
         } catch (Exception e) {
-            logger.error("não foi possível salvar arquivo no S3: " + e.getMessage());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            logger.error("não foi possível salvar arquivo no S3: " + e.getMessage()+ "\n" + sw.toString());
         }
     }
 
