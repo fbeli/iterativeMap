@@ -79,24 +79,24 @@ public class LoginController   {
 	public LoginResponse signin(@RequestBody LoginDto loginDto, HttpServletResponse response)  {
 
 		String id;
+		LoginResponse loginResponse = new LoginResponse();
+
 		try {
 			id = authorizationService.adicionarUsuario(loginDto);
 			if(id == null){
 				return internalServerError(response, "Erro to add user.");
 			}
+			loginResponse = authorizationService.login(loginDto);
 		}catch (UsuarioAlreadyExistsException e){
 			response.setStatus(HttpServletResponse.SC_CONFLICT);
-
-			LoginResponse loginResponse = new LoginResponse();
 			loginResponse.setError(e.getMessage());
 			loginResponse.setStatus(HttpServletResponse.SC_CONFLICT);
-			return loginResponse;
+
 		} catch (Exception e){
-			return internalServerError(response, e.getMessage());
+			loginResponse =  internalServerError(response, e.getMessage());
 		}
 
-		return authorizationService.login(loginDto);
-
+		return loginResponse;
 	}
 
 	private LoginResponse internalServerError(HttpServletResponse response, String exception ){

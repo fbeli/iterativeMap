@@ -40,17 +40,18 @@
 			<artifactId>aws-java-sdk-s3</artifactId>
 			<version>${aws-version}</version>
 		</dependency>
-
-
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-cloudfront -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-cloudfront</artifactId>
+			<version>${aws-version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<version>1.18.20</version>
+			<scope>provided</scope>
 		</dependency>
-
-
-
-
 		<dependency>
 			<groupId>com.github.f4b6a3</groupId>
 			<artifactId>ulid-creator</artifactId>
@@ -95,6 +96,15 @@
 	</dependencyManagement>
 
 	<build>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
