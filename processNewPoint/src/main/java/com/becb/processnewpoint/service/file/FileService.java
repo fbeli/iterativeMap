@@ -50,6 +50,7 @@ public class FileService {
         if(file != null)
             logger.info("Map file created : "+file.getAbsolutePath());
     }
+
     public void createNotApprovedFile(List<Point> points, String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(getHeadHtml());
@@ -121,20 +122,33 @@ public class FileService {
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"pt-br\"> <html>\n" +
 
-                "    <title>GuideMapper</title> " +
+                "<title>GuideMapper</title> " +
                 "<meta charset=\"utf-8\"> \n <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "<script src=\"../javascript/point.js\">   </script> \n" +
+                "<link href=\"../css/button.css\" rel=\"stylesheet\">" +
                 "</head> " +
-                "<table>    <tr><th>aprove</th><th>block</th><th>Id</th><th>Titulo</th><th>Descrição</th><th>Latitude</th><th" +
-                ">Longitude</th><th>audio</th><th" +
-                ">Usuário</th><th>Email</th></tr>";
+                "<table>    <tr><th>aprove / block</th><th>Id</th><th>Titulo</th><th>Descrição</th>" +
+                "<th>Lat / Long</th><th>audio</th><th" +
+                ">Usuário</th></tr>";
     }
     public String getBodyHtml(Point point){
-        return "\n<tr><td><a href='#' onclick=\"aprovarPoint('"+ serviceEndpoint +"aprovar/"+point.getPointId()+"/"+point.getUser().getUserEmail()+"')" +
-                "\">aprove" +
-                "</a></td><td><a href='#' onclick=\"aprovarPoint('"+ serviceEndpoint +"bloquear/"+point.getPointId()+
-                "/"+point.getUser().getUserEmail()+"')" +
-                "\">block</a></td><td>"+point.getPointId()+"</td><td>"+point.getTitle()+"</td><td>"+point.getDescription()+"</td><td>"+point.getLatitude()+"</td><td>"+point.getLongitude()+"</td><td><audio controls><source src=\""+appEndpoint+"/"+point.getAudio()+"\"type=\"audio/mpeg\"></audio></td><td>"+point.getUser().getUserName()+"</td><td>"+point.getUser().getUserEmail()+"</td></tr>";
+
+        String audio = "";
+        String audioBlock = "";
+        if (point.getAudio() != null && !point.getAudio().isBlank()) {
+            audio =  "https://"+appEndpoint + "/" + point.getAudio();
+            audioBlock =  "<audio controls><source src=\""+audio+"\" type=\"audio/mpeg\" /></audio>";
+        }
+
+        return "\n<tr><td>" +
+                "<button type=\"button\" class=\"button-53\"  onclick=\"aprovarPoint('\"+ serviceEndpoint +\"aprovar/\"+point.getPointId()+\"/\"+point.getUser().getUserEmail()+\" id=\"btn-login-get-token\" >Aprovar</button>" +
+
+
+                "<button type=\"button\" class=\"button-53\" style=\"background-color:red\" onclick=\"aprovarPoint('\"+ serviceEndpoint +\"bloquear/\"+point.getPointId()+\"/\"+point.getUser().getUserEmail()+\" id=\"btn-login-get-token\" >Bloquear</button> \n" +
+                "</td><td style=\"font-size:10px\">"+point.getPointId()+"</td><td>"+point.getTitle()+"</td><td style:\"font-weight: bold;\" >"+point.getDescription()+"</td>" +
+                "<td><p>"+point.getLatitude()+"</p><p>"+point.getLongitude() +"</p></td>" +
+                "<td>"+audioBlock+"</td>" +
+                "<td>"+point.getUser().getUserName()+"</td></tr>";
 
     }
     public String bottonHtml(){
@@ -151,14 +165,17 @@ public class FileService {
                 "  \"features\": [\n";
     }
     private String getBodyJson(Point point){
+        String audioEndpoint = "";
+        if(point.getAudio()!=null)
+            audioEndpoint = "https://"+appEndpoint.trim()+"/"+point.getAudio();
         return "\n{\n" +
                 "    \"type\": \"Feature\",\n" +
                 "    \"properties\": {\n" +
                 "      \"title\": \""+point.getTitle()+"\",\n" +
                 "      \"shortDescription\": \""+point.getShortDescription()+"\",\n" +
                 "      \"description\": \""+point.getDescription()+"\",\n" +
-                "      \"pointId\": \""+point.getPointId()+"\"\n" +
-                "      \"audio\": \""+appEndpoint+point.getAudio()+"\"\n" +
+                "      \"pointId\": \""+point.getPointId()+"\"\n," +
+                "      \"audio\": \""+audioEndpoint+"\"\n" +
                 "    },\n" +
                 "    \"geometry\": {\n" +
                 "      \"type\": \"Point\",\n" +

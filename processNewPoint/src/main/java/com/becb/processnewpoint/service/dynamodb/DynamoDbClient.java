@@ -48,6 +48,11 @@ public class DynamoDbClient {
                 .withString("aprovado", AprovedEnum.asFalse.getValue())
                 .withString("language", point.getLanguage().getValue());
 
+        if(point.getAudio() != null && !point.getAudio().isBlank()) {
+                item.withString("audio", point.getAudio());
+        }
+
+
         PutItemSpec itemSpec = new PutItemSpec();
         itemSpec.withItem(item);
 

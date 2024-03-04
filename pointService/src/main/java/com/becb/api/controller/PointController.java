@@ -76,8 +76,8 @@ public class PointController {
 
             pointDto.setAudio(filePath);
         }
-        String formatedPoint = configPoint(pointDto,  request);
 
+        String formatedPoint = configPoint(pointDto,  request);
 
         logger.info("Point to Add: "+formatedPoint);
         try{
@@ -88,6 +88,7 @@ public class PointController {
         }
         PointResponse response = new PointResponse("Point added successfully");
         response.setPointId(pointDto.getPointId());
+        logger.info("Point added: {}", response.toString());
         return response;
     }
 

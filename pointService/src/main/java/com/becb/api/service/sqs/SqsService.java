@@ -13,7 +13,8 @@ public class SqsService {
     private static final Logger logger = Logger.getLogger(SqsService.class.getName());
 
     @Value("${sqs.queue.new_point}")
-    private String queueName = "new-point-queue";
+    private String queueName;
+
     @Value("${sqs.queue.url}")
     private String sqsServiceEndpoint;
 
@@ -21,7 +22,7 @@ public class SqsService {
     }
 
     public void sendMessage(String message, String queueName) {
-        logger.info("Adding message: "+message+" , to queue:" + queueName);
+
         SQSClient sqsClient;
 
         String env = System.getenv("ENVIRONMENT");
