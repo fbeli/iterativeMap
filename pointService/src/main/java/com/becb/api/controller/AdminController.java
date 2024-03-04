@@ -14,6 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 @RestController
 @RequestMapping//( produces = "application/json;charset=UTF-8", consumes = "application/json;charset=UTF-8")
@@ -92,7 +95,7 @@ public class AdminController {
         try{
             sqsService.sendMessage(formatedPoint, this.notApprovedQueueName);
         }catch (Exception e){
-            logger.error("Erro para gerar Arquivo de aprovacao: "+e.getMessage());
+            logger.error("Erro para gerar Arquivo de aprovacao: {} ", e.getMessage());
             return new PointResponse("500", "Erro para gerar arquivo de aprovacao: " + e.getMessage());
         }
         return new PointResponse("Arquivo solicitado com sucesso: <a href=\""+fileEndpoint+arquivoService.getFileName("pointNaoCadastrado")+"\">" +fileEndpoint+arquivoService.getFileName("pointNaoCadastrado")+"</a>");
@@ -115,6 +118,48 @@ public class AdminController {
 
     }
 
+    @PostMapping("/testConnection")
+    //@PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    public String testConnection(@RequestParam String endpoint)  {
+
+        String ret = "";
+        if(endpoint != null && !endpoint.isEmpty()){
+            if(!endpoint.endsWith("/")){
+                endpoint=endpoint+"/health";
+            }else
+                endpoint = endpoint+"health";
+        }else
+            return "Endpoint nulo ou vazio";
+        try {
+            URL url = new URL(endpoint);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                return response.toString();
+            }
+        }catch (Exception e){
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            ret = e.getMessage() +"\n";
+            ret +=  sw.toString();
+        }
+        return "Endpoint não encontrado: " +endpoint+ " \n  Exception: "+ret;
+    }
 
     private String aprovePoint(String id, String user_mail) {
 
