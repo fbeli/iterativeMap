@@ -141,10 +141,10 @@ public class FileService {
         }
 
         return "\n<tr><td>" +
-                "<button type=\"button\" class=\"button-53\"  onclick=\"aprovarPoint('\"+ serviceEndpoint +\"aprovar/\"+point.getPointId()+\"/\"+point.getUser().getUserEmail()+\" id=\"btn-login-get-token\" >Aprovar</button>" +
+                "<button type=\"button\" class=\"button-53\"  onclick=\"aprovarPoint('"+ serviceEndpoint +"aprovar/"+point.getPointId()+"/"+point.getUser().getUserEmail()+"')\" id=\"btn-login-get-token\" >Aprovar</button>" +
 
 
-                "<button type=\"button\" class=\"button-53\" style=\"background-color:red\" onclick=\"aprovarPoint('\"+ serviceEndpoint +\"bloquear/\"+point.getPointId()+\"/\"+point.getUser().getUserEmail()+\" id=\"btn-login-get-token\" >Bloquear</button> \n" +
+                "<button type=\"button\" class=\"button-53\" style=\"background-color:red\" onclick=\"aprovarPoint('"+ serviceEndpoint +"bloquear/"+point.getPointId()+"/"+point.getUser().getUserEmail()+"')\" id=\"btn-login-get-token\" >Bloquear</button> \n" +
                 "</td><td style=\"font-size:10px\">"+point.getPointId()+"</td><td>"+point.getTitle()+"</td><td style:\"font-weight: bold;\" >"+point.getDescription()+"</td>" +
                 "<td><p>"+point.getLatitude()+"</p><p>"+point.getLongitude() +"</p></td>" +
                 "<td>"+audioBlock+"</td>" +
