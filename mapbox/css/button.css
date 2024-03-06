@@ -1,4 +1,10 @@
 /* CSS */
+
+.button_play {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: buttonface;
+}
 .button-53 {
     background-color: #3DD1E7;
     border: 0 solid #E5E7EB;
