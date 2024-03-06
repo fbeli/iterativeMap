@@ -70,7 +70,12 @@ map.on('click', (event) => {
 
         let insideHtml = `<h3>${feature.properties.title}</h3>`;
         if(feature.properties.audio !== undefined && feature.properties.audio.length > 2){
-            insideHtml += `<div ><audio class="audio"  controls><source src="${feature.properties.audio}" type="audio/mpeg"/>Your browser does not support the audio element.</audio></div>`;
+            if(navigator.userAgent.indexOf("iPhone") > -1){
+                insideHtml += `<div><button class="button_play" id="play" onclick="play_on_safari('${feature.properties.audio}')">Play</button><button style="display: none" class="button_play" id="stop" onclick="stop_on_safari()">Stop</button></div>`;
+
+            }else {
+                insideHtml += `<div ><audio class="audio"  controls><source src="${feature.properties.audio}" type="audio/mpeg"/>Your browser does not support the audio element.</audio></div>`;
+            }
         }
         insideHtml += `<p>${feature.properties.description}</p><br/>`;
         const popup = new mapboxgl.Popup({offset: [0, -15]})
