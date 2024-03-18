@@ -30,16 +30,32 @@ public class SqsService {
         }
     }
 
+    /**
+     * Create new maps
+     * @param headers
+     * @param message
+     */
     @SqsListener(value = "${sqs.queue.new_file_to_map}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
-    public void gerarArquivoParaMapa(@Headers Map<String, Object> headers, String message) {
-        log.info("Received message to create mapfile!");
+    public void gerarArquivoParaMapa(@Headers Map<String, Object> headers, String message) {log.info("Received message to create mapfile!");
         pointService.gerarArquivoParaMapa(message);
     }
 
+    /**
+     *
+     * Queue with not reviewd points
+     * @param headers
+     * @param message
+     */
     @SqsListener(value = "${sqs.queue.not_approved}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
     public void gerarArquivoParaAprovacao(@Headers Map<String, Object> headers, String message) {
         log.info("Received message on  queue not_approved: {}", message);
         pointService.gerarArquivoParaAprovacao(message);
+    }
+
+    @SqsListener(value = "${sqs.queue.add_photo_point}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
+    public void addPhotoToPoint(@Headers Map<String, Object> headers, String message) {
+        log.info("Received message on sqs.queue.add_photo_point: {}", message);
+        pointService.addPhotoToPoint(message);
     }
 
     @SqsListener(value = "${sqs.queue.aprovar_point}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

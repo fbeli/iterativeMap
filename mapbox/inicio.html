@@ -4,6 +4,16 @@
 <head>
 
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJH5ERQBXB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-FJH5ERQBXB');
+    </script>
+
     <title>Points on a map</title>
     <script src="./javascript/const.js"></script>
     <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
@@ -11,6 +21,8 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
 
     <!--LOGIN-->
     <!--===============================================================================================-->
@@ -37,15 +49,21 @@
                 <ul>
                     <li id="li_login"><a href="#" id="li_login_a_link" onclick="login()">Login</a>
                         <ul id="login_opt_ul" class="vertical" style="display: none">
-                            <li><a id="a_create_points" onclick="option_create_points()">Create Points</a></li>
+
                             <li><a href="#" onclick="logout()">Logout</a></li>
                         </ul>
                    </li>
+                    <li>
+                        <a href="#" id="li_introduce_a_link" onclick="introduce()">Introduce Us</a>
+                        <li><a id="a_create_points" onclick="option_create_points()">Add Spot</a></li>
+                    </li>
+
                 </ul>
-              </div>s
 
-                <div id='starting' class="modal_body"  style="display: block">
+              </div>
 
+                <div id='starting' class="modal_body"  style="display: block" >
+                    <div class="child"><img class="child" src="img/logo.png" alt=""></div>
                 </div>
               
                 <div class="wrap-login100 to_front" id="login_div" style="display: none;">
@@ -147,10 +165,10 @@
                         </div>
                         <div class="wrap-input100 validate-input">
                             <div><input type="checkbox"  id="sign_up_guide" >
-                            <label for="sign_up_guide" >I'm a guide</label></div>
+                            <label for="sign_up_guide" >I'm a guide - Can we share your contact with users to business?</label></div>
 
                             <input  type="checkbox"  id="sign_up_share">
-                            <label for="sign_up_guide" >I accept share my data with users</label>
+                            <label for="sign_up_guide" >Can show my instagram to users</label>
                         </div>
 
 
@@ -203,7 +221,7 @@
                     </div>
                 </div>
                 <div class="wrap-login100 to_front" id="cadastro_div" style="display: none;">
-                    <form class="login100-form validate-form">
+                    <form class="login100-form validate-form" enctype="multipart/form-data">
                         <span class="login100-form-title p-b-26">
                             Novo Cadastro
                         </span>
@@ -239,6 +257,11 @@
                                 </script>
                             </select>
                         </div>
+                       <div style="border-bottom: 0" class="div_btn" >
+                            <button type="button" class="button-53"  id="btn_cadastro_img" onclick="uploadClick('cadastro_img', 'btn_cadastro_img')">Select Image</button>
+                            <input class="file_out" style="display:none" type="file" id="cadastro_img" name="cadastro_img" value='Add Picture' >
+                        </div>
+
                         <div class="div_btn">
                             <button type="button" class="button-53"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
                             <input style="display:none" type="text" id="cadastro_audio">
@@ -271,6 +294,21 @@
                         </a>
                     </div>
                 </div>
+                <div class="create_point wrap-login100 to_front" id="div_please_login" style="display: none;">
+                    <div class="alert alert-danger" role="alert">
+                        <p  class="title alert-heading">You Must be Logged In</p>
+                        <p  class="p.erro"></p><br/>
+                        <hr>
+                        <p class="mb-0">Create your account and login, after it be part of out community and add spots
+                        to be shared with our community</p>
+                    </div>
+                    <div class="text-center p-t-25">
+                        <a class="txt2" onclick="fechar_divs(); login();" href="#">
+                            Close
+                        </a>
+                    </div>
+                </div>
+
                 <div class="create_point wrap-login100 to_front" id="info_div" style="display: none;">
                     <div class="alert alert-danger" role="alert">
                         <p  class="title alert-heading" id="info_title">New point added</p>
@@ -285,6 +323,8 @@
                         </a>
                     </div>
                 </div>
+
+
 
 
             </div>

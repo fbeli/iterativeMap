@@ -7,32 +7,67 @@ const map = new mapboxgl.Map({
     container: 'map',
     // Replace YOUR_STYLE_URL with your style URL.
     style: 'mapbox://styles/fbeli/clr407wxw018b01r5bt6oht1o',
-    center: [ 38.69162, -9.2158],
-    zoom: 10,
+    center: [ -9.135905, 38.709844],
+    zoom: 15,
     hash: true,
 
 
 });
 
 map.on('load', () => {
-    map.addSource('earthquakes', {
+    map.addSource('s_mapfile_pt', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_.geojson'
+        data: 'https://www.guidemapper.com/file/mapFile_pt.geojson'
+    });
+    map.addSource('s_mapfile_en', {
+        type: 'geojson',
+        // Use a URL for the value for the data property.
+        data: 'https://www.guidemapper.com/file/mapFile_en.geojson'
+    });
+    map.addSource('s_mapfile_lisboasecreta', {
+        type: 'geojson',
+        // Use a URL for the value for the data property.
+        data: 'https://www.guidemapper.com/file/mapFile_lisboasecreta.geojson'
+    });
+
+
+    map.addLayer({
+        'id': 'l_mapFile_pt',
+        'type': 'symbol',
+        'layout': {
+            'icon-image': 'pt',
+            'icon-size': 0.2
+        },
+        'source': 's_mapfile_pt'
     });
 
     map.addLayer({
-        'id': 'WorldTurism2',
+        'id': 'l_mapFile_en',
         'type': 'symbol',
         'layout': {
-            'icon-image': 'marker-editor',
-            'icon-size': 1
+            'icon-image': 'en',
+            'icon-size': 0.2
         },
-        'source': 'earthquakes'
-
+        'source': 's_mapfile_en'
+    });
+    map.addLayer({
+        'id': 'l_lisboa_secreta',
+        'type': 'symbol',
+        'layout': {
+            'icon-image': 'lisboa_secreta',
+            'icon-size': 0.2
+        },
+        'source': 's_mapfile_lisboasecreta'
     });
 
 });
+map.addControl(
+    new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl
+    }),"bottom-right"
+);
 
 map.addControl(new mapboxgl.GeolocateControl({
     positionOptions: {
@@ -41,6 +76,8 @@ map.addControl(new mapboxgl.GeolocateControl({
     trackUserLocation: true,
     showUserHeading: true
 }),"bottom-right");
+
+
 
 var point;
 
@@ -51,7 +88,7 @@ Add an event listener that runs
 map.on('click', (event) => {
     // If the user clicked on one of your markers, get its information.
     const features = map.queryRenderedFeatures(event.point, {
-        layers: ['WorldTurism', 'WorldTurism2' ] // replace with your layer name
+        layers: ['l_mapFile_pt', 'l_mapFile_en','l_lisboa_secreta' ] // replace with your layer name
 
     });
 
@@ -77,6 +114,10 @@ map.on('click', (event) => {
                 insideHtml += `<div ><audio class="audio"  controls><source src="${feature.properties.audio}" type="audio/mpeg"/>Your browser does not support the audio element.</audio></div>`;
             }
         }
+        insideHtml += `<p>Created by: ${feature.properties.user_name}.</p><br/>`;
+        if(feature.properties.share == null || feature.properties.share ){
+            insideHtml += `<p id="sh_professional">${feature.properties.user_name} is professional guide, <a href="#" onclick="getUser('${feature.properties.user_id}')"> contact.</a></p><br/>`;
+        }
         insideHtml += `<p>${feature.properties.description}</p><br/>`;
         const popup = new mapboxgl.Popup({offset: [0, -15]})
             .setLngLat(feature.geometry.coordinates)
@@ -91,3 +132,37 @@ map.on('move',() => {
     zoom = map.getZoom();
 })
 
+class User{
+    constructor(email, nome, instagram, photo, phone, share, guide) {
+        this.email = email;
+        this.name = nome;
+        this.instagram = instagram;
+        this.photo = photo;
+        this.phone = phone;
+        this.share = share;
+        this.guide = true;
+        if(guide !== undefined)
+            this.guide = guide;
+
+    }
+}
+
+async function getUser(id) {
+    await fetch(config.get_user + id)
+        .then(response => response.json())
+        .then(data => {
+        user = new User(data.email, data.name, data.instagram, data.photo, data.phone, data.share, data.guide);
+        show_guide(user);
+
+    });
+
+
+}
+function show_guide(user){
+    let include = `${user.instagram}`;
+    if(user.guide === 'true'){
+        include = `${user.email} <br> ${user.phone}`
+    }
+
+    document.getElementById("sh_professional").innerHTML = include;
+}

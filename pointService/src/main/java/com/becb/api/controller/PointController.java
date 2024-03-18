@@ -13,18 +13,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.fileupload.FileUploadException;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
-@RequestMapping( produces = "application/json;charset=UTF-8", consumes = "application/json;charset=UTF-8")
+@RequestMapping( produces = "application/json;charset=UTF-8", consumes = {"application/json;charset=UTF-8","multipart/form-data"})
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE)
 public class PointController {
 
@@ -45,6 +50,9 @@ public class PointController {
     @Value("${sqs.queue.new_file_to_map}")
     String newFileToMapQueueName;
 
+    @Value("${sqs.queue.add_photo_point}")
+    String addPhotoPointQueueName;
+
     @Value("${sqs.queue.not_approved}")
     String notApprovedQueueName;
 
@@ -63,7 +71,7 @@ public class PointController {
 
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
-    @RequestMapping(value = "/point", method = RequestMethod.POST)
+    @RequestMapping(value = "/point")
     public PointResponse cadastro(@RequestBody PointDto pointDto, HttpServletRequest request) throws UnsupportedEncodingException, InterruptedException {
 
         if(pointDto.getPointId() == null)
@@ -92,6 +100,20 @@ public class PointController {
         return response;
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @PutMapping("/point/{pointId}")
+    public PointResponse uploadPhoto(@PathVariable String pointId, @RequestParam("files") MultipartFile files) throws IOException, InterruptedException {
+
+        String filePath = fileService.savePointPhoto(files, pointId);
+        String message = "{\"point_id\" : \"" + pointId + "\", \"file_path\" : \"" + filePath + "\"}";
+
+        sqsService.sendMessage(message, addPhotoPointQueueName);
+
+        return new PointResponse("Uploading photo");
+
+    }
+
     private String configPoint(PointDto pointDto, HttpServletRequest request) {
 
         String token = request.getHeader("Authorization").replace("Bearer ", "");
@@ -104,11 +126,12 @@ public class PointController {
        pointDto.setUser_id(jsonObject.getString("usuario_id"));
        pointDto.setUser_email(jsonObject.getString("user_name"));
        pointDto.setUser_name(jsonObject.getString("nome_completo"));
+       pointDto.setShare(jsonObject.getBoolean("share"));
 
        return  unicodeEscapeToUtf8(pointDto.toString());
     }
 
-    public static String unicodeEscapeToUtf8(String unicodeEscapeString) {
+    private static String unicodeEscapeToUtf8(String unicodeEscapeString) {
         Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
         Matcher matcher = pattern.matcher(unicodeEscapeString);
         StringBuilder sb = new StringBuilder();

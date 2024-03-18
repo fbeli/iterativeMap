@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @DynamoDBTable(tableName = "points")
 @Setter
@@ -30,6 +33,8 @@ public class Point {
 
     private User user;
 
+    private List<String> photos;
+
     public void setDescription(String description) {
         this.description = description;
         int size = description.length();
@@ -43,4 +48,21 @@ public class Point {
     public void setLongitude(String longitude) {
         this.longitude = longitude.substring(longitude.indexOf(":")+1,longitude.length()-1).trim();
     }
+    public void addPhoto(String photo) {
+        if(photos == null)
+            photos = new ArrayList<>();
+        photos.add(photo);
+    }
+    public String getPhotosAsString(){
+        StringBuilder photosStr = new StringBuilder();
+        if(photos != null){
+            photosStr.append("{");
+            photos.forEach( photo -> {photosStr.append(photo).append(",");});
+            photosStr.append("}");
+            photosStr.deleteCharAt(photosStr.length()-2);
+        }
+
+        return photosStr.toString();
+    }
+
 }

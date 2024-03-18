@@ -95,6 +95,9 @@ select{
     left: 0;
 }
 
+.img_logo{
+    width: 100%;
+}
 .form-div{
 
     color:  rgb(35 55 75 / 90%);;
@@ -165,7 +168,7 @@ label {
     font-size: 18px;
     line-height: 1.7;
     color: #974343;
-    margin-top: 65px;
+    margin-top: -20px;
 }
 
 .audio{
@@ -180,7 +183,10 @@ audio:hover, audio:focus, audio:active
     -moz-transform: scale(1.05);
     transform: scale(1.05);
 }
-
+nav li {
+    display: inline-block;
+    margin: 0 0 0 15px;
+}
 
 audio
 {
@@ -200,4 +206,12 @@ audio
     line-height: 1.7;
     color: #974343;
     margin-top: 65px;
+}
+
+.child {
+    width: 70%;
+    height: 40%;
+    position: absolute;
+    top: 30%;
+    left: 15%;
 }

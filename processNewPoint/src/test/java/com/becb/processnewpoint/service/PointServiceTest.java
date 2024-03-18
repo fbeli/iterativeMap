@@ -12,8 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.TestPropertySource;
-
+import com.becb.processnewpoint.domain.Point;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -152,5 +153,61 @@ class PointServiceTest {
                 "\"user_name\": \"Frederico\","+
                 "\"audio\": \"\""+
                 "}" ;
+    }
+
+    @Test
+    void testConvertItemToPoint() {
+        Item item = new Item()
+                .withString("user_email","lisboasecreta@mail.com")
+                .withString("user_name","Lisboa Secreta")
+                .withString("language","PT")
+                .withString("point_latitude","38.74380760290884")
+                .withString("instagram","@lisboasecreta")
+                .withString("point_longitude","-9.10122436858540")
+                .withString("point_short_description","É restaurante, é livraria, é sala")
+                .withString("point_description","É restaurante, é livraria, é sala de concertos")
+                .withString("pointId","01HRVRVS9X5NC1T2JAPT9EVYEC")
+                .withString("point_title","Fábrica Braço de Prata")
+                .withString("user_id","3871ca56-4c29-4813-88f1-ff6e012a698b")
+                .withString("usuario_aprovador","lisboasecreta@mail")
+                .withBoolean("aprovado",true);
+
+        Point point = pointService.convertItemToPoint(item);
+        Assert.assertEquals("01HRVRVS9X5NC1T2JAPT9EVYEC", point.getPointId());
+
+
+    }
+
+    @Test
+    void testConvertItemToPointWithEmptyField() {
+        Item item = new Item()
+                .withString("user_email","lisboasecreta@mail.com")
+                .withString("user_name","Lisboa Secreta")
+                .withString("language","PT")
+                .withString("point_latitude","38.74380760290884")
+                .withString("point_longitude","-9.10122436858540")
+                .withString("point_short_description","É restaurante, é livraria, é sala")
+                .withString("point_description","É restaurante, é livraria, é sala de concertos")
+                .withString("pointId","01HRVRVS9X5NC1T2JAPT9EVYEC")
+                .withString("point_title","Fábrica Braço de Prata")
+                .withString("user_id","3871ca56-4c29-4813-88f1-ff6e012a698b")
+                .withString("usuario_aprovador","lisboasecreta@mail")
+                .withBoolean("aprovado",true);
+
+        Point point = pointService.convertItemToPoint(item);
+        Assert.assertEquals("01HRVRVS9X5NC1T2JAPT9EVYEC", point.getPointId());
+    }
+
+    @Test
+    void addPhotos() {
+        Point point = new Point();
+        String photos = "{photo 1,photo2,photo3,photo4}";
+        List<String> listaDePhotos = pointService.addPhotos(photos);
+        Assert.assertEquals(4, listaDePhotos.size());
+
+        point.setPhotos(listaDePhotos);
+        Assert.assertTrue(photos.equals(point.getPhotosAsString()));
+
+
     }
 }

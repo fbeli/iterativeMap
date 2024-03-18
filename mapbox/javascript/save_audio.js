@@ -1,10 +1,11 @@
 
 let mediaRecord;
 let recording = false;
+let started_audio = false;
 
 $(function(){
 
-
+//function start_record(){
     navigator.mediaDevices
         .getUserMedia({audio:true})
         .then( stream => {
@@ -28,10 +29,11 @@ $(function(){
         })
 })
 
-function gravar()
-{
+async function gravar() {
 
-    if(recording){
+   // if (!started_audio)
+   //     await start_record();
+    if (recording) {
         recording = false;
         mediaRecord.stop();
         clearInterval(countdownTimer);
@@ -40,7 +42,7 @@ function gravar()
 
     } else {
         mediaRecord.start();
-        countdownTimer = setInterval(updateCountdown, 3000);
+        countdownTimer = setInterval(updateCountdown, 1000);
         // document.getElementById("btn_gravar").textContent = "Stop";
         recording = true;
     }

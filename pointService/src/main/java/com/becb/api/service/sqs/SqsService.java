@@ -25,7 +25,7 @@ public class SqsService {
 
         SQSClient sqsClient;
 
-        String env = System.getenv("ENVIRONMENT");
+        String env = System.getenv("ENVIRONMENT").trim();
         if ( env.equals("docker") || env.equals("dev") ) {
             sqsClient = new SQSClient(queueName, sqsServiceEndpoint);
         } else {

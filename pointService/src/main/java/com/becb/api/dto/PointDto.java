@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +32,8 @@ public class PointDto{
     private String user_id;
     private String user_name;
     private String user_email;
+    private Boolean share;
+
 
 
     public String toString() {

@@ -1,63 +1,63 @@
 version: '2.2'
 
 services:
-  html:
-    image: fbeli/becb_html:0.1.6
-    container_name: points
-    ports:
-      - "80:80"
-    volumes:
-      - files:/usr/share/nginx/html
-    depends_on:
-      - point_service
+  #html:
+  #  image: fbeli/becb_html:0.1.6
+  #  container_name: points
+  #  ports:
+  #    - "80:80"
+  #  volumes:
+  #    - files:/usr/share/nginx/html
+  #  depends_on:
+  #    - point_service
 
-  point_service:
-    container_name: point_service
-    build:
-      context: ../pointService
-      dockerfile: ../pointService/Dockerfile
-    ports:
-      - "8081:8081"
-    environment:
-      # Declare which aws services will be used in localstack
-      # These variables are needed for localstack
-      - AWS_DEFAULT_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=testUser
-      - AWS_SECRET_ACCESS_KEY=testAccessKey
-      - LAMBDA_EXECUTOR=local
-      - ENVIRONMENT=docker
-      - AWS_REGION=us-east-1
-      - AUTH_SERVER_URL=http://auth:8082
-      - FILE_ENDPOINT=https://guidemapper-points-dev.s3.eu-central-1.amazonaws.com/file/
-      - QUEUE_HOST=http://sqs:9324/queue/
-    depends_on:
-      - awscli
-      - sqs
-      - process_new_point
-      - dynamodb
-      - auth
+  #point_service:
+  #  container_name: point_service
+  #  build:
+  #    context: ../pointService
+  #    dockerfile: ../pointService/Dockerfile
+  #  ports:
+  #    - "8081:8081"
+  #  environment:
+  #    # Declare which aws services will be used in localstack
+  #    # These variables are needed for localstack
+  #    - AWS_DEFAULT_REGION=us-east-1
+  #    - AWS_ACCESS_KEY_ID=testUser
+  #    - AWS_SECRET_ACCESS_KEY=testAccessKey
+  #    - LAMBDA_EXECUTOR=local
+  #    - ENVIRONMENT=docker
+  #    - AWS_REGION=us-east-1
+  #    - AUTH_SERVER_URL=http://auth:8082
+  #    - FILE_ENDPOINT=https://guidemapper-points-dev.s3.eu-central-1.amazonaws.com/file/
+  #    - QUEUE_HOST=http://sqs:9324/queue/
+  #  depends_on:
+  #    - awscli
+  #    - sqs
+  #    - process_new_point
+  #    - dynamodb
+  #    - auth
 
-  process_new_point:
-    container_name: process_new_point
-    build:
-      context: ../processNewPoint
-      dockerfile: ../processNewPoint/Dockerfile
-    environment:
-      - AWS_DEFAULT_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=testUser
-      - AWS_SECRET_ACCESS_KEY=testAccessKey
-      - LAMBDA_EXECUTOR=local
-      - ENVIRONMENT=docker
-      - AWS_REGION=us-east-1
-      - QUEUE_HOST=http://sqs:9324
-      - DYNAMODB_HOST=http://dynamodb:8000
-      - SERVICE_ENDPOINT=http://point_service:8080
-      - FILE_DIRECTORY=file
-    depends_on:
-      - dynamodb
-    volumes:
-      - files:/app/file
-    command: ["/wait-for-it.sh", "dynamodb:8000", "-t", "180", "--", "/entrypoint.sh"]
+  #process_new_point:
+  #  container_name: process_new_point
+  #  build:
+  #    context: ../processNewPoint
+  #    dockerfile: ../processNewPoint/Dockerfile
+  #  environment:
+  #    - AWS_DEFAULT_REGION=us-east-1
+  #    - AWS_ACCESS_KEY_ID=testUser
+  #    - AWS_SECRET_ACCESS_KEY=testAccessKey
+  #    - LAMBDA_EXECUTOR=local
+  #    - ENVIRONMENT=docker
+  #    - AWS_REGION=us-east-1
+  #    - QUEUE_HOST=http://sqs:9324
+  #    - DYNAMODB_HOST=http://dynamodb:8000
+  #    - SERVICE_ENDPOINT=http://point_service:8080
+  #    - FILE_DIRECTORY=file
+  #  depends_on:
+  #    - dynamodb
+  #  volumes:
+  #    - files:/app/file
+  #  command: ["/wait-for-it.sh", "dynamodb:8000", "-t", "180", "--", "/entrypoint.sh"]
 
   sqs:
     container_name: sqs
@@ -93,29 +93,27 @@ services:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
 
-  auth:
-    image: fbeli/becb_auth:0.1
-    container_name: auth
-    ports:
-      - "8082:8082"
-    environment:
-      - DB_URL=mysql:3306
-    depends_on:
-      - mysql
-    command: ["/wait-for-it.sh", "mysql:3306", "-t", "180", "--", "/entrypoint.sh"]
+  #auth:
+  #  image: fbeli/becb_auth:0.1
+  #  container_name: auth
+  #  ports:
+  #    - "8082:8082"
+  #  environment:
+  #    - DB_URL=mysql:3306
+  #  depends_on:
+  #    - mysql
+  #  command: ["/wait-for-it.sh", "mysql:3306", "-t", "180", "--", "/entrypoint.sh"]
 
-  mysql:
-    container_name: mysql
-    image: mysql:8.2.0
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=123
-      - MYSQL_DATABASE=auth
-      - MYSQL_USER=teste
-      - MYSQL_PASSWORD=123
-    volumes:
-      - ./mysql:/var/lib/mysql
+  #mysql:
+  #  container_name: mysql
+  #  image: mysql:8.2.0
+  #  ports:
+  #    - "3306:3306"
+  #  environment:
+  #    - MYSQL_ROOT_PASSWORD=123
+  #    - MYSQL_DATABASE=auth
+  #    - MYSQL_USER=teste
+  #    - MYSQL_PASSWORD=123
+  #  volumes:
+  #    - ./mysql:/var/lib/mysql
 
-volumes:
-  files:

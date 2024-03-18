@@ -2,6 +2,7 @@ package com.becb.processnewpoint.service.file;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class AmazonS3Service {
     @Value("${becb.storage.s3.directory-files}")
     private String directoryFile;
 
-    public void saveAdminFile(String fileName, InputStream file) {
-        saveFile(bucket, directoryFile, file, fileName);
+    public PutObjectResult saveAdminFile(String fileName, InputStream file) {
+        return saveFile(bucket, directoryFile, file, fileName);
     }
 
     /**
@@ -39,7 +40,7 @@ public class AmazonS3Service {
      * @param inputStream
      * @param fileName
      */
-    public void saveFile(String bucket, String directory, InputStream inputStream, String fileName) {
+    public PutObjectResult saveFile(String bucket, String directory, InputStream inputStream, String fileName) {
 
         logger.info("Sending file {} to S3 in {}: ", fileName, amazonS3.getRegion());
 
@@ -55,7 +56,7 @@ public class AmazonS3Service {
             }
             objectMetadata.setContentEncoding("UTF-8");
 
-            amazonS3.putObject(bucket, filePath, inputStream, objectMetadata);
+            return amazonS3.putObject(bucket, filePath, inputStream, objectMetadata);
 
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
@@ -64,6 +65,7 @@ public class AmazonS3Service {
 
             logger.error("não foi possível salvar arquivo no S3: " + e.getMessage()+ "\n" + sw.toString());
         }
+        return null;
     }
 
     private String getFilePath(String fileName, String directory) {

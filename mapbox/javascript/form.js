@@ -178,10 +178,11 @@ function form_cadastro_is_ok(){
 async function create_new_point() {
 
     // teste se ainda está gravando
-    if (document.getElementById("btn_gravar").textContent === "Stop") {
+    if (recording) {
         gravar();
     }
 
+    let fileInput = document.getElementById('cadastro_img') ;
     if (!form_cadastro_is_ok())
         return;
     let data = {
@@ -193,7 +194,6 @@ async function create_new_point() {
         language: document.getElementById("cadastro_language").value
     };
     try {
-
 
         const response = await fetch(config.cadastro_url, {
             method: "POST",
@@ -208,6 +208,10 @@ async function create_new_point() {
             .then(data => {
 
                 if (data.status === "200") {
+                    if(fileInput !== null && fileInput.files[0] !== undefined){
+                        upload_point_photo(data.pointId, fileInput)
+                    }
+
                     fechar_divs();
                     document.getElementById("info_info").innerHTML = "This point will be reviwed and add after it. It" +
                         " can take some minutes, hours or day";
@@ -217,6 +221,7 @@ async function create_new_point() {
                     document.getElementById("cadastro_titulo").value = 'Title';
                     document.getElementById("cadastro_description").value = 'Description';
                     document.getElementById("cadastro_audio").value = "";
+                    //document.getElementById("cadastro_img").value = null;
 
                 } else {
 
@@ -231,4 +236,32 @@ async function create_new_point() {
     } catch (e) {
         console.log(e.value);
     }
+}
+
+async function uploadClick(fileInputName, fileInputButtonName){
+    document.getElementById(fileInputName).click();
+    document.getElementById(fileInputButtonName).innerHTML = "Select another picture";
+}
+async function upload_point_photo(point_id, fileInput){
+
+    let formData = new FormData();
+
+    formData.append('files', fileInput.files[0]);
+
+    var myHeaders = new Headers();
+
+
+    myHeaders.append('Authorization', accessToken);
+
+    var requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        body: formData,
+        redirect: 'follow'
+    };
+
+    await fetch("http://localhost:8081/point/"+point_id, requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
 }

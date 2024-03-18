@@ -1,5 +1,6 @@
 package com.becb.processnewpoint.service.file;
 
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.becb.processnewpoint.domain.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -27,30 +31,79 @@ public class FileService {
     String appEndpoint;
     @Value("${service.endpoint}")
     String serviceEndpoint;
+    @Value("${file.filetomap.master}")
+    String masters;
+
+    @Value("${file.filetomap.lang}")
+    String languages;
+
 
     @Autowired
     AmazonS3Service amazonS3Service;
 
-    public void createFileToMap(List<Point> points, String fileName) throws IOException {
+    public List<String> createFileToMap(List<Point> points, String fileName) throws IOException {
+
+        List<String> masterList = Arrays.asList(masters.split(","));
+
+        List<String> filesCreated = new ArrayList<>();
+
+        masterList.forEach(l -> {
+                    List<Point> lista = points.stream()
+                            .filter((Point point) -> {
+                                return point.getUser().getInstagram().equals(l);
+                            }).collect(Collectors.toList());
+                    StringBuilder sb = createInputToFile(lista);
+
+                    String version = createFile(configFilename(fileName, l.replace("@","")), sb);
+
+                    if (version != null){
+                        logger.info("Map file created : {}", configFilename(fileName, l.replace("@", "")));
+                        filesCreated.add(configFilename(fileName, l.replace("@","")) +" - "+lista.size());
+                        points.removeAll(lista);
+                    }
+                }
+        );
+
+        List<String> languagesList = Arrays.asList(languages.split(","));
+        languagesList.forEach(l -> {
+            List<Point> lista = points.stream()
+                    .filter((Point point) -> {
+                        return point.getLanguage().getValue().equalsIgnoreCase(l);
+                    }).collect(Collectors.toList());
+            StringBuilder sb = createInputToFile(lista);
+
+            String version = createFile(configFilename(fileName, l.replace("@","")), sb);
+
+            if (version != null){
+                logger.info("Map file created : {}", configFilename(fileName, l.replace("@", "")));
+                filesCreated.add(configFilename(fileName, l.replace("@","")) +" - "+lista.size());
+            }
+
+        });
+
+
+        return filesCreated;
+    }
+
+     public String configFilename(String fileName, String sufix ){
+        String filePrefix = fileName.substring(0, fileName.lastIndexOf("."));
+        String fileSuffix = fileName.substring(filePrefix.length());
+        return filePrefix+sufix+"_"+fileSuffix;
+    }
+    private StringBuilder createInputToFile(List<Point> points){
         StringBuilder sb = new StringBuilder();
         sb.append(getHeadJson());
         logger.info("received {} points to create json file. File will be uploaded", points.size());
         int x = 1;
-
         for (Point point: points) {
             sb.append(getBodyJson(point));
             if( x < points.size() )
                 sb.append(",");
             x++;
         }
-
         sb.append(bottonJson());
-
-        File file = createFile(fileName, sb);
-        if(file != null)
-            logger.info("Map file created : "+file.getAbsolutePath());
+        return sb;
     }
-
     public void createNotApprovedFile(List<Point> points, String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(getHeadHtml());
@@ -62,13 +115,13 @@ public class FileService {
 
 
 
-        File file = createFile(fileName, sb);
-        if(file != null)
-            logger.info("File to approve created : "+file.getAbsolutePath());
+        String version = createFile(fileName, sb);
+        if(version != null)
+            logger.info("File to approve created : "+fileName);
 
     }
 
-    private File createFile(String fileName, StringBuilder sb){
+    private String createFile(String fileName, StringBuilder sb){
 
 
         File file = null;
@@ -78,9 +131,9 @@ public class FileService {
            return file;
         }else {*/
 
-            amazonS3Service.saveAdminFile( fileName, createTempFile(fileName, sb));
+        PutObjectResult result =  amazonS3Service.saveAdminFile( fileName, createTempFile(fileName, sb));
+        return result.getVersionId();
         //}
-        return file;
     }
 
 
@@ -135,8 +188,16 @@ public class FileService {
 
         String audio = "";
         String audioBlock = "";
+        String audioEndpoint = "";
+        if(point.getAudio()!=null){
+            if(appEndpoint.startsWith("https")){
+                audioEndpoint = appEndpoint.trim()+"/"+point.getAudio();
+            }else{
+                audioEndpoint = "https://"+appEndpoint.trim()+"/"+point.getAudio();
+            }
+        }
         if (point.getAudio() != null && !point.getAudio().isBlank()) {
-            audio =  "https://"+appEndpoint + "/" + point.getAudio();
+            audio =  appEndpoint + "/" + point.getAudio();
             audioBlock =  "<audio controls><source src=\""+audio+"\" type=\"audio/mpeg\" /></audio>";
         }
 
@@ -166,8 +227,13 @@ public class FileService {
     }
     private String getBodyJson(Point point){
         String audioEndpoint = "";
-        if(point.getAudio()!=null)
-            audioEndpoint = "https://"+appEndpoint.trim()+"/"+point.getAudio();
+        if(point.getAudio()!=null){
+            if(appEndpoint.startsWith("https")){
+                audioEndpoint = appEndpoint.trim()+"/"+point.getAudio();
+            }else{
+                audioEndpoint = "https://"+appEndpoint.trim()+"/"+point.getAudio();
+            }
+        }
         return "\n{\n" +
                 "    \"type\": \"Feature\",\n" +
                 "    \"properties\": {\n" +
@@ -175,6 +241,9 @@ public class FileService {
                 "      \"shortDescription\": \""+point.getShortDescription()+"\",\n" +
                 "      \"description\": \""+point.getDescription()+"\",\n" +
                 "      \"pointId\": \""+point.getPointId()+"\"\n," +
+                "      \"user_id\": \""+point.getUser().getUserId()+"\"\n," +
+                "      \"user_name\": \""+point.getUser().getUserName()+"\"\n," +
+                "      \"user_share\": \""+point.getUser().getShare()+"\"\n," +
                 "      \"audio\": \""+audioEndpoint+"\"\n" +
                 "    },\n" +
                 "    \"geometry\": {\n" +

@@ -51,6 +51,9 @@ public class DynamoDbClient {
         if(point.getAudio() != null && !point.getAudio().isBlank()) {
                 item.withString("audio", point.getAudio());
         }
+        if(point.getUser().getShare() != null) {
+            item.withBoolean("share", point.getUser().getShare());
+        }
 
 
         PutItemSpec itemSpec = new PutItemSpec();
@@ -121,6 +124,29 @@ public class DynamoDbClient {
         expressionMap.put(":ativo", aprovado);
         ItemCollection<ScanOutcome> outcome =  table.scan("aprovado = :ativo",null,null,  expressionMap);
         return outcome;
+    }
+
+    /**
+     *
+     * @param point
+     * @param
+     * @return
+     */
+    public boolean addPhotoToPoint(Point point) {
+        logger.info("Updating photo to  point {}", point.getPointId());
+        String photoPath = point.getPhotosAsString();
+        if(photoPath == null || !photoPath.startsWith("{") || !photoPath.endsWith("}")) {
+            return false;
+        }
+        UpdateItemSpec updateItemSpec =  new UpdateItemSpec().withPrimaryKey("pointId", point.getPointId())
+                .withUpdateExpression("SET photos = :val0 " )
+                .withValueMap(new ValueMap()
+                        .with(":val0", point.getPhotosAsString()))
+                .withReturnValues(ReturnValue.ALL_NEW);
+        Table table = dynamoDB.getTable(pointTable);
+        UpdateItemOutcome updateItemOutcome = table.updateItem(updateItemSpec);
+
+        return true;
     }
 
 }
