@@ -81,7 +81,7 @@ public class AdminController {
             return new PointResponse("500", "Error para bloquear ponto" + e.getMessage());
         }
 
-        return new PointResponse("Point added successfully");
+        return new PointResponse("Point blocked successfully");
 
     }
 

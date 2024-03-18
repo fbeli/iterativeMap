@@ -62,7 +62,7 @@ public class LoginController   {
 		LoginResponse loginResponse = authorizationService.login(loginDto);
 		if(loginResponse.getStatus() != HttpServletResponse.SC_OK){
 			response.setStatus(loginResponse.getStatus());
-			response.setHeader("Access-Control-Allow-Origin", "cloudfront.net");
+			//response.setHeader("Access-Control-Allow-Origin", "cloudfront.net");
 			response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS, PUT, POST");
 			response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 			response.setHeader("Access-Control-Allow-Credentials", "true");

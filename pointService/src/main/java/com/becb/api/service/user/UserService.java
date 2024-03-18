@@ -30,9 +30,18 @@ public class UserService {
         return connection;
     }
 
-    public LoginDto getUser(String id) throws IOException {
+    public LoginDto getUserById(String id) throws IOException {
 
-        HttpURLConnection con =  getConnection(auth_url+"/user/"+id, "GET");
+       return  getUser(auth_url+"/user/get_by_id/"+id);
+
+    }
+    public LoginDto getUserByEmail(String email) throws IOException {
+        return  getUser(auth_url+"/user/get_by_email/"+email);
+
+    }
+
+    public LoginDto getUser(String connectionEndpoint) throws IOException {
+        HttpURLConnection con =  getConnection(connectionEndpoint, "GET");
         int responseCode = con.getResponseCode();
         LoginDto loginResponse = new LoginDto();
         if (responseCode == HttpURLConnection.HTTP_OK) { // success
@@ -47,11 +56,10 @@ public class UserService {
 
             loginResponse.setupFromString(response.toString());
         } else {
-            logger.info("user not found: {}", id);
+            logger.info("user not found at {}", connectionEndpoint);
         }
 
-        return loginResponse;
+            return loginResponse;
 
     }
-
 }

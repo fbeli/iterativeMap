@@ -5,7 +5,7 @@ let longitude;
 function fly_back(){
    latitude = getLatitude();
    longitude = getLongitude();
-
+    add_logo();
     if(timeoutLocation()){
       map.flyTo({center: [longitude, latitude], zoom: 14});
   }
