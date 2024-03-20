@@ -8,9 +8,7 @@ import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.github.f4b6a3.ulid.UlidCreator;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -19,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -56,18 +53,23 @@ public class PointService {
             point.getUser().setUserName(jsonObject.getString("user_name"));
             point.getUser().setUserEmail(jsonObject.getString("user_email"));
 
-            point.getUser().setUserEmail(jsonObject.getString("user_email"));
-            if (jsonObject.has("share") && !jsonObject.getBoolean("share")) {
-                point.getUser().setShare(jsonObject.getBoolean("share"));
-            }
+
+            point.getUser().setInstagram(jsonObject.getString("instagram"));
+
+            point.getUser().setShare(jsonObject.optBoolean("share"));
+
             if (jsonObject.has("audio") && !jsonObject.getString("audio").isEmpty()) {
                 point.setAudio(jsonObject.getString("audio"));
             }
+            if (jsonObject.has("language") && !jsonObject.getString("language").isEmpty()) {
+                point.setLanguage(jsonObject.getString("language"));
+            }
+
+            point.getUser().setGuide(jsonObject.optBoolean("guide"));
 
         } catch (JSONException jsonException) {
             logger.error("Essential field not present: \n{}", jsonException.getMessage());
         }
-
         return savePoint(point);
     }
 
@@ -149,6 +151,10 @@ public class PointService {
         point.getUser().setUserId(item.getString("user_id"));
         point.getUser().setUserName(item.getString("user_name"));
         point.getUser().setUserEmail(item.getString("user_email"));
+
+        point.getUser().setShare( (item.getString("share") != null)? Boolean.parseBoolean(item.getString("share")):true);
+        point.getUser().setGuide(item.getString("guide") != null && Boolean.parseBoolean(item.getString("guide")));
+
         point.setAproved(item.getString("aprovado"));
         point.setAudio(item.getString("audio"));
         if (item.getString("instagram") != null){
@@ -178,19 +184,22 @@ public class PointService {
         return list;
     }
 
-
-    public boolean addPhotoToPoint(String message){
+    public boolean addFileToPoint(String message){
         JSONObject jsonObject = new JSONObject(message);
 
         String pointId = (String)jsonObject.get("point_id");
-        String photoPath = (String)jsonObject.get("file_path");
+        String path = (String)jsonObject.get("file_path");
         Point point = this.convertItemToPoint(dynamoDbClient.getPoint(pointId));
 
-        if(point == null){
+        if(point == null || path == null){
             return false;
         }
-        point.addPhoto(photoPath);
-        return dynamoDbClient.addPhotoToPoint(point);
+        if(path.endsWith("jpg") || path.endsWith("jpeg") || path.endsWith("png")) {
+            point.addPhoto(path);
+            return dynamoDbClient.addPhotoToPoint(point);
+        }
 
+            point.setAudio(path);
+            return dynamoDbClient.addAudioToPoint(point);
     }
 }

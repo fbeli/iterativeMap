@@ -4,7 +4,7 @@ let accessToken = null;
 let previous_div = null;
 let create_point = false;
 let zoom_to_create_point = 16.5;
-let zoom = 10;
+let zoom = 16;
 
 function afterLogin(){
     fechar_divs();
@@ -221,6 +221,7 @@ async function create_new_point() {
                     document.getElementById("cadastro_titulo").value = 'Title';
                     document.getElementById("cadastro_description").value = 'Description';
                     document.getElementById("cadastro_audio").value = "";
+                    document.getElementById("btn_cadastro_img").innerHTML = "Select Picture";
                     //document.getElementById("cadastro_img").value = null;
 
                 } else {
@@ -240,7 +241,7 @@ async function create_new_point() {
 
 async function uploadClick(fileInputName, fileInputButtonName){
     document.getElementById(fileInputName).click();
-    document.getElementById(fileInputButtonName).innerHTML = "Select another picture";
+    document.getElementById(fileInputButtonName).innerHTML = "Select Another";
 }
 async function upload_point_photo(point_id, fileInput){
 
@@ -260,7 +261,7 @@ async function upload_point_photo(point_id, fileInput){
         redirect: 'follow'
     };
 
-    await fetch("http://localhost:8081/point/"+point_id, requestOptions)
+    await fetch(config.cadastro_url+"/"+point_id, requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));

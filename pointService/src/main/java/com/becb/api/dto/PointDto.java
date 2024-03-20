@@ -33,6 +33,9 @@ public class PointDto{
     private String user_name;
     private String user_email;
     private Boolean share;
+    private Boolean guide;
+    private String instagram;
+    private String language;
 
 
 

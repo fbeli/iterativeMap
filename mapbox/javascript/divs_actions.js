@@ -126,4 +126,8 @@ function add_logo(){
     div_left[0].innerHTML = "<a class=\"mapboxgl-ctrl-logo\" target=\"_blank\" rel=\"noopener nofollow\" href=\"https://www.mapbox.com/\" aria-label=\"Mapbox logo\"></a>" +
         "<a class=\"mapboxgl-ctrl-logo\"  href=\"https://www.guidemapper.com/img/name_logo.png\" aria-label=\"GuideMapper\"><img class=\"img_logo\" src=\"https://guidemapper.com/img/name_logo.png\"></a>";
 
+    let div_top_right = document.getElementsByClassName("mapboxgl-ctrl-top-right");
+    div_top_right[0].innerHTML = "<div class=\"zoom\" ><div class='inside_zoom' id='inside_zoom'>"+zoom+" </div></div>";
+    div_top_right[0].class = "mapboxgl-ctrl-top-right zoom";
 }
+

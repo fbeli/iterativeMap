@@ -14,6 +14,22 @@
         gtag('config', 'G-FJH5ERQBXB');
     </script>
 
+    <script>
+        function handler(event)  {
+            var response  = event.response;
+            var headers  = response.headers;
+
+            // If Access-Control-Allow-Origin CORS header is missing, add it.
+            // Since JavaScript doesn't allow for hyphens in variable names, we use the dict["key"] notation.
+            if (!headers['access-control-allow-origin']) {
+                headers['access-control-allow-origin'] = {value: "*"};
+                console.log("Access-Control-Allow-Origin was missing, adding it now.");
+            }
+
+            return response;
+        }
+    </script>
+
     <title>Points on a map</title>
     <script src="./javascript/const.js"></script>
     <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
@@ -266,6 +282,16 @@
                             <button type="button" class="button-53"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
                             <input style="display:none" type="text" id="cadastro_audio">
                         </div>
+                        <!--div class="div_btn">
+                           <div class="div-audio-left">
+                               <button type="button" class="button-53 button-audio"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
+                               <input style="display:none" type="text" id="cadastro_audio">
+                            </div>
+                            <div class="div-audio-right">
+                                <button type="button" class="button-53 button-audio" id="btn_upload_audio"  onclick="uploadClick('cadastro_audio_upload', 'btn_upload_audio')">Upload Audio</button>
+                                <input class="file_out" style="display:none" type="file" id="cadastro_audio_upload" name="cadastro_audio_upload" value='Add Audio' >
+                            </div>
+                        </div-->
                         <div class="div_btn">
                             <button type="button" class="button-53"  onclick="create_new_point()" id="btn_criar_ponto" >Create Point</button>
                         </div>

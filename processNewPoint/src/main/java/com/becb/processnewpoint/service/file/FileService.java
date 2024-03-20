@@ -80,8 +80,6 @@ public class FileService {
             }
 
         });
-
-
         return filesCreated;
     }
 
@@ -225,13 +223,21 @@ public class FileService {
         return "{\n" +
                 "  \"features\": [\n";
     }
-    private String getBodyJson(Point point){
+    public String getBodyJson(Point point){
         String audioEndpoint = "";
+        String photoEndpoint = "";
         if(point.getAudio()!=null){
             if(appEndpoint.startsWith("https")){
                 audioEndpoint = appEndpoint.trim()+"/"+point.getAudio();
             }else{
                 audioEndpoint = "https://"+appEndpoint.trim()+"/"+point.getAudio();
+            }
+        }
+        if(point.getPhotos() != null && !point.getPhotos().isEmpty()){
+            if(appEndpoint.startsWith("https")){
+                photoEndpoint = appEndpoint.trim()+"/"+point.getPhotos().get(0);
+            }else{
+                photoEndpoint = "https://"+appEndpoint.trim()+"/"+point.getPhotos().get(0);
             }
         }
         return "\n{\n" +
@@ -240,11 +246,15 @@ public class FileService {
                 "      \"title\": \""+point.getTitle()+"\",\n" +
                 "      \"shortDescription\": \""+point.getShortDescription()+"\",\n" +
                 "      \"description\": \""+point.getDescription()+"\",\n" +
-                "      \"pointId\": \""+point.getPointId()+"\"\n," +
-                "      \"user_id\": \""+point.getUser().getUserId()+"\"\n," +
-                "      \"user_name\": \""+point.getUser().getUserName()+"\"\n," +
-                "      \"user_share\": \""+point.getUser().getShare()+"\"\n," +
-                "      \"audio\": \""+audioEndpoint+"\"\n" +
+                "      \"pointId\": \""+point.getPointId()+"\",\n" +
+                "      \"user_id\": \""+point.getUser().getUserId()+"\",\n" +
+                "      \"user_name\": \""+point.getUser().getUserName()+"\",\n" +
+                "      \"user_share\": \""+point.getUser().getShare()+"\",\n" +
+                "      \"audio\": \""+audioEndpoint+"\",\n" +
+                "      \"user_instagram\": \""+point.getUser().getInstagram()+"\",\n" +
+                "      \"user_guide\": \""+point.getUser().getGuide()+"\",\n" +
+                "      \"photo\": \""+photoEndpoint+"\"\n" +
+
                 "    },\n" +
                 "    \"geometry\": {\n" +
                 "      \"type\": \"Point\",\n" +

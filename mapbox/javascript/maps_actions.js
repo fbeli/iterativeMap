@@ -2,13 +2,14 @@
 
 // The value for 'accessToken' begins with 'pk...'
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmJlbGkiLCJhIjoiY2xyM3N2Z2NxMW1zaDJpbXlmN2tydXRwaCJ9.IKxTu4ci2HIp_yOdWhn8Rg';
+let point;
 
 const map = new mapboxgl.Map({
     container: 'map',
     // Replace YOUR_STYLE_URL with your style URL.
     style: 'mapbox://styles/fbeli/clr407wxw018b01r5bt6oht1o',
     center: [ -9.135905, 38.709844],
-    zoom: 15,
+    zoom: 16,
     hash: true,
 
 
@@ -18,17 +19,17 @@ map.on('load', () => {
     map.addSource('s_mapfile_pt', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_pt.geojson'
+        data: 'https://www.guidemapper.com/file/mapFile_pt_.geojson'
     });
     map.addSource('s_mapfile_en', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_en.geojson'
+        data: 'https://www.guidemapper.com/file/mapFile_en_.geojson'
     });
     map.addSource('s_mapfile_lisboasecreta', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_lisboasecreta.geojson'
+        data: 'https://www.guidemapper.com/file/mapFile_lisboasecreta_.geojson'
     });
 
 
@@ -79,7 +80,7 @@ map.addControl(new mapboxgl.GeolocateControl({
 
 
 
-var point;
+
 
 /*
 Add an event listener that runs
@@ -115,11 +116,18 @@ map.on('click', (event) => {
             }
         }
         insideHtml += `<p>Created by: ${feature.properties.user_name}.</p><br/>`;
-        if(feature.properties.share == null || feature.properties.share ){
+        if( feature.properties.user_guide === 'true'){
             insideHtml += `<p id="sh_professional">${feature.properties.user_name} is professional guide, <a href="#" onclick="getUser('${feature.properties.user_id}')"> contact.</a></p><br/>`;
+        }else{
+            insideHtml += `<p id="sh_professional">${feature.properties.user_name} is part of out community. </p>`;
         }
+        if(feature.properties.user_share === 'true' ) {
+            insideHtml += `<p>${feature.properties.user_instagram}</a></p>`
+        }
+        if (feature.properties.photo != null)
+            insideHtml += `<img style="width: 100%" src="${feature.properties.photo}" /><br/>`;
         insideHtml += `<p>${feature.properties.description}</p><br/>`;
-        const popup = new mapboxgl.Popup({offset: [0, -15]})
+        const popup = new mapboxgl.Popup({offset: [0, 0]})
             .setLngLat(feature.geometry.coordinates)
             .setHTML(
                 insideHtml
@@ -130,6 +138,7 @@ map.on('click', (event) => {
 
 map.on('move',() => {
     zoom = map.getZoom();
+    document.getElementById("inside_zoom").innerHTML=zoom;
 })
 
 class User{

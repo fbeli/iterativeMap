@@ -10,6 +10,7 @@ public class User {
     private String userEmail;
     private String instagram;
     private Boolean share;
+    private Boolean guide;
 
     public String getInstagram(){
         if (instagram == null)

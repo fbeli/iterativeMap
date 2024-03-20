@@ -215,3 +215,17 @@ audio
     top: 30%;
     left: 15%;
 }
+
+.zoom {
+    font-family: Poppins-Regular;
+    font-size: 16px;
+
+        background: lightgray;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+}
+.inside_zoom{
+    padding: 6px;
+    padding-top: 9px;
+}

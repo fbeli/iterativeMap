@@ -5,6 +5,8 @@ import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
 import com.becb.processnewpoint.service.AprovedEnum;
+import net.minidev.json.JSONValue;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,8 +17,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.validation.constraints.AssertTrue;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,7 +41,7 @@ class FileServiceTest {
     void configFilename() {
 
         String filename = fileService.configFilename("fileMap_.json", "eng");
-        assertEquals("fileMap_eng.json", filename);
+        assertEquals("fileMap_eng_.json", filename);
 
     }
 
@@ -90,4 +95,16 @@ class FileServiceTest {
         return point;
     }
 
+    @Test
+    void getBodyHtml() {
+        String str = fileService.getBodyJson(createPointEN());
+        JSONObject jsonObject = new JSONObject(str);
+
+        JSONObject object = new JSONObject(jsonObject.get("properties").toString());
+
+        assertEquals("null", object.get("user_guide"));
+
+        assertEquals( createPointEN().getPointId(), object.get("pointId"));
+
+    }
 }

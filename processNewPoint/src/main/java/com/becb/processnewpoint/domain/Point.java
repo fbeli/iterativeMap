@@ -27,7 +27,7 @@ public class Point {
     private String shortDescription;
     private String audio;
 
-    @DynamoDBAttribute(attributeName="aprovado")
+    @DynamoDBAttribute(attributeName = "aprovado")
     private String aproved;
     private LanguageEnum language = LanguageEnum.PT;
 
@@ -38,28 +38,54 @@ public class Point {
     public void setDescription(String description) {
         this.description = description;
         int size = description.length();
-        if(size > 40)
+        if (size > 40)
             size = 40;
-        this.shortDescription = description.substring(0,size);
+        this.shortDescription = description.substring(0, size);
     }
+
     public void setLatitude(String latitude) {
-        this.latitude = latitude.substring(latitude.indexOf(":")+1,latitude.length()-1).trim();
+        this.latitude = latitude.substring(latitude.indexOf(":") + 1, latitude.length() - 1).trim();
     }
+
     public void setLongitude(String longitude) {
-        this.longitude = longitude.substring(longitude.indexOf(":")+1,longitude.length()-1).trim();
+        this.longitude = longitude.substring(longitude.indexOf(":") + 1, longitude.length() - 1).trim();
     }
+
+    public void setLanguage(String language) {
+        switch (language) {
+            case "English":
+            case "english":
+                this.language = LanguageEnum.EN;
+                break;
+            case "Espanhol":
+            case "Español":
+            case "spanish":
+            case "Spanish":
+                this.language = LanguageEnum.ES;
+                break;
+            default:
+                this.language = LanguageEnum.PT;
+        }
+    }
+    public void setLanguage(LanguageEnum language){
+        this.language = language;
+    }
+
     public void addPhoto(String photo) {
-        if(photos == null)
+        if (photos == null)
             photos = new ArrayList<>();
         photos.add(photo);
     }
-    public String getPhotosAsString(){
+
+    public String getPhotosAsString() {
         StringBuilder photosStr = new StringBuilder();
-        if(photos != null){
+        if (photos != null) {
             photosStr.append("{");
-            photos.forEach( photo -> {photosStr.append(photo).append(",");});
+            photos.forEach(photo -> {
+                photosStr.append(photo).append(",");
+            });
             photosStr.append("}");
-            photosStr.deleteCharAt(photosStr.length()-2);
+            photosStr.deleteCharAt(photosStr.length() - 2);
         }
 
         return photosStr.toString();

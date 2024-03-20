@@ -94,3 +94,13 @@ input::file-selector-button {
     width: calc(100% - 1px);
     height: calc(100% - 1px);
 }
+.div-audio-left{
+    float: left;
+}
+.div-audio-right{
+    float: right;
+}
+.button-audio{
+    width: 100%;
+    position: relative;
+}

@@ -46,6 +46,9 @@ public class DynamoDbClient {
                 .withString("user_name", point.getUser().getUserName())
                 .withString("user_email", point.getUser().getUserEmail())
                 .withString("aprovado", AprovedEnum.asFalse.getValue())
+                .withBoolean("share", point.getUser().getShare())
+                .withBoolean("guide", point.getUser().getGuide())
+                .withString("instagram", point.getUser().getInstagram())
                 .withString("language", point.getLanguage().getValue());
 
         if(point.getAudio() != null && !point.getAudio().isBlank()) {
@@ -142,6 +145,26 @@ public class DynamoDbClient {
                 .withUpdateExpression("SET photos = :val0 " )
                 .withValueMap(new ValueMap()
                         .with(":val0", point.getPhotosAsString()))
+                .withReturnValues(ReturnValue.ALL_NEW);
+        Table table = dynamoDB.getTable(pointTable);
+        UpdateItemOutcome updateItemOutcome = table.updateItem(updateItemSpec);
+
+        return true;
+    }
+
+    /**
+     *
+     * @param point
+     * @param
+     * @return
+     */
+    public boolean addAudioToPoint(Point point) {
+        logger.info("Updating Audio to  point {}", point.getPointId());
+
+        UpdateItemSpec updateItemSpec =  new UpdateItemSpec().withPrimaryKey("pointId", point.getPointId())
+                .withUpdateExpression("SET audio = :val0 " )
+                .withValueMap(new ValueMap()
+                        .with(":val0", point.getAudio()))
                 .withReturnValues(ReturnValue.ALL_NEW);
         Table table = dynamoDB.getTable(pointTable);
         UpdateItemOutcome updateItemOutcome = table.updateItem(updateItemSpec);
