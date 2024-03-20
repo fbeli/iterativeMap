@@ -35,7 +35,6 @@ public class AmazonS3Service {
 
     private String saveFile( ObjectMetadata objectMetadata, InputStream inputStream, String filePath) {
 
-
         logger.info("Sending file {} to S3 in {}: ", filePath, amazonS3.getRegion());
 
         try {
@@ -45,11 +44,8 @@ public class AmazonS3Service {
         } catch (Exception e) {
             logger.error("não foi possível salvar arquivo no S3: {}", e.getMessage());
         }
-
         return null;
     }
-
-
 
     public String saveFile(String bucket, String directory, InputStream inputStream, String fileName) {
 

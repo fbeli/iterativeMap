@@ -34,13 +34,18 @@ public class FileService {
     AmazonS3Service amazonS3Service;
 
 
-    public String saveAudio(String b64String, String fileName) throws JSONException {
+    public String saveAudio(String b64String, String fileName) throws JSONException, IOException {
 
         byte[] decodedBytes = Base64.decode(b64String);
         InputStream inputStream= new ByteArrayInputStream(decodedBytes);
 
-        return amazonS3Service.saveFile(bucket, directoryFile,  inputStream,  fileName);
+        return saveFileMp3(inputStream, fileName);
 
+
+    }
+    public String saveFileMp3(InputStream inputStream, String fileName) throws IOException {
+
+        return amazonS3Service.saveFile(bucket, directoryFile,  inputStream,  fileName);
     }
 
     public String saveFileJpg( InputStream inputStream, String fileName) throws IOException {
@@ -48,14 +53,9 @@ public class FileService {
         return amazonS3Service.saveFile(  inputStream, directoryPhotoFile, fileName, "image/jpeg" );
     }
 
-    public String savePointPhoto(MultipartFile multipartFile, String pointId) throws IOException {
-
-        if(multipartFile  != null){
-            InputStream inputStream =  new BufferedInputStream(multipartFile.getInputStream());
+    public String savePointPhoto(InputStream inputStream, String pointId) throws IOException {
 
             return saveFileJpg( inputStream, pointId+"_");
-        }
-        return null;
 
     }
 
