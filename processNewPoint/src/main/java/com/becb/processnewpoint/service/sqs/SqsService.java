@@ -9,7 +9,6 @@ import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.util.Map;
 
@@ -52,12 +51,6 @@ public class SqsService {
         pointService.gerarArquivoParaAprovacao(message);
     }
 
-    @SqsListener(value = "${sqs.queue.add_photo_point}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
-    public void addPhotoToPoint(@Headers Map<String, Object> headers, String message) {
-        log.info("Received message on sqs.queue.add_photo_point: {}", message);
-        pointService.addPhotoToPoint(message);
-    }
-
     @SqsListener(value = "${sqs.queue.aprovar_point}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
     public void listenAproveQueue(@Headers Map<String, Object> headers, String message) {
         log.info("Received message on first queue 'aprovar_point': {}",  message);
@@ -77,5 +70,22 @@ public class SqsService {
             log.error("Error occurred while aproving point: {} . \nErro: {}", message, e.getMessage());
         }
     }
+
+    @SqsListener(value = "${sqs.queue.add_photo_point}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+    public void addPhotoToPoint(@Headers Map<String, Object> headers, String message) {
+        log.info("Received message on sqs.queue.add_photo_point: {}", message);
+        if(pointService.addFileToPoint(message))
+            log.error("Message on sqs.queue.add_photo_point: {} not saved", message);
+    }
+
+    @SqsListener(value = "${sqs.queue.add_audio_point}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+    public void addAudioToPoint(@Headers Map<String, Object> headers, String message) {
+        log.info("Received message on sqs.queue.add_audio_point: {}", message);
+
+        if(pointService.addFileToPoint(message))
+            log.error("Message on sqs.queue.add_audio_point: {} not saved", message);
+
+    }
+
 
 }
