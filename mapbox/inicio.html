@@ -111,12 +111,44 @@
                             </a>
                         </div>
                         <div class="text-center p-t-25">
+                            <a class="txt2" onclick="forgetPassword()">
+                               Forget Password
+                            </a>
+                        </div>
+                        <div class="text-center p-t-25">
                             <a class="txt2" onclick="fechar_divs()" href="#">
                                 Close
                             </a>
                         </div>
                     </form>
                 </div>
+
+                <div class="wrap-login100 to_front" id="forget_password_div" style="display: none;">
+                    <form class="login100-form validate-form">
+                        <span class="login100-form-title p-b-26">
+                            Forget Password
+                        </span>
+
+                        <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+                            <input class="input100" type="text" id="forget_login_email" value="Email" onfocus="this.value='';"
+                                   onblur="if (this.value=='') this.value='Email'" >
+                        </div>
+
+
+                        <div class="div_btn">
+                            <button type="button" class="button-53"  onclick="forget_password()" id="btn-forget-password-get-token" >Reset Password</button>
+                        </div>
+
+                        <div class="text-center p-t-25">
+                            <a class="txt2" onclick="fechar_divs()" href="#">
+                                Close
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+
+
                 <div class="wrap-login100 to_front" id="sign_up_div" style="display: none;">
                     <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
@@ -278,11 +310,11 @@
                             <input class="file_out" style="display:none" type="file" id="cadastro_img" name="cadastro_img" value='Add Picture' >
                         </div>
 
-                        <div class="div_btn">
+                        <!--<div class="div_btn">
                             <button type="button" class="button-53"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
                             <input style="display:none" type="text" id="cadastro_audio">
-                        </div>
-                        <!--div class="div_btn">
+                        </div>-->
+                        <div class="div_btn">
                            <div class="div-audio-left">
                                <button type="button" class="button-53 button-audio"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
                                <input style="display:none" type="text" id="cadastro_audio">
@@ -291,8 +323,8 @@
                                 <button type="button" class="button-53 button-audio" id="btn_upload_audio"  onclick="uploadClick('cadastro_audio_upload', 'btn_upload_audio')">Upload Audio</button>
                                 <input class="file_out" style="display:none" type="file" id="cadastro_audio_upload" name="cadastro_audio_upload" value='Add Audio' >
                             </div>
-                        </div-->
-                        <div class="div_btn">
+                        </div>
+                        <div class="div_btn" style="margin-top: 22%">
                             <button type="button" class="button-53"  onclick="create_new_point()" id="btn_criar_ponto" >Create Point</button>
                         </div>
 

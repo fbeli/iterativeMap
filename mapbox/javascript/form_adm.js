@@ -89,18 +89,18 @@ function gerar_arquivo(tipo){
         });
 }
 
-function setToken(receicedToken){
-    accessToken = "Bearer "+receicedToken;
+function setToken(receivedToken) {
+    accessToken = "Bearer " + receivedToken;
 
 }
 
 let mediaRecord;
-$(function(){
+$(function () {
 
 
     navigator.mediaDevices
-        .getUserMedia({audio:true})
-        .then( stream => {
+        .getUserMedia({audio: true})
+        .then(stream => {
             mediaRecord = new MediaRecorder(stream);
             let chunks = []
             mediaRecord.ondataavailable = data => {
@@ -112,7 +112,7 @@ $(function(){
                 const blob = new Blob(chunks, {type: 'audio/ogg code=opus'})
                 const reader = new FileReader();
                 reader.readAsDataURL(blob)
-                reader.onloadend = function(){
+                reader.onloadend = function () {
                     //console.log(reader.result);
                     const audio = document.createElement("cadastro_audio");
                     audio.src = reader.result
@@ -123,16 +123,14 @@ $(function(){
         })
 
 
-
 })
 
-function gravar()
-{
+function gravar() {
     let opt = document.getElementById("btn_gravar").textContent;
-    if( opt == 'Gravar'){
+    if (opt == 'Gravar') {
         mediaRecord.start();
         document.getElementById("btn_gravar").textContent = "Stop";
-    }else{
+    } else {
         mediaRecord.stop();
         document.getElementById("btn_gravar").textContent = "Gravar";
     }

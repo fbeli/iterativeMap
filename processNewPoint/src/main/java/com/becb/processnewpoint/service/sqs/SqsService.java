@@ -3,13 +3,13 @@ package com.becb.processnewpoint.service.sqs;
 import com.becb.processnewpoint.service.AprovedEnum;
 import com.becb.processnewpoint.service.PointService;
 import com.becb.processnewpoint.service.SuportService;
+import com.becb.processnewpoint.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
-
 import java.util.Map;
 
 @Slf4j
@@ -18,6 +18,9 @@ public class SqsService {
 
     @Autowired
     private PointService pointService;
+
+    @Autowired
+    private UserService userService;
 
     @SqsListener(value = "${sqs.queue.new_point}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
     public void listenNewPointQueue(@Headers Map<String, Object> headers, String message) {
@@ -74,8 +77,13 @@ public class SqsService {
     @SqsListener(value = "${sqs.queue.add_photo_point}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
     public void addPhotoToPoint(@Headers Map<String, Object> headers, String message) {
         log.info("Received message on sqs.queue.add_photo_point: {}", message);
-        if(pointService.addFileToPoint(message))
-            log.error("Message on sqs.queue.add_photo_point: {} not saved", message);
+        if(message.contains("http")) {
+            if (!pointService.addFileLinkToPoint(message))
+                log.error("Message on sqs.queue.add_photo_point: {} not saved", message);
+        }else {
+            if (!pointService.addFileToPoint(message))
+                log.error("Message on sqs.queue.add_photo_point: {} not saved", message);
+        }
     }
 
     @SqsListener(value = "${sqs.queue.add_audio_point}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
@@ -87,5 +95,15 @@ public class SqsService {
 
     }
 
+    @SqsListener(value = "${sqs.queue.reset_password}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+    public void sendMailToResetPass(@Headers Map<String, Object> headers, String message) {
+        log.info("Received message on sqs.queue.password.sendmail: {}", message);
+        String  code = SuportService.getCode();
+        if(userService.saveCode(message, code)) {
+            userService.sendEmailResetPassword(message, code);
+        }else
+            log.error("Error ask for reset password: {}", message);
+
+    }
 
 }

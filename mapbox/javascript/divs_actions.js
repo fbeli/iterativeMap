@@ -61,6 +61,7 @@ function fechar_divs() {
     document.getElementById("info_div").style.display = 'none';
     document.getElementById("cadastro_audio").value = null;
     document.getElementById("div_please_login").style.display = 'none';
+    document.getElementById("forget_password_div").style.display = 'none';
 
 }
 
@@ -76,6 +77,9 @@ function sign_up() {
     show_div("sign_up_div");
 }
 
+function forgetPassword() {
+    show_div("forget_password_div");
+}
 function show_div(el) {
     fechar_divs();
     document.getElementById(el).style.display = 'block';

@@ -1,7 +1,6 @@
 package com.becb.api.dto;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +18,7 @@ class LoginDtoTest {
         assertEquals("+351966960358", dto.getPhone());
         assertEquals("1980-07-19", dto.getBorn_date());
         assertEquals("true", dto.getShare());
+        assertEquals("7fa3d5a4-20be-496e-a90e-d4336297dcc3", dto.getUserId());
 
 
     }

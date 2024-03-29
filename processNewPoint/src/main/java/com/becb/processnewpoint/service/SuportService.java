@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +19,6 @@ public class SuportService {
         }
         return true;
     }
-
 
     public static String unicodeEscapeToUtf8(String unicodeEscapeString) {
         Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
@@ -37,6 +37,16 @@ public class SuportService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static String getCode(){
+        Random gerador=  new Random();
+
+        String resp = Integer.toString(gerador.nextInt(9999));
+        while (resp.length() < 4) {
+            resp = "0" + resp;
+        }
+        return resp;
     }
 
 }

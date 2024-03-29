@@ -19,22 +19,23 @@ public class LoginDto {
     private String instagram;
     private String share;
     private String description;
+    private String code;
 
     public void setupFromString(String json) {
         if(json != null && json.startsWith("{")) {
             JSONObject jsonObject = new JSONObject(json);
 
-            if (jsonObject.has("share")  && !jsonObject.get("share").toString().equals("null")) {
-                this.setName( jsonObject.has("name") ? jsonObject.get("name").toString() : "");
-                this.setEmail(jsonObject.has("email") ?jsonObject.get("email").toString(): "");
-                this.setBorn_date(jsonObject.has("born_date")  ?jsonObject.get("born_date").toString(): "");
-                this.setDescription(jsonObject.has("description")  ?jsonObject.get("description").toString(): "");
-                this.setGuide(jsonObject.has("guide") ?jsonObject.get("guide").toString(): "");
-                this.setPhone(jsonObject.has("telefone") ?jsonObject.get("telefone").toString(): "");
-                this.setCountry(jsonObject.has("country")  ?jsonObject.get("country").toString(): "");
-                this.setInstagram(jsonObject.has("instagram") ?jsonObject.get("instagram").toString(): "");
-                this.setShare(jsonObject.has("share") ?jsonObject.get("share").toString(): "");
-            }
+           this.setUserId( jsonObject.optString("id"));
+                this.setName(  jsonObject.optString("name"));
+                this.setEmail(jsonObject.optString("email"));
+                this.setBorn_date(jsonObject.optString("born_date"));
+                this.setDescription(jsonObject.optString("description"));
+                this.setGuide(jsonObject.optString("guide"));
+                this.setPhone(jsonObject.optString("telefone"));
+                this.setCountry(jsonObject.optString("country"));
+                this.setInstagram(jsonObject.optString("instagram"));
+                this.setShare(jsonObject.optString("share"));
+
         }
     }
     public void setDescription(String description){

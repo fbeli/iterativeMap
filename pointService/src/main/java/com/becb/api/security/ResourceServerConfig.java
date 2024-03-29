@@ -33,6 +33,8 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter{
                     .antMatchers(HttpMethod.GET, "/aprovar/*").permitAll()
                     .antMatchers(HttpMethod.GET, "/bloquear/*").permitAll()
                     .antMatchers(HttpMethod.GET, "/user/*").permitAll()
+                    .antMatchers(HttpMethod.GET, "/user/forget/").permitAll()
+
                 .and()
                 .cors().and()
                 .oauth2ResourceServer()

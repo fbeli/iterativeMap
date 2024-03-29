@@ -53,6 +53,40 @@ function execute_login(){
             error_div_event("login_div");
         });
 }
+
+async function forget_password(){
+
+    let data = {
+        email: document.getElementById("forget_login_email").value,
+    };
+    fetch(config.forget_password, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status == "200") {
+                fechar_divs();
+                document.getElementById("info_info").innerHTML = "An email has set to address, open your email and follow the steps to reset your password";
+                document.getElementById("info_title").innerHTML = "Password Reset Requested";
+                document.getElementById("info_highlight").innerHTML = "";
+                document.getElementById("info_div").style.display = 'flex';
+
+
+            }else{
+                document.getElementById("erro_alert_text").innerHTML = data.error;
+                error_div_event("forget_password_div");
+            }
+        })
+        .catch(error => {
+            document.getElementById("erro_alert_text").innerHTML = data.error;
+            error_div_event("forget_password_div");
+        });
+}
+
 function setToken(receicedToken){
     accessToken = "Bearer "+receicedToken;
 
@@ -183,6 +217,7 @@ async function create_new_point() {
     }
 
     let fileInput = document.getElementById('cadastro_img') ;
+    let audioInput = document.getElementById('cadastro_audio_upload') ;
     if (!form_cadastro_is_ok())
         return;
     let data = {
@@ -211,7 +246,10 @@ async function create_new_point() {
                     if(fileInput !== null && fileInput.files[0] !== undefined){
                         upload_point_photo(data.pointId, fileInput)
                     }
-
+                    if(audioInput !== null && audioInput.files[0] !== undefined){
+                        upload_point_photo(data.pointId, audioInput)
+                    }
+                    console.log(data.pointId +" "+ document.getElementById("cadastro_titulo").value);
                     fechar_divs();
                     document.getElementById("info_info").innerHTML = "This point will be reviwed and add after it. It" +
                         " can take some minutes, hours or day";
@@ -241,7 +279,13 @@ async function create_new_point() {
 
 async function uploadClick(fileInputName, fileInputButtonName){
     document.getElementById(fileInputName).click();
-    document.getElementById(fileInputButtonName).innerHTML = "Select Another";
+    let new_str;
+    if(fileInputButtonName === "btn_upload_audio")
+        new_str = "Another Audio"
+    else
+        new_str = "Another Photo"
+    document.getElementById(fileInputButtonName).innerHTML = new_str;
+
 }
 async function upload_point_photo(point_id, fileInput){
 
