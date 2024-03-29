@@ -31,6 +31,11 @@ map.on('load', () => {
         // Use a URL for the value for the data property.
         data: 'https://www.guidemapper.com/file/mapFile_lisboasecreta_.geojson'
     });
+    map.addSource('s_mapfile_sp', {
+        type: 'geojson',
+        // Use a URL for the value for the data property.
+        data: 'https://www.guidemapper.com/file/mapFile_sp_.geojson'
+    });
 
 
     map.addLayer({
@@ -61,6 +66,15 @@ map.on('load', () => {
         },
         'source': 's_mapfile_lisboasecreta'
     });
+    map.addLayer({
+        'id': 'l_mapFile_sp',
+        'type': 'symbol',
+        'layout': {
+            'icon-image': 'sp',
+            'icon-size': 0.2
+        },
+        'source': 's_mapfile_sp'
+    });
 
 });
 map.addControl(
@@ -89,7 +103,7 @@ Add an event listener that runs
 map.on('click', (event) => {
     // If the user clicked on one of your markers, get its information.
     const features = map.queryRenderedFeatures(event.point, {
-        layers: ['l_mapFile_pt', 'l_mapFile_en','l_lisboa_secreta' ] // replace with your layer name
+        layers: ['l_mapFile_pt', 'l_mapFile_en','l_lisboa_secreta' , 'l_mapFile_sp'] // replace with your layer name
 
     });
 
@@ -119,7 +133,7 @@ map.on('click', (event) => {
         if( feature.properties.user_guide === 'true'){
             insideHtml += `<p id="sh_professional">${feature.properties.user_name} is professional guide, <a href="#" onclick="getUser('${feature.properties.user_id}')"> contact.</a></p><br/>`;
         }else{
-            insideHtml += `<p id="sh_professional">${feature.properties.user_name} is part of out community. </p>`;
+            insideHtml += `<p id="sh_professional">${feature.properties.user_name} is part of our community. </p>`;
         }
         if(feature.properties.user_share === 'true' ) {
             insideHtml += `<p>${feature.properties.user_instagram}</a></p>`
@@ -133,6 +147,9 @@ map.on('click', (event) => {
                 insideHtml
             )
             .addTo(map);
+
+        console.log(feature.properties.pointId+" "+feature.properties.title );
+
     }
 });
 
