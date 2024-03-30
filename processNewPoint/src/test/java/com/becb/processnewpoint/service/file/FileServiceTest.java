@@ -5,6 +5,7 @@ import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
 import com.becb.processnewpoint.service.AprovedEnum;
+import com.becb.processnewpoint.service.sqs.SqsConfiguration;
 import net.minidev.json.JSONValue;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -36,6 +37,9 @@ class FileServiceTest {
 
     @MockBean
     AmazonS3Service amazonS3Service;
+
+    @MockBean
+    SqsConfiguration sqsConfiguration;
 
     @Test
     void configFilename() {
@@ -102,7 +106,7 @@ class FileServiceTest {
 
         JSONObject object = new JSONObject(jsonObject.get("properties").toString());
 
-        assertEquals("null", object.get("user_guide"));
+        assertEquals("false", object.get("user_guide"));
 
         assertEquals( createPointEN().getPointId(), object.get("pointId"));
 
