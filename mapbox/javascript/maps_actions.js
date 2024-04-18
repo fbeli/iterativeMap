@@ -12,7 +12,6 @@ const map = new mapboxgl.Map({
     zoom: 16,
     hash: true,
 
-
 });
 
 map.on('load', () => {
@@ -92,10 +91,6 @@ map.addControl(new mapboxgl.GeolocateControl({
     showUserHeading: true
 }),"bottom-right");
 
-
-
-
-
 /*
 Add an event listener that runs
   when a user clicks on the map element.
@@ -107,9 +102,8 @@ map.on('click', (event) => {
 
     });
 
-
     if (!features.length) {
-
+        myLocation();
         if(map.getZoom() > zoom_to_create_point && create_point){
             cadastro();
             point = event.lngLat;
@@ -147,7 +141,7 @@ map.on('click', (event) => {
                 insideHtml
             )
             .addTo(map);
-
+        setLatLong(feature.geometry.coordinates);
         console.log(feature.properties.pointId+" "+feature.properties.title );
 
     }
@@ -191,4 +185,18 @@ function show_guide(user){
     }
 
     document.getElementById("sh_professional").innerHTML = include;
+}
+
+function setLatLong(latLong){
+    longitude = latLong[0];
+    latitude = latLong[1];
+    save_cookies("latitude", latitude);
+    save_cookies("longitude", longitude);
+}
+
+//const element = document.getElementById("mapboxgl-ctrl-geolocate");
+//element.addEventListener("click", myFunction);
+function myLocation(){
+    save_cookies("latitude",map.getCenter().lat);
+    save_cookies("longitude", map.getCenter.lng);
 }
