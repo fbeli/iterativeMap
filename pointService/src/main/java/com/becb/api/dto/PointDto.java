@@ -36,6 +36,8 @@ public class PointDto{
     private Boolean guide;
     private String instagram;
     private String language;
+    private String photo;
+    private String type;
 
 
 

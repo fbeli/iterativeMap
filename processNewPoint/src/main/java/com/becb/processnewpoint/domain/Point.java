@@ -26,6 +26,7 @@ public class Point {
     private String description;
     private String shortDescription;
     private String audio;
+    private TypeEnum type;
 
     @DynamoDBAttribute(attributeName = "aprovado")
     private String aproved;
@@ -55,13 +56,15 @@ public class Point {
         switch (language) {
             case "English":
             case "english":
+            case "EN":
                 this.language = LanguageEnum.EN;
                 break;
             case "Espanhol":
             case "Español":
             case "spanish":
+            case "SP":
             case "Spanish":
-                this.language = LanguageEnum.ES;
+                this.language = LanguageEnum.SP;
                 break;
             default:
                 this.language = LanguageEnum.PT;
@@ -89,6 +92,21 @@ public class Point {
         }
 
         return photosStr.toString();
+    }
+    public void setType(String typestr){
+        if(typestr==null) {
+            type = TypeEnum.museum;
+        }else {
+            if(typestr.toLowerCase().contains("museum") ){
+                type = TypeEnum.museum;
+            }
+            if(typestr.toLowerCase().contains("gem") ){
+                type = TypeEnum.gem;
+            }
+            if(typestr.toLowerCase().contains("rest") ){
+                type = TypeEnum.restaurant;
+            }
+        }
     }
 
 }

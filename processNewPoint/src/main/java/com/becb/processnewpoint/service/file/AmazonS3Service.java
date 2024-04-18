@@ -1,8 +1,7 @@
 package com.becb.processnewpoint.service.file;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,17 @@ public class AmazonS3Service {
     @Value("${becb.storage.s3.directory-files}")
     private String directoryFile;
 
+    @Value("${becb.storage.s3.users_directory_template}")
+    private String usersTemplate;
+
+    @Value("${becb.storage.s3.users_directory}")
+    private String usersDirectory;
+
     public PutObjectResult saveAdminFile(String fileName, InputStream file) {
         return saveFile(bucket, directoryFile, file, fileName);
+    }
+    public PutObjectResult saveConstFile(String fileName, InputStream file) {
+        return saveFile(bucket, "", file, fileName);
     }
 
     /**
@@ -42,7 +50,7 @@ public class AmazonS3Service {
      */
     public PutObjectResult saveFile(String bucket, String directory, InputStream inputStream, String fileName) {
 
-        logger.info("Sending file {} to S3 in {}: ", fileName, amazonS3.getRegion());
+
 
         try {
             String filePath = getFilePath(fileName, directory);
@@ -55,7 +63,7 @@ public class AmazonS3Service {
                 objectMetadata.setContentType("text/html");
             }
             objectMetadata.setContentEncoding("UTF-8");
-
+            logger.info("Sending file {} to bucker {} in S3 region:{} ", filePath, bucket, amazonS3.getRegion());
             return amazonS3.putObject(bucket, filePath, inputStream, objectMetadata);
 
         } catch (Exception e) {
@@ -68,8 +76,15 @@ public class AmazonS3Service {
         return null;
     }
 
+
     private String getFilePath(String fileName, String directory) {
-        return String.format("%s/%s", directory, fileName);
+        if(directory.length()>1)
+            return String.format("%s/%s", directory, fileName);
+        else return fileName;
     }
 
+    public void copyUsersFile(String directory){
+        CopyObjectResult result = amazonS3.copyObject(bucket, usersTemplate,
+                bucket, usersDirectory+"/"+directory.replace("@","")+"/index.html");
+    }
 }

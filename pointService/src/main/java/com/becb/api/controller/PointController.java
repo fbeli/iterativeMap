@@ -1,7 +1,9 @@
 package com.becb.api.controller;
 
+import com.becb.api.core.Properties;
 import com.becb.api.dto.PointDto;
 import com.becb.api.dto.PointResponse;
+import com.becb.api.dto.PointVoteDto;
 import com.becb.api.service.ArquivoService;
 import com.becb.api.service.file.FileService;
 import com.becb.api.service.sqs.SqsService;
@@ -13,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +40,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class PointController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    Properties becbProperties;
 
     @Autowired
     SqsService sqsService;
@@ -84,10 +90,8 @@ public class PointController {
             pointDto.setPointId(UlidCreator.getUlid().toString());
 
         if (pointDto.getAudio() != null && !pointDto.getAudio().isEmpty()) {
-
             String filePath = fileService.saveAudio(pointDto.getAudio().replace("data:audio/ogg code=opus;base64,", ""),
                     pointDto.getPointId());
-
             pointDto.setAudio(filePath);
         }
 
@@ -138,14 +142,64 @@ public class PointController {
 
     }
 
-    private String configPoint(PointDto pointDto, HttpServletRequest request) {
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @PutMapping("/point/upload_file_link/{pointId}")
+    public PointResponse uploadFilelink(@PathVariable String pointId, @RequestParam("file") String link, HttpServletRequest request) throws IOException, InterruptedException {
 
+
+        String queue = addPhotoPointQueueName;
+        String message;
+
+        message = "{\"point_id\" : \"" + pointId + "\", \"link\" : \"" + link + "\"}";
+        sqsService.sendMessage(message, queue);
+
+        return new PointResponse("Uploading to " + queue);
+
+    }
+
+
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @PostMapping(value = "/point/vote")
+    public PointResponse vote(@RequestBody PointVoteDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
+
+        PointResponse response = new PointResponse("Vote added successfully");
+
+        if (pointDto.getPointId() == null){
+            response.setStatus(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+            response.setError("Point Id not received.");
+            return response;
+        }
+        if (pointDto.getVote() == null){
+            response.setStatus(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+            response.setError("Vote not received.");
+            return response;
+        }
+
+        String formatedPoint = configPointVote(pointDto, request);
+
+        try {
+            sqsService.sendMessage(formatedPoint, becbProperties.sqs.point_vote);
+        } catch (Exception e) {
+            logger.error("Error to add point: {}", e.getMessage());
+            return new PointResponse("500", "Error to add point" + e.getMessage());
+        }
+        return response;
+    }
+
+    private JSONObject getToken(HttpServletRequest request){
         String token = request.getHeader("Authorization").replace("Bearer ", "");
-
         String[] chunks = token.split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String payload = new String(decoder.decode(chunks[1]));
-        JSONObject jsonObject = new JSONObject(payload);
+
+        return new JSONObject(payload);
+    }
+
+    private String configPoint(PointDto pointDto, HttpServletRequest request) {
+
+        JSONObject jsonObject = getToken(request);
 
         pointDto.setUser_id(jsonObject.getString("usuario_id"));
         pointDto.setUser_email(jsonObject.getString("user_name"));
@@ -153,7 +207,6 @@ public class PointController {
         pointDto.setShare(jsonObject.getBoolean("share"));
         pointDto.setInstagram(jsonObject.getString("usuario_instagram"));
         pointDto.setShare(jsonObject.getBoolean("guide"));
-
         return unicodeEscapeToUtf8(pointDto.toString());
     }
 
@@ -178,4 +231,12 @@ public class PointController {
         }
     }
 
+    private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
+
+        JSONObject jsonObject = getToken(request);
+
+        pointDto.setUserId(jsonObject.getString("usuario_id"));
+
+        return pointDto.toString();
+    }
 }

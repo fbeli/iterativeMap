@@ -1,9 +1,6 @@
 
 let previous_div = null;
 
-
-
-
 function validate_password(){
     let password =  document.getElementById("reset_password").value;
     let second_password = document.getElementById("repeat_reset_password").value;

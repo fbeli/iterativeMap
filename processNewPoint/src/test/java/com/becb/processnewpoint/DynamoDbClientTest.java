@@ -3,14 +3,12 @@ package com.becb.processnewpoint;
 import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
-import com.becb.processnewpoint.service.AprovedEnum;
+import com.becb.processnewpoint.domain.AprovedEnum;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-
-import java.util.Locale;
 
 @SpringBootTest
 @ComponentScan({"com.becb.processnewpoint", "com.becb.processnewpoint.service", "com.becb.processnewpoint.domain"})

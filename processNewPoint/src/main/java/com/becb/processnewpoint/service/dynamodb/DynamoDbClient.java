@@ -10,7 +10,7 @@ import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import com.becb.processnewpoint.domain.Point;
-import com.becb.processnewpoint.service.AprovedEnum;
+import com.becb.processnewpoint.domain.AprovedEnum;
 import lombok.Setter;
 
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
@@ -49,7 +49,8 @@ public class DynamoDbClient {
                 .withBoolean("share", point.getUser().getShare())
                 .withBoolean("guide", point.getUser().getGuide())
                 .withString("instagram", point.getUser().getInstagram())
-                .withString("language", point.getLanguage().getValue());
+                .withString("language", point.getLanguage().getValue())
+                .withString("type", point.getType().getValue());
 
         if(point.getAudio() != null && !point.getAudio().isBlank()) {
                 item.withString("audio", point.getAudio());
@@ -63,7 +64,10 @@ public class DynamoDbClient {
         itemSpec.withItem(item);
 
         PutItemOutcome putItem = dynamoDB.getTable(pointTable).putItem(itemSpec);
-        return putItem.getItem();
+
+        if(point .getPhotos() != null && !point.getPhotos().isEmpty())
+            addPhotoToPoint(point);
+        return item;
     }
 
     public Item getPoint(String pointId) {
@@ -71,6 +75,14 @@ public class DynamoDbClient {
         Table table = dynamoDB.getTable(pointTable);
 
         return table.getItem(new PrimaryKey("pointId", pointId));
+
+    }
+
+    public Item getItem(String objectId, String primaryKey, String tableName) {
+
+        Table table = dynamoDB.getTable(tableName);
+
+        return table.getItem(new PrimaryKey(primaryKey, objectId));
 
     }
     public long getTotalPoints() {
@@ -126,6 +138,13 @@ public class DynamoDbClient {
         Map<String, Object> expressionMap = new HashMap<>();
         expressionMap.put(":ativo", aprovado);
         ItemCollection<ScanOutcome> outcome =  table.scan("aprovado = :ativo",null,null,  expressionMap);
+        return outcome;
+    }
+    public ItemCollection<ScanOutcome>  getPointsByUserId(String userId) {
+        Table table = dynamoDB.getTable(pointTable);
+        Map<String, Object> expressionMap = new HashMap<>();
+        expressionMap.put(":user_id", userId);
+        ItemCollection<ScanOutcome> outcome =  table.scan("user_id = :user_id",null,null,  expressionMap);
         return outcome;
     }
 

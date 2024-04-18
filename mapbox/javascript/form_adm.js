@@ -7,11 +7,40 @@ let zoom_to_create_point = 16.5;
 let zoom = 10;
 
 function init() {
+    read_cookies();
     if(accessToken !== null){
         afterLogin();
     }
 }
+
+
+async function read_cookies(){
+
+    let token = "token=";
+    let name ="name=";
+    let lat = "latitude=";
+    let long = "longitude=";
+    let access = "access="
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    let c;
+    for(let i = 0; i <ca.length; i++) {
+        c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            userName = c.substring(name.length, c.length);
+        }
+        if (c.indexOf(token) == 0) {
+            accessToken = c.substring(token.length, c.length);
+            //testToken();
+        }
+    }
+}
+
 function afterLogin(){
+    fechar_divs();
     document.getElementById("after_login_div").style.display = 'block';
 }
 

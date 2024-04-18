@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 //@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -59,7 +60,6 @@ public class LoginController   {
 		LoginResponse loginResponse = authorizationService.login(loginDto);
 		if(loginResponse.getStatus() != HttpServletResponse.SC_OK){
 			response.setStatus(loginResponse.getStatus());
-			//response.setHeader("Access-Control-Allow-Origin", "cloudfront.net");
 			response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS, PUT, POST");
 			response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -83,6 +83,7 @@ public class LoginController   {
 			if(id == null){
 				return internalServerError(response, "Erro to add user.");
 			}
+
 			loginResponse = authorizationService.login(loginDto);
 		}catch (UsuarioAlreadyExistsException e){
 			response.setStatus(HttpServletResponse.SC_CONFLICT);

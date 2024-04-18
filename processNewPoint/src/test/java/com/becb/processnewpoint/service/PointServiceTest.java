@@ -69,6 +69,13 @@ class PointServiceTest {
     }
 
     @Test
+    void savePointAudioNull() {
+        when(dynamodbClient.savePoint(any())).thenReturn(new Item());
+        Item item = pointService.savePoint(getMessageFromStackAudioNull());
+        Assert.assertNotNull(item);
+
+    }
+    @Test
     void savePointWithAudio() {
         when(dynamodbClient.savePoint(any())).thenReturn(new Item());
         Assert.assertNotNull(pointService.savePoint(getMessageFromStackWithAudio()));
@@ -155,6 +162,22 @@ class PointServiceTest {
                 "}" ;
     }
 
+    private String getMessageFromStackAudioNull(){
+
+        return "{"+
+                "\"description\": \"Marquês de Pombal era muito bom\","+
+                "\"latitude\": \"Latitude: 38.72524959265044\","+
+                "\"lngLat\": null,"+
+                "\"longitude\": \"Longitude: -9.15007687024712\","+
+                "\"pointId\": null,"+
+                "\"s3Voice\": null,"+
+                "\"title\": \"Marqus de Pombal\","+
+                "\"user_email\": \"frederico@gmail.com\","+
+                "\"user_id\": \"335254e4-73e6-4c9d-a271-904cb3bf320a\","+
+                "\"user_name\": \"Frederico\","+
+                "\"audio\": null"+
+                "}" ;
+    }
     @Test
     void testConvertItemToPoint() {
         Item item = new Item()

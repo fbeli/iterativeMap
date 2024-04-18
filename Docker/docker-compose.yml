@@ -59,6 +59,7 @@ services:
   #    - files:/app/file
   #  command: ["/wait-for-it.sh", "dynamodb:8000", "-t", "180", "--", "/entrypoint.sh"]
 
+
   sqs:
     container_name: sqs
     image: roribio16/alpine-sqs
@@ -81,6 +82,7 @@ services:
       - dynamodb
       - sqs
     entrypoint: sh -c '  aws dynamodb create-table --table-name points --endpoint-url http://dynamodb:8000  --region us-east-1 --attribute-definitions AttributeName=pointId,AttributeType=S AttributeName=aprovado,AttributeType=S --key-schema AttributeName=pointId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2 --global-secondary-indexes "{\"IndexName\":\"aprovado-index\",\"KeySchema\":[{\"AttributeName\":\"aprovado\",\"KeyType\":\"HASH\"}],\"Projection\":{\"ProjectionType\":\"ALL\"},\"ProvisionedThroughput\":{\"ReadCapacityUnits\":5,\"WriteCapacityUnits\":5}}"
+      &&  aws dynamodb create-table --table-name points_vote --endpoint-url http://dynamodb:8000  --region us-east-1 --attribute-definitions AttributeName=pointId,AttributeType=S  --key-schema AttributeName=pointId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2
       && tail -f /dev/null'
 
   dynamodb:

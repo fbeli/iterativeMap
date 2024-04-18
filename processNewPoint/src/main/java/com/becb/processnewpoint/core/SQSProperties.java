@@ -20,6 +20,7 @@ public class SQSProperties {
     public String add_photo_point;
     public String add_audio_point;
     public String reset_password;
+    public String point_vote;
 
 
 }

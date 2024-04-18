@@ -3,7 +3,7 @@ let mediaRecord;
 let recording = false;
 let started_audio = false;
 
-$(function(){
+/*$(function(){
 
 //function start_record(){
     navigator.mediaDevices
@@ -27,7 +27,33 @@ $(function(){
         }, err => {
             alert("please allow audio record");
         })
-})
+})*/
+
+function start_record() {
+    navigator.mediaDevices
+        .getUserMedia({audio:true})
+        .then( stream => {
+            mediaRecord = new MediaRecorder(stream);
+            let chunks = []
+            mediaRecord.ondataavailable = data => {
+                console.log(data);
+                chunks.push(data.data);
+            }
+            mediaRecord.onstop = () => {
+                console.log("stopped media record");
+                const blob = new Blob(chunks, {type: 'audio/ogg code=opus'})
+                const reader = new FileReader();
+                reader.readAsDataURL(blob)
+                reader.onloadend = function(){
+                    document.getElementById("cadastro_audio").value =  reader.result;
+                }
+            }
+            // Start recording
+            mediaRecord.start();
+        }, err => {
+            alert("please allow audio record");
+        })
+}
 
 async function gravar() {
 
@@ -41,7 +67,8 @@ async function gravar() {
         currentTime = undefined;
 
     } else {
-        mediaRecord.start();
+        //mediaRecord.start();
+        start_record();
         countdownTimer = setInterval(updateCountdown, 1000);
         // document.getElementById("btn_gravar").textContent = "Stop";
         recording = true;

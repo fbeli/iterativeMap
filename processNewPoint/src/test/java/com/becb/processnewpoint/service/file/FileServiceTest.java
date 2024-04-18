@@ -4,25 +4,16 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
-import com.becb.processnewpoint.service.AprovedEnum;
 import com.becb.processnewpoint.service.sqs.SqsConfiguration;
-import net.minidev.json.JSONValue;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import javax.validation.constraints.AssertTrue;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;

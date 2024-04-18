@@ -1,4 +1,4 @@
-package com.becb.processnewpoint.service;
+package com.becb.processnewpoint.domain;
 
 public enum AprovedEnum {
 

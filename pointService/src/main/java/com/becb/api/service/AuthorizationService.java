@@ -30,12 +30,23 @@ public class AuthorizationService {
 
     private static final Logger logger = Logger.getLogger(AuthorizationService.class.getName());
 
+    public boolean isTokenValid(String token) throws IOException {
+        HttpURLConnection connection = getConnection(auth_url+"/oauth/check_token");
+        String params = "token="+token;
+        byte[] postData = params.getBytes(StandardCharsets.UTF_8);
+        OutputStream outputStream = connection.getOutputStream() ;
+        outputStream.write(postData);
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            return true;
+        }
+        return false;
+    }
     public LoginResponse login(LoginDto loginDto) {
 
         LoginResponse loginResponse = new LoginResponse();
         try {
-
-            logger.info("URL_CONNECTION: " + auth_url) ;
 
             HttpURLConnection connection = getConnection(auth_url+"/oauth/token");
 

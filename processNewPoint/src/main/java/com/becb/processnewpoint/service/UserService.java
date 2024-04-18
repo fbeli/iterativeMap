@@ -1,6 +1,10 @@
 package com.becb.processnewpoint.service;
 
+import com.becb.processnewpoint.domain.Point;
+import com.becb.processnewpoint.domain.User;
+import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.email.SendEmailService;
+import com.becb.processnewpoint.service.file.FileService;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONObject;
@@ -11,9 +15,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -24,6 +30,16 @@ public class UserService {
     @Autowired
     @Qualifier("sendMailCourier")
     SendEmailService sendEmailService;
+
+    @Autowired
+    DynamoDbClient dynamoDbClient;
+
+    @Autowired
+    PointService pointService;
+
+    @Autowired
+    FileService fileService;
+
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -40,54 +56,66 @@ public class UserService {
         return false;
     }
 
-    public boolean saveCode(String message, String code) {
-        return sendCode(new ResetRequestDto(message), code);
-    }
-    private boolean sendCode(ResetRequestDto message, String code) {
+    public boolean sendCode(String inputMessage, String code) {
+        ResetRequestDto message = new ResetRequestDto(inputMessage);
 
-            try {
-                String fullUrl = auth_url + "/user/reset_create_code";
-                URL url = new URL(fullUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setDoOutput(true);
-                connection.setDoInput(true);
+        try {
+            String fullUrl = auth_url + "/user/reset_create_code";
+            URL url = new URL(fullUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
 
-                String requestBody = "{\"email\": \"" + message.email + "\"," +
-                        "\"name\": \"" + message.name + "\"," +
-                        "\"code\": \"" + code + "\"," +
-                        "\"userId\": \"" + message.userId + "\"}";
+            String requestBody = "{\"email\": \"" + message.email + "\"," +
+                    "\"name\": \"" + message.name + "\"," +
+                    "\"code\": \"" + code + "\"," +
+                    "\"userId\": \"" + message.userId + "\"}";
 
-                OutputStream outputStream = connection.getOutputStream();
-                outputStream.write(requestBody.getBytes());
-                outputStream.flush();
-                outputStream.close();
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(requestBody.getBytes());
+            outputStream.flush();
+            outputStream.close();
 
-                int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    connection.disconnect();
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                connection.disconnect();
+                return true;
+            } else {
+                return false;
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new RuntimeException(e);
         }
-    }
-@Getter
-@Setter
- class ResetRequestDto {
 
-    ResetRequestDto(String message){
-        JSONObject jsonObject = new JSONObject(message);
-        this.name = jsonObject.optString("name");
-        this.email = jsonObject.optString("email");
-        this.userId = jsonObject.optString("user_id");
     }
-    String email;
-    String userId;
-    String name;
 
+    public boolean createUserMap(User user) throws IOException {
+
+        List<Point> points = pointService.convertItemsToPoints(dynamoDbClient.getPointsByUserId(user.getUserId()));
+        fileService.createFileToUserMap(points, user.getInstagram());
+        fileService.copyUserFiles(user.getInstagram());
+        fileService.createConstFile(user.getInstagram());
+        return true;
+    }
+
+
+    @Getter
+    @Setter
+    class ResetRequestDto {
+
+        ResetRequestDto(String message) {
+            JSONObject jsonObject = new JSONObject(message);
+            this.name = jsonObject.optString("name");
+            this.email = jsonObject.optString("email");
+            this.userId = jsonObject.optString("user_id");
+        }
+
+        String email;
+        String userId;
+        String name;
+
+    }
 }

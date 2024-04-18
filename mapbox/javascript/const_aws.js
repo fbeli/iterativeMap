@@ -5,5 +5,7 @@
     gerar_geo_file_url:"https://webservice.guidemapper.com:8081/gerarArquivoParaMapa",
     gerar_arquivo_to_aprove_url: "https://webservice.guidemapper.com:8081/gerarArquivoAprovacao",
     end_point_url: "https://webservice.guidemapper.com:8081",
-    get_user: "https://webservice.guidemapper.com:8081/user/"
+    get_user: "https://webservice.guidemapper.com:8081/user/",
+    forget_password: "https://webservice.guidemapper.com:8081/user/forget",
+    reset_url: "https://webservice.guidemapper.com:8081/user/reset_password"
 }

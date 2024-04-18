@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJH5ERQBXB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-FJH5ERQBXB');
+    </script>
+
+    <script>
+        function handler(event)  {
+            var response  = event.response;
+            var headers  = response.headers;
+
+            // If Access-Control-Allow-Origin CORS header is missing, add it.
+            // Since JavaScript doesn't allow for hyphens in variable names, we use the dict["key"] notation.
+            if (!headers['access-control-allow-origin']) {
+                headers['access-control-allow-origin'] = {value: "*"};
+                console.log("Access-Control-Allow-Origin was missing, adding it now.");
+            }
+
+            return response;
+        }
+    </script>
+
+    <title>Points on a map</title>
+    <script src="./const.js"></script>
+    <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
+        <link rel="stylesheet" type="text/css" href="../../css/util.css">
+        <link rel="stylesheet" type="text/css" href="../../css/button.css">
+        <link rel="stylesheet" type="text/css" href="../../css/main.css">
+        <link rel="stylesheet" type="text/css" href="../../css/inicio.css">
+
+</head>
+
+<body onload="fly_back()">
+
+            <div id='map'>
+              <div id="sidebar" >
+                <ul>
+
+                    <li>
+                        <a href="https://www.guidemapper.com/landing/index.html" id="li_introduce_a_link" >Introduce Us</a>
+                    </li>
+
+                </ul>
+
+              </div>
+
+                <div id='starting' class="modal_body"  style="display: block" >
+                    <div class="child"><img class="child" src="../../img/logo.png" alt=""></div>
+                </div>
+
+              <!-- Erro Modal-->
+                <div class="wrap-login100 to_front" id="erro_alert_div" style="display: none;">
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Error!</h4>
+                        <p id="erro_alert_text" class="p.erro"></p><br/>
+                        <hr>
+                        <p class="mb-0">Please check data and try again.</p>
+                    </div>
+                    <div class="text-center p-t-25">
+                        <a class="txt2" onclick="close_error_div()" href="#">
+                            Close
+                        </a>
+                    </div>
+                </div>
+
+                <div class="create_point wrap-login100 to_front" id="info_div" style="display: none;">
+                    <div class="alert alert-danger" role="alert">
+                        <p  class="title alert-heading" id="info_title">New point added</p>
+                        <p  class="p.erro" id="info_highlight"></p><br/>
+                        <hr>
+                        <p class="mb-0" id="info_info">This point will be reviwed and add after it. It can take some
+                        minutes, hours or day</p>
+                    </div>
+                    <div class="text-center p-t-25">
+                        <a class="txt2" onclick="fechar_divs()" href="#">
+                            Close
+                        </a>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+            <script src="../javascript/posicao.js">   </script>
+            <script src="../javascript/maps_actions.js">   </script>
+            <script src="../javascript/divs_actions.js">   </script>
+
+
+</body>
+
+</html>

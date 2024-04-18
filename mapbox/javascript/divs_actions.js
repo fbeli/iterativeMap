@@ -23,15 +23,15 @@ function show_create_points_warning() {
 function option_create_points() {
     fechar_divs();
     if(accessToken !== undefined && accessToken!== null && accessToken !== "") {
-    if (create_point) {
-        create_point = false;
-        document.getElementById("a_create_points").innerHTML = 'Add Spot';
-    } else {
-        create_point = true;
-        show_create_points_warning();
-        document.getElementById("a_create_points").innerHTML = 'Stop Add';
-
-    }
+        if (create_point) {
+            create_point = false;
+            document.getElementById("a_create_points").innerHTML = 'Add Spot';
+        } else {
+            create_point = true;
+            show_create_points_warning();
+            document.getElementById("a_create_points").innerHTML = 'Stop Add';
+            map.setZoom(17);
+        }
     }else{
         document.getElementById("div_please_login").style.display = 'flex';
     }
@@ -55,13 +55,14 @@ function fechar_divs() {
     document.getElementById("sign_up_div").style.display = 'none';
     document.getElementById("cadastro_div").style.display = 'none';
     document.getElementById("welcome_div_id").style.display = 'none';
-    document.getElementById("starting").style.display = 'none';
+    //document.getElementById("starting").style.display = 'none';
     document.getElementById("create_points_warning").style.display = 'none';
-    document.getElementById("login_opt_ul").style.display = 'none';
+    //document.getElementById("login_opt_ul").style.display = 'none';
     document.getElementById("info_div").style.display = 'none';
     document.getElementById("cadastro_audio").value = null;
     document.getElementById("div_please_login").style.display = 'none';
     document.getElementById("forget_password_div").style.display = 'none';
+    document.getElementById("sidebar_logout_div").style.display = 'none';
 
 }
 
@@ -85,46 +86,6 @@ function show_div(el) {
     document.getElementById(el).style.display = 'block';
 }
 
-function introduce() {
-
-    fechar_divs();
-    let mapDescription;
-    if (navigator.language.indexOf("pt") > -1) {
-        mapDescription = `
-        Descubra e Contribua para Nosso Mapa Turístico feito pela comunidade!<br><br>
-        Procurando explorar os melhores pontos turísticos em sua área? Nosso mapa interativo tem tudo o que você precisa!<br><br>
-
-Por que escolher nosso mapa?<br>
-
-1. Cobertura Abrangente: Dos pontos turísticos famosos às joias escondidas, nosso mapa inclui tudo.<br>
-2. Fácil de Usar: Amplie locais, obtenha informações detalhadas e rotas em poucos cliques.<br>
-3. Colaboração Comunitária: Compartilhe suas próprias descobertas e ajude outros a encontrar lugares incríveis.<br>
-4. Recomendações Personalizadas: Filtragem e busca com base em suas preferências.<br>
-5. Compartilhamento Social: Compartilhe seus pontos turísticos favoritos com amigos e família.<br>
-Junte-se à nossa comunidade de aventureiros hoje, contribua com o mapa e descubra tesouros escondidos juntos!<br>
-`;
-    } else {
-
-        mapDescription = `
-Discover and Contribute to Our Community Touristic Map!<br><br>
-Looking to explore the best touristic spots in your area? Our interactive map has you covered!<br><br>
-Why choose our map?<br>
-1. Extensive Coverage: From famous landmarks to hidden gems, our map includes it all.<br>
-2. Easy to Use: Zoom in on locations, get detailed info, and directions in a few clicks.<br>
-3. Community Collaboration: Share your own discoveries and help others find amazing spots.<br>
-4. Personalized Recommendations: Filter and search based on your preferences.<br>
-5. Social Sharing: Share your favorite touristic points with friends and family.<br><br>
-Join our community of adventurers today, contribute to the map, and uncover hidden treasures together!
-`;
-    }
-
-    document.getElementById("info_info").innerHTML = mapDescription;
-    document.getElementById("info_title").innerHTML = "Introducing Ourselves";
-    document.getElementById("info_highlight").innerHTML = "";
-    document.getElementById("info_div").style.display = 'flex';
-
-}
-
 function add_logo(){
     let div_left = document.getElementsByClassName("mapboxgl-ctrl-bottom-left");
     div_left[0].innerHTML = "<a class=\"mapboxgl-ctrl-logo\" target=\"_blank\" rel=\"noopener nofollow\" href=\"https://www.mapbox.com/\" aria-label=\"Mapbox logo\"></a>" +
@@ -135,3 +96,10 @@ function add_logo(){
     div_top_right[0].class = "mapboxgl-ctrl-top-right zoom";
 }
 
+
+//const element = document.getElementsByClassName("mapboxgl-ctrl-geolocate");
+//element.addEventListener("click", myFunction);
+function myFunction(){
+    save_cookies("latitude",map.getCenter().lat);
+    save_cookies("longitude", map.getCenter.lng);
+}

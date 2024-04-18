@@ -18,4 +18,9 @@ public class User {
         return instagram;
     }
 
+    public Boolean getGuide() {
+        if(guide== null)
+            return false;
+        return guide;
+    }
 }

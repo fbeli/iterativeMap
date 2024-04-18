@@ -34,6 +34,9 @@ public class FileService {
     @Value("${file.filetomap.master}")
     String masters;
 
+    @Value("${becb.storage.s3.users_directory}")
+    private String usersDirectory;
+
     @Value("${file.filetomap.lang}")
     String languages;
 
@@ -83,7 +86,31 @@ public class FileService {
         return filesCreated;
     }
 
-     public String configFilename(String fileName, String sufix ){
+    public boolean createFileToUserMap(List<Point> points, String userInstagram) throws IOException{
+        StringBuilder sb = createInputToFile(points);
+        String filename = userInstagram.replace("@","")+"_map_.geojson";
+        String version = createFile(filename, sb);
+
+        if (version != null) {
+            logger.info("Map file created : {}", filename);
+            return true;
+        }return false;
+    }
+    public void copyUserFiles(String userInstagram){
+        amazonS3Service.copyUsersFile(userInstagram);
+    }
+    public void createConstFile(String instagram){
+        StringBuilder sb = new StringBuilder();
+        instagram = instagram.replace("@","");
+        sb.append("const config = {\n" +
+                "    map_file:\"https://www.guidemapper.com/file/"+instagram+"_map_.geojson\"\n" +
+                "}");
+        String fileName = usersDirectory+"/"+instagram.replace("@","")+"/const.js";
+        PutObjectResult result =  amazonS3Service.saveConstFile( fileName, createTempFile(sb));
+        result.getVersionId();
+    }
+
+    public String configFilename(String fileName, String sufix ){
         String filePrefix = fileName.substring(0, fileName.lastIndexOf("."));
         String fileSuffix = fileName.substring(filePrefix.length());
         return filePrefix+sufix+"_"+fileSuffix;
@@ -129,13 +156,13 @@ public class FileService {
            return file;
         }else {*/
 
-        PutObjectResult result =  amazonS3Service.saveAdminFile( fileName, createTempFile(fileName, sb));
+        PutObjectResult result =  amazonS3Service.saveAdminFile( fileName, createTempFile(sb));
         return result.getVersionId();
         //}
     }
 
 
-    private InputStream createTempFile(String fileName, StringBuilder sb)
+    private InputStream createTempFile( StringBuilder sb)
     {
 
             InputStream inputStream = new ByteArrayInputStream(sb.toString().getBytes());
@@ -234,11 +261,14 @@ public class FileService {
             }
         }
         if(point.getPhotos() != null && !point.getPhotos().isEmpty()){
-            if(appEndpoint.startsWith("https")){
-                photoEndpoint = appEndpoint.trim()+"/"+point.getPhotos().get(0);
-            }else{
-                photoEndpoint = "https://"+appEndpoint.trim()+"/"+point.getPhotos().get(0);
-            }
+            if(!point.getPhotos().get(point.getPhotos().size()-1).contains("http")){
+                if(appEndpoint.startsWith("https")){
+                    photoEndpoint = appEndpoint.trim()+"/"+point.getPhotos().get(0);
+                }else{
+                    photoEndpoint = "https://"+appEndpoint.trim()+"/"+point.getPhotos().get(0);
+                }
+            }else
+                photoEndpoint =  point.getPhotos().get(point.getPhotos().size()-1);
         }
         return "\n{\n" +
                 "    \"type\": \"Feature\",\n" +

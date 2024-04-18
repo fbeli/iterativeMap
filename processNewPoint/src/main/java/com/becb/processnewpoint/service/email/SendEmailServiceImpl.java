@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import com.becb.processnewpoint.exception.EmailException;
-import com.becb.processnewpoint.core.EmailProperties;
+import com.becb.processnewpoint.core.BecbProperties;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +16,7 @@ public class SendEmailServiceImpl implements SendEmailService{
     private JavaMailSender mailSender;
 
     @Autowired
-    EmailProperties emailProperties;
+    BecbProperties becbProperties;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -36,7 +36,7 @@ public class SendEmailServiceImpl implements SendEmailService{
             mailMessage.setTo(to);
             mailMessage.setSubject(subject);
             mailMessage.setText(htmlContent);
-            mailMessage.setFrom(emailProperties.getRemetente());
+            mailMessage.setFrom(becbProperties.email.remetente);
             mailSender.send(mailMessage);
 
         }catch (Exception e) {

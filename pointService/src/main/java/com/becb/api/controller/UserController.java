@@ -27,7 +27,7 @@ public class UserController {
     SqsService sqsService;
 
     @Value("${sqs.queue.reset_password}")
-    private String reserPasswordQueue;
+    private String resetPasswordQueue;
 
 
     @GetMapping("/user/{id}")
@@ -44,22 +44,29 @@ public class UserController {
 
     @GetMapping("/user/email/{email}")
     public LoginDto getUserByEmail(@RequestParam String email) throws IOException {
-
         return userService.getUser(email);
-
     }
+
 
     @PostMapping("/user/forget")
     @ResponseBody
     public LoginResponse forgetPassword(@RequestBody LoginDto requestLoginDto,  HttpServletResponse response) throws IOException {
 
         LoginDto loginDto =  userService.getUserByEmail(requestLoginDto.getEmail());
-
-        String message = "{ \"name\" : \""+loginDto.getName()+"\", \"email\" : \""+loginDto.getEmail()+"\" ," +
-                " \"user_id\" : \""+loginDto.getUserId()+"\" }";
-        sqsService.sendMessage(message, reserPasswordQueue);
         LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setStatus(response.getStatus());
+
+        if(loginDto.getName()!=null) {
+            String message = "{ \"name\" : \"" + loginDto.getName() + "\", \"email\" : \"" + loginDto.getEmail() + "\" ," +
+                    " \"user_id\" : \"" + loginDto.getUserId() + "\" }";
+
+            sqsService.sendMessage(message, resetPasswordQueue);
+            loginResponse.setStatus(response.getStatus());
+        } else {
+            logger.info("Email not found: {}", requestLoginDto.getEmail());
+            loginResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            loginResponse.setError("email not found.");
+        }
+
 
         return loginResponse;
 
@@ -69,8 +76,20 @@ public class UserController {
     @ResponseBody
     public LoginResponse resetPassword(@RequestBody LoginDto requestLoginDto,  HttpServletResponse response) throws IOException {
 
-        return   userService.resetPassword(requestLoginDto);
+        return userService.resetPassword(requestLoginDto);
 
+    }
+
+    @GetMapping("/token/{token}")
+    @ResponseBody
+    public LoginDto testToken(@PathVariable String token) throws IOException {
+        return new LoginDto();
+    }
+
+    @PostMapping("/token")
+    @ResponseBody
+    public LoginDto postTestToken(@RequestBody String token) throws IOException {
+        return new LoginDto();
     }
 
 }

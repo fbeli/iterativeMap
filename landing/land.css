@@ -1,0 +1,203 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+}
+
+.header {
+    background-color: black;
+    opacity: 0.8;
+    background-image: url("mapa.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 36vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 3rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.part1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem 0;
+    margin: 0;
+    width: 100%;
+    background-color: #f9f9ff;
+}
+
+.part1 h1 {
+    font-size: 46px;
+    text-transform: uppercase;
+    color: #333;
+    text-align: center;
+    margin-bottom: 2rem;
+    font: "Corben";
+}
+
+.part1 .features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.part1 .feature {
+    width: 100%;
+    max-width: 33.33%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.part1 .feature h2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.part1 .feature p {
+    font-size: 1.2rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.part2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem 0;
+    margin: 0;
+    width: 100%;
+    background-color: #f9f9f5;
+}
+
+.part2 h1 {
+    font-size: 46px;
+    text-transform: uppercase;
+    color: #333;
+    text-align: center;
+    margin-bottom: 2rem;
+    font: "Corben";
+}
+
+.part2 .features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.part2 .feature {
+    width: 100%;
+    max-width: 33.33%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.part2 .feature h2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.part1 h2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 1rem;
+}
+.part2 h2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 1rem;
+}
+.part2 .feature p {
+    font-size: 1.2rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.part2 .feature2 {
+    width: 100%;
+    max-width: 66%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.part2 .feature3 {
+    width: 100%;
+    max-width: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 1rem;
+}
+
+footer a:hover {
+    color: #ccc;
+}
+
+@media screen and (max-width: 768px) {
+    .part1 .features {
+        flex-direction: column;
+    }
+
+    .part1 .feature {
+        width: 100%;
+    }
+
+    .part2 .features {
+        flex-direction: column;
+    }
+
+    .part2 .feature {
+        width: 100%;
+    }
+}

@@ -1,6 +1,8 @@
 package com.becb.processnewpoint.service.sqs;
 
-import com.becb.processnewpoint.service.AprovedEnum;
+import com.becb.processnewpoint.core.BecbProperties;
+import com.becb.processnewpoint.domain.AprovedEnum;
+import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.service.PointService;
 import com.becb.processnewpoint.service.SuportService;
 import com.becb.processnewpoint.service.UserService;
@@ -10,6 +12,8 @@ import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 import java.util.Map;
 
 @Slf4j
@@ -22,11 +26,17 @@ public class SqsService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BecbProperties becbProperties;
+
     @SqsListener(value = "${sqs.queue.new_point}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
-    public void listenNewPointQueue(@Headers Map<String, Object> headers, String message) {
-        log.info("Received message on  queue new_point : {}", message);
+    public void listenNewPointQueue(@Headers Map<String, Object> headers, String message) throws IOException {
+        log.info("Received message on queue new_point : {}", message);
         if(SuportService.isValid(message)){
-            pointService.savePoint(message);
+            Point point = pointService.convertItemToPoint(pointService.savePoint(message));
+            if(point.getUser().getInstagram()!=null){
+                userService.createUserMap(point.getUser());
+            }
         }else{
             log.error("Invalid message received on queue new_point : {}: ", message);
         }
@@ -99,11 +109,25 @@ public class SqsService {
     public void sendMailToResetPass(@Headers Map<String, Object> headers, String message) {
         log.info("Received message on sqs.queue.password.sendmail: {}", message);
         String  code = SuportService.getCode();
-        if(userService.saveCode(message, code)) {
+        if(userService.sendCode(message, code)) {
+            log.info("Code saved to message: {} code to  password : {}", message, code  );
             userService.sendEmailResetPassword(message, code);
         }else
             log.error("Error ask for reset password: {}", message);
 
     }
+    @SqsListener(value = "${sqs.queue.point_vote}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+    public void addVote(@Headers Map<String, Object> headers, String message) {
+        log.info("Received message on sqs.queue.point_vote: {}", message);
+        String  code = SuportService.getCode();
+        if(userService.sendCode(message, code)) {
+            log.info("Code saved to message: {} code to  password : {}", message, code  );
+            userService.sendEmailResetPassword(message, code);
+        }else
+            log.error("Error ask for reset password: {}", message);
+
+    }
+
+
 
 }

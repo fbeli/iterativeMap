@@ -1,29 +1,42 @@
 
 
 let accessToken = null;
+let userName = null;
 let previous_div = null;
 let create_point = false;
 let zoom_to_create_point = 16.5;
+let formattedPhoneNumber;
 let zoom = 16;
+let link;
+let firstTime = true;
 
 function afterLogin(){
     fechar_divs();
 
     const decode =  decodeURIComponent(atob(accessToken.split('.')[1].replace('-', '+').replace('_', '/')).split('').map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`).join(''));
     //console.log(decode);
-    let nome = JSON.parse(decode)["nome_completo"]
+    let nome = JSON.parse(decode)["nome_completo"];
+    let instagram = JSON.parse(decode)["usuario_instagram"];
     document.getElementById("welcome_name").innerHTML =  nome;
+    if(instagram !== undefined || instagram !== "" || instagram != "@null") {
+        link = "www.mygmap.com/" + instagram.replace("@", "");
+        document.getElementById("span_msg").innerHTML = "Now you have your own map <br>" + link +
+            "<br><a href='#' onclick='copyLink()' title='Copy'> <img aria-label='copy' src='img/copy.png' id='copy' style='width:20px'/></a>";
+        document.getElementById("span_msg").style.fontSize = "small"
+    }
     get_li_after_login(nome);
+    save_cookies("token", accessToken);
+    save_cookies("name", nome);
     welcome_div_show();
 }
-function get_li_after_login(nome){
-    if(nome.indexOf(' ') >= 0){
-        nome = nome.split(" ")[0];
-    }
 
-    document.getElementById("li_login_a_link").innerHTML = nome ;
-    document.getElementById("li_login_a_link").setAttribute("onclick", "login_opt_ul_show()");
+function copyLink(){
+    navigator.clipboard.writeText(link);
+}
 
+
+function open_div_login(){
+    document.getElementById("sidebar_logout_div").style.display="block";
 }
 function execute_login(){
 
@@ -89,7 +102,6 @@ async function forget_password(){
 
 function setToken(receicedToken){
     accessToken = "Bearer "+receicedToken;
-
 }
 
 function validateEmail(email) {
@@ -107,7 +119,7 @@ function validateAndFormatPhoneNumber(phoneNumber) {
     formattedPhoneNumber = addPlusIfMissing(phoneNumber).replace(/\s/g, '').replace(/-/g, '').replace(/\./g, '');
     return regex.test(formattedPhoneNumber);
 }
-let formattedPhoneNumber;
+
 
 function form_sign_in_is_ok(){
     let validEmail = validateEmail(document.getElementById("sign_up_email").value);
@@ -185,11 +197,13 @@ function execute_sign_in(){
         error_div_event("sign_up_div", "Erro to connect, try again latter");
     }
 }
+
 function logout(){
+
     accessToken = null;
     document.getElementById("li_login_a_link").innerHTML = "Login";
-    document.getElementById("li_login_a_link").setAttribute("onclick", "login()");
-    document.getElementById("login_opt_ul").style.display = 'none';
+    document.getElementById("sidebar_login_div").setAttribute("onclick", "login()");
+    fechar_divs();
 
 }
 function form_cadastro_is_ok(){
@@ -206,6 +220,11 @@ function form_cadastro_is_ok(){
         error_div_event("cadastro_div", "Insert Description");
         return false ;
     }
+    if(document.getElementById("cadastro_place_type").value === 'Place Type'){
+        error_div_event("cadastro_div", "Insert Place Type");
+        return false ;
+    }
+
     return true;
 }
 
@@ -215,6 +234,7 @@ async function create_new_point() {
     if (recording) {
         gravar();
     }
+    document.getElementById("btn_criar_ponto").innerHTML = "Saving Point - Wait";
 
     let fileInput = document.getElementById('cadastro_img') ;
     let audioInput = document.getElementById('cadastro_audio_upload') ;
@@ -226,7 +246,8 @@ async function create_new_point() {
         title: document.getElementById("cadastro_titulo").value,
         description: document.getElementById("cadastro_description").value,
         audio: document.getElementById("cadastro_audio").value,
-        language: document.getElementById("cadastro_language").value
+        language: document.getElementById("cadastro_language").value,
+        type: document.getElementById("cadastro_place_type").value
     };
     try {
 
@@ -260,10 +281,10 @@ async function create_new_point() {
                     document.getElementById("cadastro_description").value = 'Description';
                     document.getElementById("cadastro_audio").value = "";
                     document.getElementById("btn_cadastro_img").innerHTML = "Select Picture";
+                    document.getElementById("btn_criar_ponto").innerHTML = "Create Point";
                     //document.getElementById("cadastro_img").value = null;
 
                 } else {
-
                     error_div_event("cadastro_div", "Erro to create new point.Check data and try again.");
                 }
 
@@ -274,6 +295,19 @@ async function create_new_point() {
             });
     } catch (e) {
         console.log(e.value);
+    }
+}
+
+function clearOnFocus(fiel_id, defaul_value){
+    field_value = document.getElementById(fiel_id).value;
+    if(field_value == defaul_value){
+        document.getElementById(fiel_id).value = "";
+    }
+}
+function onExit(fiel_id, defaul_value){
+    field_value = document.getElementById(fiel_id).value;
+    if(field_value == ""){
+        document.getElementById(fiel_id).value = defaul_value;
     }
 }
 
