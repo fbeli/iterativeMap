@@ -40,8 +40,9 @@ public class PointDto{
     private String type;
 
 
-
     public String toString() {
+        if(description != null)
+            description = description.replace("\n"," ").replace("\t"," ").replace("\"", "");
         return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 

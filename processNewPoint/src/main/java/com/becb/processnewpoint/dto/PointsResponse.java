@@ -1,4 +1,4 @@
-package com.becb.processnewpoint.controller;
+package com.becb.processnewpoint.dto;
 
 import com.becb.processnewpoint.domain.Point;
 import lombok.Getter;
