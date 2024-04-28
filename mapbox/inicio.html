@@ -78,8 +78,9 @@
                     <a  href="#" onclick="logout()" id="logout">Logout</a>
                 </div>
 
-                <div id='starting' class="modal_body"  style="display: none" >
+                <div id='starting' class="modal_body"  style="display: block" >
                     <div class="child" ><img id="img_back_start" class="child" src="img/ponto1.png" alt=""></div>
+
                     <div id="start_welcome" class="start_welcome" style="display: block">
                         <div onclick="next('start_welcome')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
                         <p>Welcome to Guide Mapper.</p>
@@ -89,12 +90,22 @@
                         <p class="p_br">Bem vindo ao Guide Mapper.</p>
                         <p class="p_br">Aqui você não ficará mais perdido, vai encontrar informações pontos de interesse e tudo para sua viagem</p>
                         <p class="p_br">Aproveite e compartilhe seu conhecimento e sua viagem com clientes e amigo</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
                     <div id="start_here_you_are" class="start_here_you_are" style="display: none">
                         <div onclick="next('start_here_you_are')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
                         <p>Here you are. This blue point shows exactly point you are in the map</p>
                         <br>
                         <p class="p_br">Você está aqui, esse ponto mostra onde você está no mapa.</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
                     <div id="start_back_to_point" class="start_back_to_point" style="display: none">
                         <div onclick="next('start_back_to_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
@@ -103,24 +114,44 @@
                         <br>
                         <p class="p_br">Se estiver perdido, aqui pode voltar ao seu local no mapa.</p>
                         <p class="p_br">E abaixo, procurar por um local qualquer.</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
                     <div id="start_zoom" class="start_zoom" style="display: none">
                         <div onclick="next('start_zoom')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
                         <p>Zoom up and down with your fingers. Bigger zoom can show more flags and details, try it in museuns and places with more interesting points. </p>
                         <br>
                         <p class="p_br">Zoom pode aumentar e diminuir usando seus dedos, zoom maior pode mostrar mais detalhes. Teste zoom maiores próximo a museus e luares com muitos pontos de interesse</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
                     <div id="start_point" class="start_point" style="display: none">
                         <div onclick="next('start_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
                         <p>Flags and simbols are interesting points on map, you can click to know more </p>
                         <br>
                         <p class="p_br">Bandeiras e síbolos são pontos que você pode clicar e aprender mais.</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
                     <div id="start_about_point" class="start_about_point" style="display: none">
                         <div onclick="next('start_about_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
                         <p>The info box opens to you.</p>
                         <br>
                         <p class="p_br">Abrirá a caixa com informações do ponto</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
 
                     <div id="start_description_point" class="start_description_point" style="display: none">
@@ -128,17 +159,32 @@
                         <p>Pictures, audio and infos to you know for where you are looking at.</p>
                         <br>
                         <p class="p_br">Foto, audios e informações sobe o ponto, aqui você sabe pra onde está a olhar.</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
 
                     <div id="start_login" class="start_login" style="display: none">
                         <div onclick="next('start_login')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
                         <p>Here you can signup, create your own map, routes and share with friends.</p>
                         <br><p class="p_br">Aqui você se cadastra, cria seu próprio mapa, rotas e compartilha com amigos.</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
                     <div id="start_add_point" class="start_add_point" style="display: none">
                         <div onclick="next('start_add_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
                         <p>If you are interested in create points, here is the place to start, 'Add Spot'. Enjoy and share your map with friends</p>
                         <br><p class="p_br">Para criar um novo ponto, 'Add Spot', crie seus pontos and share it with your friends.</p>
+                        <br>
+                        <div onclick="next('start_add_point')">
+                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                            <label style="top: -5px" >SKIP TUTORIAL</label>
+                        </div>
                     </div>
                 </div>
               
