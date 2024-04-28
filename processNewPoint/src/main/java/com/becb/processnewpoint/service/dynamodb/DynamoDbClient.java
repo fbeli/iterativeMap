@@ -33,7 +33,7 @@ public class DynamoDbClient {
     }
 
     public Item savePoint(Point point) {
-        logger.info("Saving Point: {} ", point);
+        logger.info("Saving Point: {} ", point.getPointId());
 
         Item item = new Item()
                 .withString("pointId", point.getPointId())
@@ -131,7 +131,6 @@ public class DynamoDbClient {
                 .withExpressionAttributeValues(ativoMap)
                 .withConsistentRead(false);
     }
-
 
     public ItemCollection<ScanOutcome>  getPointsByAproved(String aprovado) {
         Table table = dynamoDB.getTable(pointTable);

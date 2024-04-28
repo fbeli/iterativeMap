@@ -63,13 +63,11 @@ public class LoginController   {
 			response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS, PUT, POST");
 			response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
+			logger.info("Error to login with email : {}",loginDto.getEmail());
+			//loginResponse.setStatus(403);
 		}
-
 		return loginResponse;
-
 	}
-
-
 
 	@PostMapping("/signin")
 	@ResponseBody
