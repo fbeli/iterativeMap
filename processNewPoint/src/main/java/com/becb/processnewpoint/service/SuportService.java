@@ -1,11 +1,16 @@
 package com.becb.processnewpoint.service;
 
 
+import com.github.f4b6a3.ulid.Ulid;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,6 +52,19 @@ public class SuportService {
             resp = "0" + resp;
         }
         return resp;
+    }
+    public static LocalDateTime ulidToLocalDateTime(String ulidString) {
+        //String ulid = "01HTX5G45H9BACTSAPYTRXF8NC";
+
+        long time = Ulid.getTime(ulidString);
+
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(time),
+                TimeZone.getDefault().toZoneId());
+    }
+    private static final Pattern ULID_PATTERN = Pattern.compile("^[0-9A-Fa-f]{10}-?[0-9A-Fa-f]{1,13}(-[0-9A-Fa-f]{1,13})?$");
+
+    public static boolean isValidUlid(String ulid) {
+        return ULID_PATTERN.matcher(ulid).matches();
     }
 
 }

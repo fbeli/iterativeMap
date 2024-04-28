@@ -3,38 +3,54 @@ package com.becb.processnewpoint.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+
 @DynamoDBTable(tableName = "points")
 @Setter
 @Getter
+@Entity
+@Table(name = "points")
 public class Point {
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
+    @Id
     @DynamoDBHashKey(attributeName = "pointId")
     private String pointId;
 
+    @Column
     private String title;
-    private String latitude;
-    private String longitude;
-    private String description;
-    private String shortDescription;
-    private String audio;
-    private TypeEnum type;
+    @Column private String latitude;
+    @Column private String longitude;
+    @Column(length = 5000) private String description;
+    @Column private String shortDescription;
+    @Column private String audio;
+    @Column private TypeEnum type;
+    @Column private LocalDateTime  createTime;
 
     @DynamoDBAttribute(attributeName = "aprovado")
-    private String aproved;
-    private LanguageEnum language = LanguageEnum.PT;
+    @Column private String aproved;
+    @Column private LanguageEnum language = LanguageEnum.PT;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
+    @Transient
     private List<String> photos;
+
+    @Column String photo;
+
 
     public void setDescription(String description) {
         this.description = description;
@@ -78,6 +94,7 @@ public class Point {
         if (photos == null)
             photos = new ArrayList<>();
         photos.add(photo);
+        this.setPhoto(photo);
     }
 
     public String getPhotosAsString() {
@@ -108,5 +125,20 @@ public class Point {
             }
         }
     }
+    public TypeEnum getType(){
+        if(type==null) {
+            type = TypeEnum.museum;
+        }
+        return type;
+    }
 
+    public void setPhoto(String photo){
+        this.photo = photo;
+    }
+    public String getPhoto(){
+        if(photos != null && photos.size() > 0){
+            return photos.get(0);
+        }
+        return null;
+    }
 }

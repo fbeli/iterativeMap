@@ -2,6 +2,7 @@ package com.becb.processnewpoint.service;
 
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
+import com.becb.processnewpoint.repository.UserRepository;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.email.SendEmailService;
 import com.becb.processnewpoint.service.file.FileService;
@@ -40,6 +41,8 @@ public class UserService {
     @Autowired
     FileService fileService;
 
+    @Autowired
+    UserRepository userRepository;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -83,6 +86,7 @@ public class UserService {
                 connection.disconnect();
                 return true;
             } else {
+                logger.error("Email courier error, Response Code: {} trying to connect with {} \n ", responseCode, fullUrl);
                 return false;
             }
         } catch (Exception e) {
@@ -95,12 +99,16 @@ public class UserService {
     public boolean createUserMap(User user) throws IOException {
 
         List<Point> points = pointService.convertItemsToPoints(dynamoDbClient.getPointsByUserId(user.getUserId()));
+        Point point = points.stream().sorted((p1,p2) -> p2.getPointId().compareTo(p2.getPointId())).findFirst().get();
         fileService.createFileToUserMap(points, user.getInstagram());
         fileService.copyUserFiles(user.getInstagram());
-        fileService.createConstFile(user.getInstagram());
+        fileService.createConstFile(user.getInstagram(), point.getLatitude(), point.getLongitude());
         return true;
     }
 
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
 
     @Getter
     @Setter
@@ -118,4 +126,6 @@ public class UserService {
         String name;
 
     }
+
+
 }

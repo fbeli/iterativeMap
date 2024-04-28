@@ -7,6 +7,7 @@ import com.becb.processnewpoint.domain.AprovedEnum;
 import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
+import com.becb.processnewpoint.repository.PointRepository;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
 import com.github.f4b6a3.ulid.UlidCreator;
@@ -15,10 +16,13 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PointService {
@@ -28,6 +32,8 @@ public class PointService {
 
     @Autowired
     private DynamoDbClient dynamoDbClient;
+    @Autowired
+    private PointRepository pointRepository;
 
     public DynamoDbClient getDynamoDbClient() {
         return dynamoDbClient;
@@ -35,7 +41,7 @@ public class PointService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public Item savePoint(String message) {
+    public Point  messageToPoint(String message){
         Point point = new Point();
         JSONObject jsonObject = new JSONObject(message);
 
@@ -46,7 +52,7 @@ public class PointService {
         }
         try {
             point.setTitle(jsonObject.getString("title"));
-            point.setDescription(jsonObject.getString("description").replace("\"","'"));
+            point.setDescription(jsonObject.getString("description").replace("\"","'").replace("\n","'"));
             point.setLongitude(jsonObject.getString("longitude"));
             point.setLatitude(jsonObject.getString("latitude"));
             point.setUser(new User());
@@ -68,15 +74,46 @@ public class PointService {
             logger.error("Essential field not present: \n{}", jsonException.getMessage());
             return null;
         }
-        return savePoint(point);
+        return point;
     }
 
-    public Item savePoint(Point point) {
+    public Item savePoint(String message) {
+        Point point = messageToPoint(message);
+        if(point != null)
+            return savePointDynamo(point);
+        return null;
+    }
+
+    @Deprecated
+    public Item savePointDynamo(Point point) {
         return dynamoDbClient.savePoint(point);
     }
 
+    public Point savePointDb(Point point){
+
+        if(point != null) {
+            if(point.getAproved() == null)
+                point.setAproved("false");
+            pointRepository.save(point);
+        }
+
+        return point;
+    }
+
+
+
     public void aprovePoint(String message, String aprovedValue) {
-        dynamoDbClient.updatePointToAproved(getUpdatePointValue(message), aprovedValue);
+        Point point = getUpdatePointValue(message);
+
+        dynamoDbClient.updatePointToAproved(point, aprovedValue);
+
+        Optional<Point> optionalPoint = pointRepository.findPointByPointId(point.getPointId());
+        if(optionalPoint.isPresent()) {
+            optionalPoint.get().setAproved(aprovedValue);
+            savePointDb(optionalPoint.get());
+        }
+
+
     }
 
     private Point getUpdatePointValue(String message) {
@@ -98,8 +135,8 @@ public class PointService {
         point.getUser().setUserName(jsonObject.getString("user_name"));
         point.getUser().setUserEmail(jsonObject.getString("user_email"));
 
-        ArrayList<Point> points =
-                convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
+        ArrayList<Point> points = getApprovedPoints();
+
 
         try {
             fileService.createFileToMap(points, jsonObject.getString("file_name"));
@@ -107,6 +144,9 @@ public class PointService {
             logger.info(
                     "Error to create file for not approved points: " + e.getMessage());
         }
+    }
+    public  ArrayList<Point> getApprovedPoints() {
+        return convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
     }
 
     public void gerarArquivoParaAprovacao(String message) {
@@ -186,12 +226,20 @@ public class PointService {
 
     public boolean addFileToPoint(String message) {
         JSONObject jsonObject = new JSONObject(message);
-
         String pointId = (String) jsonObject.get("point_id");
         String path = (String) jsonObject.get("file_path");
-        Point point = this.convertItemToPoint(dynamoDbClient.getPoint(pointId));
 
+
+        addFileToPointDb( pointId, path);
+        return addFileToPointDynamo(pointId,path);
+    }
+
+    @Deprecated
+    public boolean addFileToPointDynamo(String pointId,  String path){
+        Item item = dynamoDbClient.getPoint(pointId);
+        Point point = this.convertItemToPoint(item);
         if (point == null || path == null) {
+            logger.info("PointId not found{}, trying again....", pointId);
             return false;
         }
         if (path.endsWith("jpg") || path.endsWith("jpeg") || path.endsWith("png")) {
@@ -202,11 +250,35 @@ public class PointService {
         point.setAudio(path);
         return dynamoDbClient.addAudioToPoint(point);
     }
+
+        public void addFileToPointDb(String pointId,  String path){
+
+            Optional<Point> opPoint = pointRepository.findPointByPointId(pointId);
+            if (opPoint.isPresent()) {
+                Point point = opPoint.get();
+                if (path.endsWith("jpg") || path.endsWith("jpeg") || path.endsWith("png") || path.endsWith("gif")) {
+                    point.addPhoto(path);
+                }else {
+                    point.setAudio(path);
+                }
+                pointRepository.save(point);
+            }
+
+    }
+
     public boolean addFileLinkToPoint(String message) {
         JSONObject jsonObject = new JSONObject(message);
 
         String pointId = (String) jsonObject.get("point_id");
         String path = (String) jsonObject.get("link");
+
+        addFileToPointDb(pointId, path);
+        return addFileLinkToPointDynamo(pointId,path);
+
+    }
+
+     @Deprecated
+    public boolean addFileLinkToPointDynamo(String pointId,  String path){
         Point point = this.convertItemToPoint(dynamoDbClient.getPoint(pointId));
 
         if (point == null || path == null) {
@@ -228,5 +300,12 @@ public class PointService {
         Integer vote = jsonObject.optInt("vote");
 
 
+    }
+
+    public Page<Point>  getPointsByUserId(Pageable pageable, String userId){
+        return pointRepository.findAllByUser(pageable, userId);
+    }
+    public Point getPointById(String pointId){
+        return pointRepository.findPointByPointId(pointId).orElse(null);
     }
 }
