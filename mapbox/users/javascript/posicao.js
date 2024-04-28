@@ -3,12 +3,13 @@
 let latitude;
 let longitude;
 function fly_back(){
-   latitude = getLatitude();
-   longitude = getLongitude();
+   latitude = config.latitude;
+   longitude = config.longitude;
     add_logo();
-    if(timeoutLocation()){
-      map.flyTo({center: [longitude, latitude], zoom: 14});
-  }
+    //if(timeoutLocation()){
+      map.flyTo({center: [longitude, latitude], zoom: 13.6});
+     // fly_back_map();
+  //}
 }
 
 function fly_back_map(){
