@@ -44,7 +44,7 @@ public class FileService {
     @Autowired
     AmazonS3Service amazonS3Service;
 
-    public List<String> createFileToMap(List<Point> points, String fileName) throws IOException {
+    public List<String> createFileToMap(List<Point> points, String fileName) {
 
         List<String> masterList = Arrays.asList(masters.split(","));
 
@@ -86,7 +86,7 @@ public class FileService {
         return filesCreated;
     }
 
-    public boolean createFileToUserMap(List<Point> points, String userInstagram) throws IOException{
+    public boolean createFileToUserMap(List<Point> points, String userInstagram){
         StringBuilder sb = createInputToFile(points);
         String filename = userInstagram.replace("@","")+"_map_.geojson";
         String version = createFile(filename, sb);
@@ -99,11 +99,13 @@ public class FileService {
     public void copyUserFiles(String userInstagram){
         amazonS3Service.copyUsersFile(userInstagram);
     }
-    public void createConstFile(String instagram){
+    public void createConstFile(String instagram, String latitude, String longitude){
         StringBuilder sb = new StringBuilder();
         instagram = instagram.replace("@","");
         sb.append("const config = {\n" +
-                "    map_file:\"https://www.guidemapper.com/file/"+instagram+"_map_.geojson\"\n" +
+                "    map_file:\"https://www.guidemapper.com/file/"+instagram+"_map_.geojson\",\n" +
+                "    latitude:\""+latitude+"\",\n" +
+                "    longitude:\""+longitude+"\"\n" +
                 "}");
         String fileName = usersDirectory+"/"+instagram.replace("@","")+"/const.js";
         PutObjectResult result =  amazonS3Service.saveConstFile( fileName, createTempFile(sb));
