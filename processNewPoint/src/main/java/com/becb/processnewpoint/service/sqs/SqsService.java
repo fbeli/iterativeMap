@@ -3,6 +3,7 @@ package com.becb.processnewpoint.service.sqs;
 import com.becb.processnewpoint.core.BecbProperties;
 import com.becb.processnewpoint.domain.AprovedEnum;
 import com.becb.processnewpoint.domain.Point;
+import com.becb.processnewpoint.exception.SQSMessageException;
 import com.becb.processnewpoint.service.PointService;
 import com.becb.processnewpoint.service.SuportService;
 import com.becb.processnewpoint.service.UserService;
@@ -14,6 +15,7 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Slf4j
@@ -30,12 +32,31 @@ public class SqsService {
     private BecbProperties becbProperties;
 
     @SqsListener(value = "${sqs.queue.new_point}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
-    public void listenNewPointQueue(@Headers Map<String, Object> headers, String message) throws IOException {
+    public void listenNewPointQueue(@Headers Map<String, Object> headers, String message){
         log.info("Received message on queue new_point : {}", message);
         if(SuportService.isValid(message)){
-            Point point = pointService.convertItemToPoint(pointService.savePoint(message));
+            Point point0 = pointService.messageToPoint(message);
+            if(point0.getCreateTime() ==null)
+                point0.setCreateTime(LocalDateTime.now());
+            Point point = pointService.convertItemToPoint(pointService.savePointDynamo(point0));
+
+            userService.saveUser(point0.getUser());
+            pointService.savePointDb(point0);
+
             if(point.getUser().getInstagram()!=null){
-                userService.createUserMap(point.getUser());
+                Runnable runnable = () -> {
+                        try {
+                            Thread.sleep(100000); // pausa por 10 segundos
+                            userService.createUserMap(point.getUser());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            log.error("Error to save file to user map. Error: {}", e.getMessage());
+                        }
+                };
+                Thread thread = new Thread(runnable);
+                thread.start();
+
             }
         }else{
             log.error("Invalid message received on queue new_point : {}: ", message);
@@ -84,25 +105,30 @@ public class SqsService {
         }
     }
 
-    @SqsListener(value = "${sqs.queue.add_photo_point}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
-    public void addPhotoToPoint(@Headers Map<String, Object> headers, String message) {
+    @SqsListener(value = "${sqs.queue.add_photo_point}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
+    public void addPhotoToPoint(@Headers Map<String, Object> headers, String message) throws SQSMessageException {
         log.info("Received message on sqs.queue.add_photo_point: {}", message);
         if(message.contains("http")) {
             if (!pointService.addFileLinkToPoint(message))
                 log.error("Message on sqs.queue.add_photo_point: {} not saved", message);
         }else {
-            if (!pointService.addFileToPoint(message))
-                log.error("Message on sqs.queue.add_photo_point: {} not saved", message);
+            if (!pointService.addFileToPoint(message)) {
+                String exc = "Message on sqs.queue.add_audio_point: " + message + " not saved";
+                log.error(exc);
+                throw new SQSMessageException(exc, null);
+            }
         }
     }
 
-    @SqsListener(value = "${sqs.queue.add_audio_point}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
-    public void addAudioToPoint(@Headers Map<String, Object> headers, String message) {
+    @SqsListener(value = "${sqs.queue.add_audio_point}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
+    public void addAudioToPoint(@Headers Map<String, Object> headers, String message) throws SQSMessageException {
         log.info("Received message on sqs.queue.add_audio_point: {}", message);
 
-        if(pointService.addFileToPoint(message))
-            log.error("Message on sqs.queue.add_audio_point: {} not saved", message);
-
+        if(!pointService.addFileToPoint(message)) {
+            String exc = "Message on sqs.queue.add_audio_point: "+message+" not saved";
+            log.error(exc);
+            throw new SQSMessageException(exc, null);
+        }
     }
 
     @SqsListener(value = "${sqs.queue.reset_password}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
@@ -124,7 +150,7 @@ public class SqsService {
             log.info("Code saved to message: {} code to  password : {}", message, code  );
             userService.sendEmailResetPassword(message, code);
         }else
-            log.error("Error ask for reset password: {}", message);
+            log.error("Erro receiving vote: {}", message);
 
     }
 
