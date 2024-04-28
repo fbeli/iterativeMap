@@ -7,7 +7,8 @@ function fly_back(){
    if(firstTime){
        document.getElementById("starting").style.display="block";
    }
-   if(longitude == 'undefined' || longitude == undefined ){
+   if((longitude == 'undefined' || longitude == undefined)
+                && window.location.href.search("-9.135905") != -1){
        latitude = getLatitude();
        longitude = getLongitude();
        if(timeoutLocation()){
@@ -115,12 +116,13 @@ async function read_cookies(){
 function get_li_after_login(nome){
     if(nome.indexOf(' ') >= 0){
         nome = nome.split(" ")[0];
+    }
         document.getElementById("li_login_a_link").innerHTML = nome ;
         document.getElementById("sidebar_login_div").setAttribute("onclick", "open_div_login()");
-    }else{
-        document.getElementById("li_login_a_link").innerHTML = "Login" ;
-        document.getElementById("sidebar_login_div").setAttribute("onclick", "login()");
-    }
+    //}else{
+    //    document.getElementById("li_login_a_link").innerHTML = "Login" ;
+     //   document.getElementById("sidebar_login_div").setAttribute("onclick", "login()");
+   // }
 
 }
 
