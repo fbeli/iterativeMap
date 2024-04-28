@@ -19,7 +19,7 @@ function afterLogin(){
     let instagram = JSON.parse(decode)["usuario_instagram"];
     document.getElementById("welcome_name").innerHTML =  nome;
     if(instagram !== undefined || instagram !== "" || instagram != "@null") {
-        link = "www.mygmap.com/" + instagram.replace("@", "");
+        link = "https://www.mygmap.com/" + instagram.replace("@", "");
         document.getElementById("span_msg").innerHTML = "Now you have your own map <br>" + link +
             "<br><a href='#' onclick='copyLink()' title='Copy'> <img aria-label='copy' src='img/copy.png' id='copy' style='width:20px'/></a>";
         document.getElementById("span_msg").style.fontSize = "small"
@@ -53,17 +53,17 @@ function execute_login(){
     })
         .then(response => response.json())
         .then(data => {
-            if(data.status == "200") {
+            if(data.status === 200) {
                 setToken(data.token);
                 afterLogin();
             }else{
-                document.getElementById("erro_alert_text").innerHTML = data.error;
-                error_div_event("login_div");
+               // document.getElementById("erro_alert_text").innerHTML = data.error;
+                error_div_event("login_div",data.error);
             }
         })
         .catch(error => {
-            document.getElementById("erro_alert_text").innerHTML = data.error;
-            error_div_event("login_div");
+           // document.getElementById("erro_alert_text").innerHTML = data.error;
+            error_div_event("login_div", data.error);
         });
 }
 
@@ -81,7 +81,7 @@ async function forget_password(){
     })
         .then(response => response.json())
         .then(data => {
-            if(data.status == "200") {
+            if(data.status === 200) {
                 fechar_divs();
                 document.getElementById("info_info").innerHTML = "An email has set to address, open your email and follow the steps to reset your password";
                 document.getElementById("info_title").innerHTML = "Password Reset Requested";
@@ -90,13 +90,13 @@ async function forget_password(){
 
 
             }else{
-                document.getElementById("erro_alert_text").innerHTML = data.error;
-                error_div_event("forget_password_div");
+              //  document.getElementById("erro_alert_text").innerHTML = data.error;
+                error_div_event("forget_password_div", data.error);
             }
         })
         .catch(error => {
-            document.getElementById("erro_alert_text").innerHTML = data.error;
-            error_div_event("forget_password_div");
+            //document.getElementById("erro_alert_text").innerHTML = data.error;
+            error_div_event("forget_password_div", data.error);
         });
 }
 
@@ -328,7 +328,6 @@ async function upload_point_photo(point_id, fileInput){
     formData.append('files', fileInput.files[0]);
 
     var myHeaders = new Headers();
-
 
     myHeaders.append('Authorization', accessToken);
 
