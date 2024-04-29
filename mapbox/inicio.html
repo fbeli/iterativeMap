@@ -29,6 +29,7 @@
     </script>
 
     <title>Be your own Guide</title>
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
     <script src="./javascript/const.js"></script>
     <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -54,6 +55,9 @@
         <link rel="stylesheet" type="text/css" href="css/inicio.css">
         <link rel="stylesheet" type="text/css" href="css/start_divs.css">
 
+        <script src="/javascript/addtohomescreem.js">   </script>
+        <link rel="stylesheet" type="text/css" href="css/addtohomescreem.css">
+
         <script src="javascript/form.js">   </script>
 </head>
 
@@ -78,7 +82,9 @@
                     <a  href="#" onclick="logout()" id="logout">Logout</a>
                 </div>
 
-                <div id='starting' class="modal_body"  style="display: block" >
+
+
+                <div id='starting' class="modal_body"  style="display: none" >
                     <div class="child" ><img id="img_back_start" class="child" src="img/ponto1.png" alt=""></div>
 
                     <div id="start_welcome" class="start_welcome" style="display: block">
@@ -513,6 +519,8 @@
             <script src="/javascript/divs_actions.js">   </script>
             <script src="/javascript/save_audio.js">   </script>
             <script src="/javascript/start_divs.js">   </script>
+            <script src="/javascript/miscelanius.js">   </script>
+
 </body>
 
 </html>
