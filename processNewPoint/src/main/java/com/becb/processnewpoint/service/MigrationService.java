@@ -25,7 +25,6 @@ public class MigrationService {
         ArrayList<Point> points = pointService.getApprovedPoints();
         for (Point point : points) {
           migrateAll(point);
-
         }
     }
     Set<String> users = new HashSet<>();

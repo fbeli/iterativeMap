@@ -53,11 +53,14 @@ public class Point {
 
 
     public void setDescription(String description) {
-        this.description = description;
-        int size = description.length();
-        if (size > 40)
-            size = 40;
-        this.shortDescription = description.substring(0, size);
+
+        if(description != null) {
+            this.description = description;
+            int size = description.length();
+            if (size > 40)
+                size = 40;
+            this.shortDescription = description.substring(0, size);
+        }
     }
 
     public void setLatitude(String latitude) {
