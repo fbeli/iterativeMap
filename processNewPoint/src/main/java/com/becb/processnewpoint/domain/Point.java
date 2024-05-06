@@ -50,6 +50,9 @@ public class Point {
     private List<String> photos;
 
     @Column String photo;
+    @Column String State; // Region
+    @Column String Country;
+    @Column String City;  //place
 
 
     public void setDescription(String description) {

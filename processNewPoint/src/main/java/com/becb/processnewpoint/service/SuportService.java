@@ -5,8 +5,12 @@ import com.github.f4b6a3.ulid.Ulid;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -14,6 +18,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class SuportService {
 
     public static boolean isValid(String json) {
@@ -67,4 +72,13 @@ public class SuportService {
         return ULID_PATTERN.matcher(ulid).matches();
     }
 
+    public  HttpURLConnection getConnection(String fullUrl) throws IOException {
+        URL url = new URL(fullUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setConnectTimeout(5000);
+        connection.setReadTimeout(5000);
+        return connection;
+    }
 }

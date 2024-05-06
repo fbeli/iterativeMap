@@ -1,0 +1,256 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "id": "dXJuOm1ieGFkcjozMWE1NzJkMy03MTk5LTQzYmYtYjdiNS1jOTg3Njc4Yjk2MWM",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -9.4306525,
+                    38.7005212
+                ]
+            },
+            "properties": {
+                "mapbox_id": "dXJuOm1ieGFkcjozMWE1NzJkMy03MTk5LTQzYmYtYjdiNS1jOTg3Njc4Yjk2MWM",
+                "feature_type": "address",
+                "full_address": "Rua Doutor Gabriel De Freitas 11, 2750-358 Cascais, Lisbon, Portugal",
+                "name": "Rua Doutor Gabriel De Freitas 11",
+                "name_preferred": "Rua Doutor Gabriel De Freitas 11",
+                "coordinates": {
+                    "longitude": -9.4306525,
+                    "latitude": 38.7005212,
+                    "accuracy": "rooftop",
+                    "routable_points": [
+                        {
+                            "name": "default",
+                            "latitude": 38.700605,
+                            "longitude": -9.430471
+                        }
+                    ]
+                },
+                "place_formatted": "2750-358 Cascais, Lisbon, Portugal",
+                "context": {
+                    "address": {
+                        "mapbox_id": "dXJuOm1ieGFkcjozMWE1NzJkMy03MTk5LTQzYmYtYjdiNS1jOTg3Njc4Yjk2MWM",
+                        "address_number": "11",
+                        "street_name": "Rua Doutor Gabriel De Freitas",
+                        "name": "Rua Doutor Gabriel De Freitas 11"
+                    },
+                    "street": {
+                        "mapbox_id": "dXJuOm1ieGFkcjozMWE1NzJkMy03MTk5LTQzYmYtYjdiNS1jOTg3Njc4Yjk2MWM",
+                        "name": "Rua Doutor Gabriel De Freitas"
+                    },
+                    "postcode": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpFaDh1dWc",
+                        "name": "2750-358"
+                    },
+                    "place": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpiQWk2",
+                        "name": "Cascais",
+                        "wikidata_id": "Q273059"
+                    },
+                    "region": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpKTG8",
+                        "name": "Lisbon",
+                        "wikidata_id": "Q207199",
+                        "region_code": "11",
+                        "region_code_full": "PT-11"
+                    },
+                    "country": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpJcm8",
+                        "name": "Portugal",
+                        "wikidata_id": "Q45",
+                        "country_code": "PT",
+                        "country_code_alpha_3": "PRT"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "dXJuOm1ieHBsYzpFaDh1dWc",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -9.429446,
+                    38.699255
+                ]
+            },
+            "properties": {
+                "mapbox_id": "dXJuOm1ieHBsYzpFaDh1dWc",
+                "feature_type": "postcode",
+                "full_address": "2750-358, Cascais, Lisbon, Portugal",
+                "name": "2750-358",
+                "name_preferred": "2750-358",
+                "coordinates": {
+                    "longitude": -9.429446,
+                    "latitude": 38.699255
+                },
+                "place_formatted": "Cascais, Lisbon, Portugal",
+                "bbox": [
+                    -9.431837,
+                    38.698647,
+                    -9.429183,
+                    38.701352
+                ],
+                "context": {
+                    "place": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpiQWk2",
+                        "name": "Cascais",
+                        "wikidata_id": "Q273059"
+                    },
+                    "region": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpKTG8",
+                        "name": "Lisbon",
+                        "wikidata_id": "Q207199",
+                        "region_code": "11",
+                        "region_code_full": "PT-11"
+                    },
+                    "country": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpJcm8",
+                        "name": "Portugal",
+                        "wikidata_id": "Q45",
+                        "country_code": "PT",
+                        "country_code_alpha_3": "PRT"
+                    },
+                    "postcode": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpFaDh1dWc",
+                        "name": "2750-358"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "dXJuOm1ieHBsYzpiQWk2",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -9.420665,
+                    38.698032
+                ]
+            },
+            "properties": {
+                "mapbox_id": "dXJuOm1ieHBsYzpiQWk2",
+                "feature_type": "place",
+                "full_address": "Cascais, Lisbon, Portugal",
+                "name": "Cascais",
+                "name_preferred": "Cascais",
+                "coordinates": {
+                    "longitude": -9.420665,
+                    "latitude": 38.698032
+                },
+                "place_formatted": "Lisbon, Portugal",
+                "bbox": [
+                    -9.4865117,
+                    38.6893774,
+                    -9.4089726,
+                    38.7406695
+                ],
+                "context": {
+                    "region": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpKTG8",
+                        "name": "Lisbon",
+                        "wikidata_id": "Q207199",
+                        "region_code": "11",
+                        "region_code_full": "PT-11"
+                    },
+                    "country": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpJcm8",
+                        "name": "Portugal",
+                        "wikidata_id": "Q45",
+                        "country_code": "PT",
+                        "country_code_alpha_3": "PRT"
+                    },
+                    "place": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpiQWk2",
+                        "name": "Cascais",
+                        "wikidata_id": "Q273059"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "dXJuOm1ieHBsYzpKTG8",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -9.1365919,
+                    38.7077507
+                ]
+            },
+            "properties": {
+                "mapbox_id": "dXJuOm1ieHBsYzpKTG8",
+                "feature_type": "region",
+                "full_address": "Lisbon, Portugal",
+                "name": "Lisbon",
+                "name_preferred": "Lisbon",
+                "coordinates": {
+                    "longitude": -9.1365919,
+                    "latitude": 38.7077507
+                },
+                "place_formatted": "Portugal",
+                "bbox": [
+                    -9.5860044,
+                    38.5833653,
+                    -8.781858,
+                    39.317723
+                ],
+                "context": {
+                    "country": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpJcm8",
+                        "name": "Portugal",
+                        "wikidata_id": "Q45",
+                        "country_code": "PT",
+                        "country_code_alpha_3": "PRT"
+                    },
+                    "region": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpKTG8",
+                        "name": "Lisbon",
+                        "wikidata_id": "Q207199"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "dXJuOm1ieHBsYzpJcm8",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -8.56273059638958,
+                    39.6009946583093
+                ]
+            },
+            "properties": {
+                "mapbox_id": "dXJuOm1ieHBsYzpJcm8",
+                "feature_type": "country",
+                "full_address": "Portugal",
+                "name": "Portugal",
+                "name_preferred": "Portugal",
+                "coordinates": {
+                    "longitude": -8.56273059638958,
+                    "latitude": 39.6009946583093
+                },
+                "bbox": [
+                    -31.3687699,
+                    29.9501178,
+                    -6.189158,
+                    42.154276
+                ],
+                "context": {
+                    "country": {
+                        "mapbox_id": "dXJuOm1ieHBsYzpJcm8",
+                        "name": "Portugal",
+                        "country_code": "PT",
+                        "country_code_alpha_3": "PRT",
+                        "wikidata_id": "Q45"
+                    }
+                }
+            }
+        }
+    ],
+    "attribution": "NOTICE: © 2024 Mapbox and its suppliers. All rights reserved. Use of this data is subject to the Mapbox Terms of Service (https://www.mapbox.com/about/maps/). This response and the information it contains may not be retained."
+}
