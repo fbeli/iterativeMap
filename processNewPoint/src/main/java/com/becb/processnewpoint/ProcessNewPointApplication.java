@@ -4,7 +4,6 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.becb.processnewpoint.service.MigrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
+
 
 
 @EnableScheduling
@@ -69,10 +67,11 @@ public class ProcessNewPointApplication {
 	}
 
 
-	@Autowired
-	MigrationService migrationService;
+//	@Autowired
+//	MigrationService migrationService;
 	//@PostConstruct
-	public void migrate() throws IOException {
-		migrationService.migrate();
-	}
+//	public void migrate() throws IOException {
+//		migrationService.migrate();
+//	}
+
 }
