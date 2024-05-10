@@ -92,7 +92,7 @@ public class SqsConfiguration {
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(10);
+        executor.setMaxPoolSize(15);
         executor.initialize();
         return executor;
     }

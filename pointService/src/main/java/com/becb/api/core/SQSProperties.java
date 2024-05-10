@@ -21,6 +21,6 @@ public class SQSProperties {
     public String add_audio_point;
     public String reset_password;
     public String point_vote;
-
+    public String update_point;
 
 }
