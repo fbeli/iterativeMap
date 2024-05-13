@@ -3,17 +3,19 @@ package com.becb.processnewpoint.service.sqs;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
+import com.becb.processnewpoint.exception.SQSMessageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
-@Service
+//@Service
 public class SqsChronClient {
 
-    @Autowired
+  //  @Autowired
     public SqsChronClient(SqsService sqsService, AmazonSQS sqs) {
         this.sqsService = sqsService;
         this.sqs = sqs;
@@ -65,13 +67,19 @@ public class SqsChronClient {
     String queueUrl;
 
 
-    @Scheduled(cron = "2 * * * * *") // Cron expression for running every minute
+  //  @Scheduled(cron = "2 * * * * *") // Cron expression for running every 2 minutes
+    public void receberMensagensChron() {
+        receberMensagens();
+    }
+
     public void receberMensagens() {
+
         queues.stream().forEach(queue -> {
             //System.out.println("Recebendo mensagens... from queue: " + queueUrl + queue);
             ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(queueUrl + queue);
             receiveMessageRequest.setMaxNumberOfMessages(5);
             List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
+
             if (messages.size() > 0) {
                 switch (queue) {
                     case "not-approved-queue":
@@ -107,15 +115,25 @@ public class SqsChronClient {
 
                     case "upload-photo-queue":
                         messages.forEach(message -> {
-                            sqsService.addPhotoToPoint(null, message.getBody());
-                            sqs.deleteMessage(queueUrl + queue, message.getReceiptHandle());
+                            try {
+                                sqsService.addPhotoToPoint(null, message.getBody());
+                                sqs.deleteMessage(queueUrl + queue, message.getReceiptHandle());
+                            } catch (SQSMessageException e) {
+                                e.printStackTrace();
+                            }
+
                         });
                         break;
 
                     case "upload-audio-queue":
                         messages.forEach(message -> {
-                            sqsService.addAudioToPoint(null, message.getBody());
-                            sqs.deleteMessage(queueUrl + queue, message.getReceiptHandle());
+                            try {
+                                sqsService.addAudioToPoint(null, message.getBody());
+                                sqs.deleteMessage(queueUrl + queue, message.getReceiptHandle());
+                            } catch (SQSMessageException e) {
+                                e.printStackTrace();
+                            }
+
                         });
                         break;
                     case "new-file-to-map-queue":
