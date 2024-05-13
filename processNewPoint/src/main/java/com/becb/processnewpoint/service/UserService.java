@@ -127,5 +127,9 @@ public class UserService {
 
     }
 
+    public User getUserByPointId(String pointId) {
+        return userRepository.findUserByPoints(pointId);
+    }
+
 
 }

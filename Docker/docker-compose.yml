@@ -95,27 +95,29 @@ services:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
 
-  #auth:
-  #  image: fbeli/becb_auth:0.1
-  #  container_name: auth
-  #  ports:
-  #    - "8082:8082"
-  #  environment:
-  #    - DB_URL=mysql:3306
-  #  depends_on:
-  #    - mysql
-  #  command: ["/wait-for-it.sh", "mysql:3306", "-t", "180", "--", "/entrypoint.sh"]
+  auth:
+    image: fbeli/becb_auth:0.19
+    container_name: auth
+    ports:
+      - "8082:8082"
+    environment:
+      - DB_URL=mysql:3306
+    depends_on:
+      - mysql
+      - dynamodb
+      - sqs
+    command: ["/wait-for-it.sh", "mysql:3306", "-t", "180", "--", "/entrypoint.sh"]
 
-  #mysql:
-  #  container_name: mysql
-  #  image: mysql:8.2.0
-  #  ports:
-  #    - "3306:3306"
-  #  environment:
-  #    - MYSQL_ROOT_PASSWORD=123
-  #    - MYSQL_DATABASE=auth
-  #    - MYSQL_USER=teste
-  #    - MYSQL_PASSWORD=123
-  #  volumes:
-  #    - ./mysql:/var/lib/mysql
+  mysql:
+    container_name: mysql
+    image: mysql:8.2.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_DATABASE=auth
+      - MYSQL_USER=teste
+      - MYSQL_PASSWORD=123
+    volumes:
+      - ./mysql:/var/lib/mysql
 
