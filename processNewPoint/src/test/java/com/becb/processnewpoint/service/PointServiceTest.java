@@ -1,11 +1,14 @@
 package com.becb.processnewpoint.service;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
+import com.becb.processnewpoint.repository.PointRepository;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
+import com.becb.processnewpoint.service.file.FileService;
 import com.becb.processnewpoint.service.sqs.SqsConfiguration;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +17,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.TestPropertySource;
 import com.becb.processnewpoint.domain.Point;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -25,7 +30,6 @@ import static org.mockito.Mockito.*;
 @ComponentScan
 @ExtendWith(MockitoExtension.class)
 @TestPropertySource(locations="classpath:test.properties")
-
 class PointServiceTest {
 
     @MockBean
@@ -34,26 +38,40 @@ class PointServiceTest {
     @MockBean
     DynamoDbClient dynamodbClient;
 
-    @Autowired
+    @InjectMocks
     PointService pointService;
-    //@Test
-    void gerarArquivoParaMapa() {
 
+    @MockBean
+    PointRepository pointRepository;
+
+    @MockBean
+    MapService mapService;
+
+    @MockBean
+    FileService fileService;
+
+    @Test
+    void gerarArquivoParaMapa() {
+        ArrayList lista = new ArrayList();
+        for(int i =0; i < 3; i++) {
+            Point point = new Point();
+            point.setTitle("Title "+i);
+            point.setLongitude("-9"+i+".15007687024712");
+            point.setLatitude("3"+i+".72524959265044");
+            lista.add(point);
+        }
+        when(pointRepository.findAllByAproved(any())).thenReturn(lista);
+        when(mapService.setPlace(any())).thenCallRealMethod();
+        when(fileService.createFileToMap(any(), any())).thenReturn(List.of("file1","file2","file3"));
         pointService.gerarArquivoParaMapa("{" +
                 "  \"user_id\": \"01HNG094DXF7A4HQPD8QKWHCBW\"," +
                 "  \"user_name\": \"Fred\"," +
                 "  \"user_email\": \"fred.belisario@gmail.com\","+
                 "  \"file_name\": \"arquivo_"+ LocalDateTime.now() +".html\"} ");
+        assertEquals(3, lista.size());
     }
 
-   // @Test
-    void gerarArquivoParaAprovacao() {
-        pointService.gerarArquivoParaAprovacao("{" +
-                "  \"user_id\": \"01HNG094DXF7A4HQPD8QKWHCBW\"," +
-                "  \"user_name\": \"Fred\"," +
-                "  \"user_email\": \"fred.belisario@gmail.com\","+
-                "  \"file_name\": \"arquivo_"+ LocalDateTime.now() +".html\"} ");
-    }
+
 
     @Test
     void savePoint() {
@@ -89,6 +107,23 @@ class PointServiceTest {
                     pointService.savePoint("[B@20976331");
                 });
     }
+
+    @Test
+    void updatePointObject() throws IllegalAccessException {
+        String title = "new Title Here!";
+        Point pointOld = new Point();
+        pointOld.setPointId("01HRVRVS9X5NC1T2JAPT9EVYEC");
+        pointOld.setPhotos(List.of("photo1","photo2"));
+
+        Point pointNew  = new Point();
+        pointNew.setPointId("01HRVRVS9X5NC1T2JAPT9EVYEC");
+        pointNew.setTitle("new Title Here!");
+
+        pointService.updatePointObject(pointNew, pointOld );
+        Assert.assertEquals(title, pointOld.getTitle());
+
+    }
+
     @Test
     void testSavePoint() {
     }
