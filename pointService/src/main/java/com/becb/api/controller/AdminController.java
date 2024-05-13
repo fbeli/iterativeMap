@@ -124,12 +124,7 @@ public class AdminController {
     public String testConnection(@RequestParam String endpoint)  {
 
         String ret = "";
-        if(endpoint != null && !endpoint.isEmpty()){
-            if(!endpoint.endsWith("/")){
-                endpoint=endpoint+"/health";
-            }else
-                endpoint = endpoint+"health";
-        }else
+        if(endpoint == null || endpoint.isEmpty())
             return "Endpoint nulo ou vazio";
         try {
             URL url = new URL(endpoint);

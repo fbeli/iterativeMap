@@ -7,6 +7,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import org.springframework.cloud.aws.messaging.support.NotificationMessageArgume
 import org.springframework.cloud.aws.messaging.support.converter.NotificationRequestConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.messaging.converter.CompositeMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
@@ -27,83 +29,47 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.amazon.sqs.javamessaging.SQSConnectionFactory;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.annotation.EnableJms;
+
+
+import com.amazon.sqs.javamessaging.ProviderConfiguration;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+
+import javax.jms.Session;
+
 @Configuration
-@RequiredArgsConstructor
+@EnableJms
 public class SqsConfiguration {
 
-    private final ObjectMapper objectMapper;
-
-    @Value("${sqs.queue.url}")
-    String endpoint;
+    @Value("${becb.sqs.region}")
+    private String region;
 
     @Value("${becb.sqs.access-key}")
-    String sqsAccessKey;
+    private String accessKey;
 
     @Value("${becb.sqs.secret-key}")
-    String sqsSecretKey;
+    private String secretKey;
 
-    @Value("${becb.sqs.region}")
-    String region;
-
-    @Value("${env}")
-    String env;
-
-    @Bean
-    public AmazonSQSAsync amazonSQS() {
-        if (env.equals("docker") || env.equals("dev")) {
-            return AmazonSQSAsyncClientBuilder.standard()
-                    .withCredentials(new AWSStaticCredentialsProvider(new AnonymousAWSCredentials()))
-                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, "elasticmq"))
-                    .build();
-        } else {
-            final AWSCredentials credentials = new BasicAWSCredentials(sqsAccessKey, sqsSecretKey);
-            final AWSStaticCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
-            return AmazonSQSAsyncClientBuilder.standard()
-                    .withCredentials(credentialsProvider)
-                    //.withRegion(region)
-                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region))
-                    .build();
-        }
+    private SQSConnectionFactory connectionFactorySqs() {
+        return new SQSConnectionFactory(
+                new ProviderConfiguration(),
+                AmazonSQSClientBuilder.standard()
+                        .withRegion(region)
+                        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+                        .build());
     }
 
     @Bean
-    public QueueMessageHandler queueMessageHandler() {
-        QueueMessageHandlerFactory queueMessageHandlerFactory = new QueueMessageHandlerFactory();
-        queueMessageHandlerFactory.setAmazonSqs(amazonSQS());
-
-        MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
-        messageConverter.setSerializedPayloadClass(String.class);
-        messageConverter.setObjectMapper(objectMapper);
-
-        messageConverter.setStrictContentTypeMatch(false);
-
-        List<MessageConverter> messageConverterList = new ArrayList<>();
-        messageConverterList.add(messageConverter);
-        messageConverterList.add(new NotificationRequestConverter(messageConverter));
-        messageConverterList.add(new SimpleMessageConverter());
-
-        CompositeMessageConverter compositeMessageConverter = new CompositeMessageConverter(messageConverterList);
-
-        queueMessageHandlerFactory.setArgumentResolvers(Collections.singletonList(new NotificationMessageArgumentResolver(compositeMessageConverter)));
-        QueueMessageHandler queueMessageHandler = queueMessageHandlerFactory.createQueueMessageHandler();
-        return queueMessageHandler;
-    }
-
-    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(15);
-        executor.initialize();
-        return executor;
-    }
-
-    @Bean
-    public SimpleMessageListenerContainer simpleMessageListenerContainer(QueueMessageHandler queueMessageHandler) {
-        SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
-        simpleMessageListenerContainer.setAmazonSqs(amazonSQS());
-        simpleMessageListenerContainer.setMessageHandler(queueMessageHandler);
-        simpleMessageListenerContainer.setMaxNumberOfMessages(10);
-        simpleMessageListenerContainer.setTaskExecutor(threadPoolTaskExecutor());
-        return simpleMessageListenerContainer;
+    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
+        final var factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactorySqs());
+        factory.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
+        return factory;
     }
 }
