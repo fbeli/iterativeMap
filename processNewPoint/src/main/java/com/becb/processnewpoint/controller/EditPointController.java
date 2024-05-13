@@ -55,6 +55,7 @@ public class EditPointController {
      */
     public ResponseEntity addChron() {
         pointService.adiantarChron();
+        System.out.println("Adiantou chron");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -5,6 +5,7 @@ import com.becb.api.dto.PointDto;
 import com.becb.api.dto.PointResponse;
 import com.becb.api.dto.PointVoteDto;
 import com.becb.api.service.ArquivoService;
+import com.becb.api.service.PointService;
 import com.becb.api.service.file.FileService;
 import com.becb.api.service.sqs.SqsService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -16,21 +17,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -41,6 +40,16 @@ public class PointController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    public PointController(@Autowired ArquivoService arquivoService,@Autowired FileService fileService, @Autowired Properties becbProperties,@Autowired SqsService sqsService,@Autowired PointService pointService) {
+        this.arquivoService = arquivoService;
+        this.fileService = fileService;
+        this.becbProperties = becbProperties;
+        this.sqsService = sqsService;
+        this.pointService = pointService;
+    }
+
+    public PointController() {
+    }
     @Autowired
     Properties becbProperties;
 
@@ -71,11 +80,15 @@ public class PointController {
     @Value("${file.endpoint}")
     String fileEndpoint;
 
+
     @Autowired
     ArquivoService arquivoService;
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    PointService pointService;
 
     /**
      * Cadastrar um ponto
@@ -89,6 +102,7 @@ public class PointController {
         if (pointDto.getPointId() == null)
             pointDto.setPointId(UlidCreator.getUlid().toString());
 
+        //if audio is recorded at time.
         if (pointDto.getAudio() != null && !pointDto.getAudio().isEmpty()) {
             String filePath = fileService.saveAudio(pointDto.getAudio().replace("data:audio/ogg code=opus;base64,", ""),
                     pointDto.getPointId());
@@ -141,6 +155,66 @@ public class PointController {
         return new PointResponse("Uploading to " + queue);
 
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @GetMapping("/point/{pointId}")
+    public PointDto getPoint(@PathVariable String pointId) throws IOException {
+        logger.info("Get point by id: {}", pointId);
+        return pointService.getPointById(pointId);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping( value = "/point/users")
+    @ResponseBody
+    public List<PointDto> getByUser(@RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                 @RequestParam("userId") String userId) throws IOException {
+
+
+        return pointService.getPointsByUser(userId, size, page);
+    }
+
+    private boolean addfile( String pointId, MultipartFile files) throws IOException {
+
+        String queue;
+        String filePath;
+        String message;
+
+        InputStream inputStream = null;
+        if (files != null)
+            inputStream = new BufferedInputStream(files.getInputStream());
+        else
+            return false;
+
+        if (files.getOriginalFilename().endsWith(".mp3")) {
+
+            filePath = fileService.saveFileMp3(inputStream, pointId);
+            queue = addAudioPointQueueName;
+
+        } else {
+            filePath = fileService.savePointPhoto(inputStream, pointId);
+            queue = addPhotoPointQueueName;
+        }
+
+        message = "{\"point_id\" : \"" + pointId + "\", \"file_path\" : \"" + filePath + "\"}";
+        sqsService.sendMessage(message, queue);
+
+        return true;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @PutMapping(value="/v2/point")
+    public PointResponse updatePoint( @RequestParam String pointId, @RequestBody PointDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
+
+        pointDto.setPointId(pointId);
+        sqsService.sendMessage(pointDto.toString(), becbProperties.sqs.update_point);
+        pointService.sendMessageToReadFromQueue();
+        return new PointResponse("point updated successfully");
+    }
+
+
 
     @PreAuthorize("isAuthenticated()")
     @ResponseBody

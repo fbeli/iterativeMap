@@ -6,11 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -38,6 +33,11 @@ public class PointDto{
     private String language;
     private String photo;
     private String type;
+    private String country;
+    private String city;
+    private String state;
+    private String aproved;
+    private String createdAt;
 
 
     public String toString() {
@@ -47,4 +47,7 @@ public class PointDto{
     }
 
 
+    public String getCreatedAt() {
+        return createdAt;
+    }
 }

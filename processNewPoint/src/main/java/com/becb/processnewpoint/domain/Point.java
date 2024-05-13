@@ -41,7 +41,7 @@ public class Point {
     @Column private String aproved;
     @Column private LanguageEnum language = LanguageEnum.PT;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
@@ -50,9 +50,9 @@ public class Point {
     private List<String> photos;
 
     @Column String photo;
-    @Column String State; // Region
-    @Column String Country;
-    @Column String City;  //place
+    @Column String state; // Region
+    @Column String country;
+    @Column String city;  //place
 
 
     public void setDescription(String description) {
@@ -67,11 +67,13 @@ public class Point {
     }
 
     public void setLatitude(String latitude) {
-        this.latitude = latitude.substring(latitude.indexOf(":") + 1, latitude.length() - 1).trim();
+        if(latitude.length() >0)
+            this.latitude = latitude.substring(latitude.indexOf(":") + 1, latitude.length() - 1).trim();
     }
 
     public void setLongitude(String longitude) {
-        this.longitude = longitude.substring(longitude.indexOf(":") + 1, longitude.length() - 1).trim();
+        if(longitude.length() >0)
+            this.longitude = longitude.substring(longitude.indexOf(":") + 1, longitude.length() - 1).trim();
     }
 
     public void setLanguage(String language) {
@@ -143,8 +145,12 @@ public class Point {
     }
     public String getPhoto(){
         if(photos != null && photos.size() > 0){
-            return photos.get(0);
+            photo =  photos.get(0);
         }
-        return null;
+        return photo;
+    }
+
+    public String toString(){
+        return pointId +" "+title+" "+getCountry()+" "+photo;
     }
 }

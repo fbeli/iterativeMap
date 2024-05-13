@@ -36,8 +36,16 @@ public class ErrorsController {
     @ResponseBody
     @ExceptionHandler(IOException.class)
     public ResponseEntity handleFileUploadingError(IOException exception) {
-        log.warn("Failed to save file", exception);
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        log.warn("IOException error: {}", exception);
+        return new ResponseEntity<>(exception.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
+    @ResponseBody
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity runtimeExceptionError(IOException exception) {
+        log.warn("IOException error: {}", exception);
+        return new ResponseEntity<>(exception.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
 

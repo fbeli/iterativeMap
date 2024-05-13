@@ -10,6 +10,7 @@ import com.becb.processnewpoint.domain.User;
 import com.becb.processnewpoint.repository.PointRepository;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
+import com.becb.processnewpoint.service.sqs.SqsChronClient;
 import com.github.f4b6a3.ulid.UlidCreator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,13 +30,21 @@ import java.util.Optional;
 @Service
 public class PointService {
 
-    @Autowired
-    FileService fileService;
 
-    @Autowired
+    public PointService(@Autowired FileService fileService,
+                        @Autowired DynamoDbClient dynamoDbClient,
+                        @Autowired PointRepository pointRepository,
+                        @Autowired MapService mapService) {
+        this.fileService = fileService;
+        this.dynamoDbClient = dynamoDbClient;
+        this.pointRepository = pointRepository;
+        this.mapService = mapService;
+    }
+
+    private FileService fileService;
     private DynamoDbClient dynamoDbClient;
-    @Autowired
     private PointRepository pointRepository;
+    private MapService mapService;
 
     public DynamoDbClient getDynamoDbClient() {
         return dynamoDbClient;
@@ -51,14 +62,14 @@ public class PointService {
             point.setPointId(jsonObject.getString("pointId"));
         }
         try {
-            point.setTitle(jsonObject.getString("title"));
-            point.setDescription(jsonObject.getString("description").replace("\"","'").replace("\n","'"));
-            point.setLongitude(jsonObject.getString("longitude"));
-            point.setLatitude(jsonObject.getString("latitude"));
+            point.setTitle(jsonObject.optString("title"));
+            point.setDescription(jsonObject.optString("description").replace("\"","'").replace("\n","'"));
+            point.setLongitude(jsonObject.optString("longitude"));
+            point.setLatitude(jsonObject.optString("latitude"));
             point.setUser(new User());
-            point.getUser().setUserId(jsonObject.getString("user_id"));
-            point.getUser().setUserName(jsonObject.getString("user_name"));
-            point.getUser().setUserEmail(jsonObject.getString("user_email"));
+            point.getUser().setUserId(jsonObject.optString("user_id"));
+            point.getUser().setUserName(jsonObject.optString("user_name"));
+            point.getUser().setUserEmail(jsonObject.optString("user_email"));
             point.getUser().setInstagram(jsonObject.optString("instagram"));
             point.getUser().setShare(jsonObject.optBoolean("share"));
             point.setAudio(jsonObject.optString("audio"));
@@ -89,11 +100,13 @@ public class PointService {
         return dynamoDbClient.savePoint(point);
     }
 
-    public Point savePointDb(Point point){
+    public Point savePointDb(Point point) {
 
         if(point != null) {
             if(point.getAproved() == null)
                 point.setAproved("false");
+            if(point.getCountry() == null)
+                mapService.setPlace(point);
             pointRepository.save(point);
         }
 
@@ -135,18 +148,34 @@ public class PointService {
         point.getUser().setUserName(jsonObject.getString("user_name"));
         point.getUser().setUserEmail(jsonObject.getString("user_email"));
 
-        ArrayList<Point> points = getApprovedPoints();
+        List<Point> points = getApprovedPoints();
 
+        points.parallelStream().forEach(p -> {
+            if (p.getCountry() == null) {
+                this.savePointDb(p);
+            }
+        });
 
         try {
             fileService.createFileToMap(points, jsonObject.getString("file_name"));
         } catch (Exception e) {
             logger.info(
-                    "Error to create file for not approved points: " + e.getMessage());
+                    "Error to create file for not approved points: {}", e.getMessage());
         }
     }
-    public  ArrayList<Point> getApprovedPoints() {
-        return convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
+
+    //TODO: fix it
+    public  List<Point> getApprovedPoints() {
+        List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
+        List<Point> pointdy = convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
+
+        return pointdy;
+    }
+    public  List<Point> getApprovedPointsDb() {
+        List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
+        //List<Point> pointdy = convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
+
+        return pointdb;
     }
 
     public void gerarArquivoParaAprovacao(String message) {
@@ -263,7 +292,6 @@ public class PointService {
                 }
                 pointRepository.save(point);
             }
-
     }
 
     public boolean addFileLinkToPoint(String message) {
@@ -303,9 +331,42 @@ public class PointService {
     }
 
     public Page<Point>  getPointsByUserId(Pageable pageable, String userId){
-        return pointRepository.findAllByUser(pageable, userId);
+        Page<Point> page = pointRepository.findAllByUser(pageable, userId);
+        page.stream().filter( p -> p.getCountry() == null)
+                .forEach(p -> this.savePointDb(p));
+        return page;
     }
     public Point getPointById(String pointId){
         return pointRepository.findPointByPointId(pointId).orElse(null);
     }
+
+    public Point updatePointObject(Point newPoint, Point oldPoint) {
+
+        if(newPoint == null || oldPoint == null || !newPoint.getPointId().equals(oldPoint.getPointId()) )
+            return null;
+        Field[] fields = Point.class.getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object newValue = field.get(newPoint);
+
+                if (newValue != null && !newValue.toString().isBlank()) {
+
+                        field.set(oldPoint, newValue);
+
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        return oldPoint;
+    }
+
+    //@Autowired
+    SqsChronClient chron;
+    public void adiantarChron(){
+        //chron.receberMensagens();
+    }
+
 }
