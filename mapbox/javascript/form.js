@@ -321,25 +321,3 @@ async function uploadClick(fileInputName, fileInputButtonName){
     document.getElementById(fileInputButtonName).innerHTML = new_str;
 
 }
-async function upload_point_photo(point_id, fileInput){
-
-    let formData = new FormData();
-
-    formData.append('files', fileInput.files[0]);
-
-    var myHeaders = new Headers();
-
-    myHeaders.append('Authorization', accessToken);
-
-    var requestOptions = {
-        method: 'PUT',
-        headers: myHeaders,
-        body: formData,
-        redirect: 'follow'
-    };
-
-    await fetch(config.cadastro_url+"/"+point_id, requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-}

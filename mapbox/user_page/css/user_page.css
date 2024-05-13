@@ -1,0 +1,62 @@
+.sidebar {
+    background-color: rgb(35 55 75 / 90%);
+    color: #fff;
+    padding: 6px 12px;
+    font-family: monospace;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.sidebar .div_side_bar {
+    width: 20%;
+    padding: 2px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar .div_side_bar .image {
+    height: 25px;
+    width: 25px;
+}
+
+a {
+
+    color: #a6a64a;
+    margin: 0px;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+
+    padding: 0px;
+    box-sizing: border-box;
+
+    cursor: pointer;
+    text-decoration: underline;
+    -webkit-tap-highlight-color: rgb(0 0 0 / 0);
+    font: 12px / 20px Helvetica Neue, Arial, Helvetica, sans-serif;
+}
+
+input{
+    font: 13px / 20px Helvetica Neue, Arial, Helvetica, sans-serif;
+    margin: 0;
+    line-height: normal;
+}
+textarea{
+    font: 13px / 20px Helvetica Neue, Arial, Helvetica, sans-serif;
+    margin: 0;
+    line-height: normal;
+    height: 100px;
+    width: 250px;
+}
+select{
+        font: 13px / 20px Helvetica Neue, Arial, Helvetica, sans-serif;
+        margin: 0;
+        line-height: normal;
+
+}

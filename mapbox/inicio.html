@@ -31,7 +31,9 @@
     <title>Be your own Guide</title>
     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
     <script src="./javascript/const.js"></script>
-    <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
+    <script src="/javascript/suport.js"></script>
+    <script src="/javascript/posicao.js"></script>
+        <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
@@ -80,7 +82,8 @@
               </div>
                 <div class="sidebar_sub_left" id="sidebar_logout_div" style="display: none;" >
                     <a  href="#" onclick="logout()" id="logout">Logout</a><br>
-                    <a href="#" onclick="copyLink()" >Copy My Link</a>
+                    <a href="#" onclick="copyLink()" >Copy My Link</a><br>
+                    <a href="/user_page/login.html"  >Edit My Points</a>
                 </div>
 
 
@@ -515,7 +518,6 @@
 
             </div>
             <script src="/javascript/reset_pass.js">   </script>
-            <script src="/javascript/posicao.js">   </script>
             <script src="/javascript/maps_actions.js">   </script>
             <script src="/javascript/divs_actions.js">   </script>
             <script src="/javascript/save_audio.js">   </script>

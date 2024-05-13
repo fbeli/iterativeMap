@@ -448,10 +448,10 @@ pre {
 
 .container {
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto; }
+  padding-right: 1px;
+  padding-left: 1px;
+  margin-right: 1px;
+  margin-left: 1px; }
   @media (min-width: 576px) {
     .container {
       max-width: 540px; } }
@@ -460,10 +460,10 @@ pre {
       max-width: 720px; } }
   @media (min-width: 992px) {
     .container {
-      max-width: 960px; } }
+      max-width: 98%; } }
   @media (min-width: 1200px) {
     .container {
-      max-width: 1140px; } }
+      max-width: 98%; } }
 
 .container-fluid {
   width: 100%;
@@ -1337,7 +1337,7 @@ pre {
   color: #212529; }
   .table th,
   .table td {
-    padding: 0.75rem;
+    padding: 0.50rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6; }
   .table thead th {
