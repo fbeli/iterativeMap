@@ -5,6 +5,8 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
@@ -19,6 +21,7 @@ import org.springframework.cloud.aws.messaging.support.converter.NotificationReq
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.messaging.converter.CompositeMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
@@ -67,9 +70,34 @@ public class SqsConfiguration {
 
     @Bean
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
-        final var factory = new DefaultJmsListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactorySqs());
+        final SQSConnectionFactory connectionFactory = SQSConnectionFactory.builder()
+                .withRegion(Region.getRegion(Regions.EU_CENTRAL_1))
+                .withAWSCredentialsProvider(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+                .withNumberOfMessagesToPrefetch(0)
+                .build();
+
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+        cachingConnectionFactory.setTargetConnectionFactory(connectionFactory);
+        cachingConnectionFactory.setReconnectOnException(true);
+
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        //factory.setErrorHandler(getErrorHandler());
         factory.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
         return factory;
     }
+
+    @Bean
+    public AmazonSQSAsync amazonSQS() {
+
+            final AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+            final AWSStaticCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+            return AmazonSQSAsyncClientBuilder.standard()
+                    .withCredentials(credentialsProvider)
+                    .withRegion(region)
+                    //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region))
+                    .build();
+
+    }
+
 }

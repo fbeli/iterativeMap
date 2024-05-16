@@ -4,7 +4,9 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.becb.processnewpoint.repository.PointRepository;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
+import com.becb.processnewpoint.service.sqs.SqsChronClient;
 import com.becb.processnewpoint.service.sqs.SqsConfiguration;
+import com.becb.processnewpoint.service.sqs.SqsService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +35,10 @@ import static org.mockito.Mockito.*;
 class PointServiceTest {
 
     @MockBean
-    private SqsConfiguration conf;
+    SqsService sqsService;
+
+    @MockBean
+    SqsConfiguration sqsConfiguration;
 
     @MockBean
     DynamoDbClient dynamodbClient;
@@ -50,6 +55,9 @@ class PointServiceTest {
     @MockBean
     FileService fileService;
 
+    @MockBean
+    SqsChronClient sqsChronClient;
+
     @Test
     void gerarArquivoParaMapa() {
         ArrayList lista = new ArrayList();
@@ -63,6 +71,7 @@ class PointServiceTest {
         when(pointRepository.findAllByAproved(any())).thenReturn(lista);
         when(mapService.setPlace(any())).thenCallRealMethod();
         when(fileService.createFileToMap(any(), any())).thenReturn(List.of("file1","file2","file3"));
+
         pointService.gerarArquivoParaMapa("{" +
                 "  \"user_id\": \"01HNG094DXF7A4HQPD8QKWHCBW\"," +
                 "  \"user_name\": \"Fred\"," +

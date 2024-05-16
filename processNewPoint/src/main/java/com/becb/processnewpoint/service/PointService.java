@@ -167,9 +167,9 @@ public class PointService {
     //TODO: fix it
     public  List<Point> getApprovedPoints() {
         List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
-        List<Point> pointdy = convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
+        //List<Point> pointdy = convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
 
-        return pointdy;
+        return pointdb;
     }
     public  List<Point> getApprovedPointsDb() {
         List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());

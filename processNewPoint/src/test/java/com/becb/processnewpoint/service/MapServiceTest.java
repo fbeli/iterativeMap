@@ -2,7 +2,9 @@ package com.becb.processnewpoint.service;
 
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
+import com.becb.processnewpoint.service.sqs.SqsChronClient;
 import com.becb.processnewpoint.service.sqs.SqsConfiguration;
+import com.becb.processnewpoint.service.sqs.SqsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,8 +34,15 @@ class MapServiceTest {
     @InjectMocks
     MapService mapService;
 
+
     @MockBean
-    private SqsConfiguration conf;
+    SqsConfiguration sqsConfiguration;
+
+    @MockBean
+    SqsService sqsService;
+
+    @MockBean
+    SqsChronClient sqsChronClient;
 
     @MockBean
     DynamoDbClient dynamodbClient;

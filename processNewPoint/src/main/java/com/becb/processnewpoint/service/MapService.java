@@ -1,6 +1,5 @@
 package com.becb.processnewpoint.service;
 
-import com.becb.api.dto.PointDto;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.dto.PlaceDto;
 import lombok.Setter;

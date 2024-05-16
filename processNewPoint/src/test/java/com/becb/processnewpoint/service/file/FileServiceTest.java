@@ -4,7 +4,10 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
+import com.becb.processnewpoint.service.sqs.SqsChronClient;
 import com.becb.processnewpoint.service.sqs.SqsConfiguration;
+import com.becb.processnewpoint.service.sqs.SqsService;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,12 @@ class FileServiceTest {
 
     @MockBean
     SqsConfiguration sqsConfiguration;
+
+    @MockBean
+    SqsService sqsService;
+
+    @MockBean
+    SqsChronClient sqsChronClient;
 
     @Test
     void configFilename() {
@@ -91,7 +100,7 @@ class FileServiceTest {
     }
 
     @Test
-    void getBodyHtml() {
+    void getBodyHtml() throws JSONException {
         String str = fileService.getBodyJson(createPointEN());
         JSONObject jsonObject = new JSONObject(str);
 
