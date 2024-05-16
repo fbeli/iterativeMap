@@ -37,6 +37,53 @@ function option_create_points() {
     }
 }
 
+function open_boomings() {
+    fechar_divs();
+
+    document.getElementById("booming_places").style.display = 'block';
+}
+function close_boomings(place) {
+
+    fechar_divs();
+    var la = latitude;
+    var lo = longitude;
+    if( place === "lisbon"){
+        lo ="-9.13667";
+        la = "38.70796";
+    }if( place === "london"){
+        la = "51.509903";
+        lo ="-0.134511";
+    }
+    if( place === "madrid"){
+        la = "40.41223";
+        lo ="-3.70529";
+    }
+    if( place === "porto"){
+        la = "41.143126";
+        lo ="-8.61069";
+
+    }
+    if( place === "valencia"){
+        la = "39.4789";
+        lo ="-0.37635";
+
+    }
+    if( place === "rio_de_janeiro"){
+        la = "-43.17691";
+        lo ="-22.90968";
+    }
+    if( place === "barcelona"){
+        la = "51.509903";
+        lo ="-0.134511";
+    }
+
+
+    map.flyTo({
+        center: [lo, la],
+        zoom: 15
+    });
+}
+
 function login_opt_ul_show() {
     fechar_divs();
     if (document.getElementById("login_opt_ul").style.display == 'none') {
@@ -63,6 +110,7 @@ function fechar_divs() {
     document.getElementById("div_please_login").style.display = 'none';
     document.getElementById("forget_password_div").style.display = 'none';
     document.getElementById("sidebar_logout_div").style.display = 'none';
+    document.getElementById("booming_places").style.display = 'none';
 
 }
 

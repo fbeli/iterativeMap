@@ -36,6 +36,7 @@ function copyLink(){
 
 
 function open_div_login(){
+    fechar_divs();
     document.getElementById("sidebar_logout_div").style.display="block";
 }
 function execute_login(){

@@ -117,7 +117,19 @@ function setToken(receicedToken) {
 
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                    <td><img  style="height: 30px" src="update.png" onclick="update_point('${item.pointId}' )"></td>
+                    <td>
+                        Update: <img  style="height: 30px" src="update.png" onclick="update_point('${item.pointId}' )">
+                         
+                         <p> Translate to: <select name="${language}" id="${language}">
+                          <option value="">Choose...</option>
+                          <option value="PT">PT</option>
+                          <option value="SP">SP</option>
+                          <option value="EN">EN</option>
+                        </select>
+                        <img  style="height: 30px" src="update.png" onclick="translate_point('${item.pointId}' )">
+                        </p>
+                        
+                    </td>
                     <td><input type="text" id="${title}" value="${item.title}"></td>
                     <td>${item.aproved}</td>
                     <td>
