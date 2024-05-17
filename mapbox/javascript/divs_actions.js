@@ -69,8 +69,8 @@ function close_boomings(place) {
 
     }
     if( place === "rio_de_janeiro"){
-        la = "-43.17691";
-        lo ="-22.90968";
+        la = "-43.19163";
+        lo ="-22.9318";
     }
     if( place === "barcelona"){
         la = "51.509903";
@@ -80,7 +80,7 @@ function close_boomings(place) {
 
     map.flyTo({
         center: [lo, la],
-        zoom: 15
+        zoom: 13
     });
 }
 
