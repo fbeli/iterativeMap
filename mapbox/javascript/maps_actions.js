@@ -101,7 +101,7 @@ map.on('click', (event) => {
         layers: ['l_mapFile_pt', 'l_mapFile_en','l_lisboa_secreta' , 'l_mapFile_sp'] // replace with your layer name
 
     });
-
+    fechar_divs();
     if (!features.length) {
         myLocation();
         if(map.getZoom() > zoom_to_create_point && create_point){

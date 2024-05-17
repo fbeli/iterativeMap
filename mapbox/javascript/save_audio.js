@@ -123,11 +123,10 @@ async function play_on_safari(URL) {
             audio_source = context.createBufferSource();
             audio_source.buffer = audioBuffer;
             audio_source.connect(context.destination);
+            audio_source.muted = false;
             audio_source.start();
         };
 
-        //var URL = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/123941/Yodel_Sound_Effect.mp3';
-        //var AudioContext = window.AudioContext || window.webkitAudioContext;
         var AudioContext = window.AudioContext;
         var context = new AudioContext(); // Make it crossbrowser
         var gainNode = context.createGain();
@@ -138,13 +137,14 @@ async function play_on_safari(URL) {
         // The Promise-based syntax for BaseAudioContext.decodeAudioData() is not supported in Safari(Webkit).
         await window.fetch(URL)
             .then(response => response.arrayBuffer())
-            .then(arrayBuffer => context.decodeAudioData(arrayBuffer,
-                audioBuffer => {
-                    yodelBuffer = audioBuffer;
-                },
-                error =>
-                    console.error(error)
-            ))
+            .then(arrayBuffer =>
+                context.decodeAudioData(arrayBuffer,
+                    audioBuffer => {
+                        yodelBuffer = audioBuffer;
+                    },
+                    error =>
+                        console.error(error)
+                ))
 
         document.getElementById("play").style.display = "none";
         document.getElementById("stop").style.display = "flex";
