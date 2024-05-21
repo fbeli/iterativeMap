@@ -11,11 +11,14 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import com.becb.processnewpoint.domain.Point;
 import java.time.LocalDateTime;
@@ -29,10 +32,18 @@ import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
-@ComponentScan
-@ExtendWith(MockitoExtension.class)
-@TestPropertySource(locations="classpath:test.properties")
+//@TestPropertySource("/resources/application-test.properties")
+@TestPropertySource(
+        locations = {"classpath:application-test.properties"},
+        properties = { "key=value" })
+//@ActiveProfiles("test")
 class PointServiceTest {
+
+    @InjectMocks
+    PointService pointService;
+
+    @Mock
+    private PointRepository pointRepository;
 
     @MockBean
     SqsService sqsService;
@@ -40,19 +51,15 @@ class PointServiceTest {
     @MockBean
     SqsConfiguration sqsConfiguration;
 
-    @MockBean
+    @Mock
     DynamoDbClient dynamodbClient;
 
-    @InjectMocks
-    PointService pointService;
 
-    @MockBean
-    PointRepository pointRepository;
 
-    @MockBean
+    @Mock
     MapService mapService;
 
-    @MockBean
+    @Mock
     FileService fileService;
 
     @MockBean
@@ -97,10 +104,10 @@ class PointServiceTest {
 
     @Test
     void savePointAudioNull() {
+
         when(dynamodbClient.savePoint(any())).thenReturn(new Item());
         Item item = pointService.savePoint(getMessageFromStackAudioNull());
         Assert.assertNotNull(item);
-
     }
     @Test
     void savePointWithAudio() {
