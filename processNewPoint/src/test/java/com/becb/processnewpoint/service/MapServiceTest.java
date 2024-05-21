@@ -6,12 +6,10 @@ import com.becb.processnewpoint.service.sqs.SqsChronClient;
 import com.becb.processnewpoint.service.sqs.SqsConfiguration;
 import com.becb.processnewpoint.service.sqs.SqsService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.ByteArrayInputStream;
@@ -26,28 +24,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@ComponentScan
-@ExtendWith(MockitoExtension.class)
-@TestPropertySource(locations="classpath:test.properties")
+@TestPropertySource(
+        locations = {"classpath:application-test.properties"},
+        properties = {"key=value"})
 class MapServiceTest {
 
     @InjectMocks
     MapService mapService;
 
 
-    @MockBean
-    SqsConfiguration sqsConfiguration;
-
-    @MockBean
-    SqsService sqsService;
-
-    @MockBean
-    SqsChronClient sqsChronClient;
-
-    @MockBean
-    DynamoDbClient dynamodbClient;
-
-    @MockBean
+    @Mock
     SuportService suporteService;
 
     @Test
@@ -58,10 +44,9 @@ class MapServiceTest {
         when(mockHttpURLConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(mockHttpURLConnection.getInputStream()).thenReturn(new ByteArrayInputStream(getResponse().getBytes()));
 
-
         StringBuffer response = new StringBuffer();
 
-     Point point = new Point();
+        Point point = new Point();
         point.setLatitude("-9.999");
         point.setLongitude("-11.1111");
         point.setTitle("Teste");
@@ -71,11 +56,10 @@ class MapServiceTest {
         assertTrue(point.getState().equals("Lisbon"));
         assertTrue(point.getCity().equals("Cascais"));
 
-
     }
 
-    private String getResponse(){
-        String filePath = "src/test/java/resources/response_map.txt";
+    private String getResponse() {
+        String filePath = "src/test/resources/response_map.txt";
         Path path = Paths.get(filePath);
         System.out.println(path.toAbsolutePath());
         try {

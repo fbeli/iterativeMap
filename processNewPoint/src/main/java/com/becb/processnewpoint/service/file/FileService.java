@@ -51,7 +51,7 @@ public class FileService {
         List<String> filesCreated = new ArrayList<>();
 
         masterList.forEach(l -> {
-                    List<Point> lista = points.stream()
+                    List<Point> lista = points.parallelStream()
                             .filter((Point point) -> {
                                 return point.getUser().getInstagram().equals(l);
                             }).collect(Collectors.toList());

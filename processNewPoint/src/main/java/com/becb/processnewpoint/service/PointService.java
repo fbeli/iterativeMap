@@ -21,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -331,7 +330,7 @@ public class PointService {
     }
 
     public Page<Point>  getPointsByUserId(Pageable pageable, String userId){
-        Page<Point> page = pointRepository.findAllByUser(pageable, userId);
+        Page<Point> page = pointRepository.findAllByUserNotBlocked(pageable, userId);
         page.stream().filter( p -> p.getCountry() == null)
                 .forEach(p -> this.savePointDb(p));
         return page;

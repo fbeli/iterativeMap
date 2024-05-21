@@ -49,7 +49,6 @@ public class ProcessNewPointApplication {
 	public DynamoDbClient getDynamoDbClient(@Value("${dynamodb.host}")String dynamoDbHost) {
 		AmazonDynamoDBClient client ;
 
-
 		if ( env.equals("docker") || env.equals("dev") ) {
 			client = new AmazonDynamoDBClient();
 			logger.info("DynamoDbHost: {}", dynamoDbHost);
