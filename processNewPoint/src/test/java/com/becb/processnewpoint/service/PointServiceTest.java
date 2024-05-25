@@ -32,11 +32,10 @@ import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
-//@TestPropertySource("/resources/application-test.properties")
 @TestPropertySource(
         locations = {"classpath:application-test.properties"},
         properties = { "key=value" })
-//@ActiveProfiles("test")
+
 class PointServiceTest {
 
     @InjectMocks
@@ -44,12 +43,6 @@ class PointServiceTest {
 
     @Mock
     private PointRepository pointRepository;
-
-    @MockBean
-    SqsService sqsService;
-
-    @MockBean
-    SqsConfiguration sqsConfiguration;
 
     @Mock
     DynamoDbClient dynamodbClient;
@@ -62,8 +55,6 @@ class PointServiceTest {
     @Mock
     FileService fileService;
 
-    @MockBean
-    SqsChronClient sqsChronClient;
 
     @Test
     void gerarArquivoParaMapa() {

@@ -1,6 +1,8 @@
 package com.becb.processnewpoint.controller;
 
 import com.becb.processnewpoint.domain.Point;
+import com.becb.processnewpoint.domain.User;
+import com.becb.processnewpoint.dto.PointDto;
 import com.becb.processnewpoint.service.PointService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -39,11 +41,19 @@ class EditPointControllerTest {
         String userId = "testUser";
         int page = 0;
         int size = 10;
-        Page<Point> pageResult = new PageImpl<>(Arrays.asList(new Point(), new Point()));
+
+        Point point = new Point();
+        Point point1 = new Point();
+        User user = new User();
+        user.setUserId(userId);
+        point.setUser(user);
+        point1.setUser(user);
+        Page<Point> pageResult = new PageImpl<>(Arrays.asList(point1, point));
+
 
         when(pointService.getPointsByUserId(any(Pageable.class), eq(userId))).thenReturn(pageResult);
-
-        List<Point> result = editPointController.getByUser(page, size, userId);
+        when(pointService.convertPointToDto(any())).thenCallRealMethod();
+        List<PointDto> result = editPointController.getByUser(page, size, userId);
 
         assertEquals(2, result.size());
         verify(pointService, times(1)).getPointsByUserId(any(Pageable.class), eq(userId));
