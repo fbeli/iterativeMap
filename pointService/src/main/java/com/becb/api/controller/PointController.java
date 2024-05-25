@@ -3,7 +3,6 @@ package com.becb.api.controller;
 import com.becb.api.core.Properties;
 import com.becb.api.dto.PointDto;
 import com.becb.api.dto.PointResponse;
-import com.becb.api.dto.PointVoteDto;
 import com.becb.api.service.ArquivoService;
 import com.becb.api.service.PointService;
 import com.becb.api.service.file.FileService;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -89,6 +87,7 @@ public class PointController {
 
     @Autowired
     PointService pointService;
+
 
     /**
      * Cadastrar um ponto
@@ -206,7 +205,10 @@ public class PointController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PutMapping(value="/v2/point")
-    public PointResponse updatePoint( @RequestParam String pointId, @RequestBody PointDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
+    /**
+     * {{endpoint_service}}/v2/point/01HSF8GPB8DWWH4FW3K7Z753WR
+     */
+    public PointResponse updatePoint( @RequestParam String pointId, @RequestParam PointDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
 
         pointDto.setPointId(pointId);
         sqsService.sendMessage(pointDto.toString(), becbProperties.sqs.update_point);
@@ -214,13 +216,10 @@ public class PointController {
         return new PointResponse("point updated successfully");
     }
 
-
-
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PutMapping("/point/upload_file_link/{pointId}")
     public PointResponse uploadFilelink(@PathVariable String pointId, @RequestParam("file") String link, HttpServletRequest request) throws IOException, InterruptedException {
-
 
         String queue = addPhotoPointQueueName;
         String message;
@@ -229,10 +228,36 @@ public class PointController {
         sqsService.sendMessage(message, queue);
 
         return new PointResponse("Uploading to " + queue);
-
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @GetMapping("/point_translate")
+    /**
+     * https://rapidapi.com/gofitech/api/nlp-translation/
+     */
+    public PointDto translate(@RequestParam String pointId,
+                              @RequestParam(value = "language", defaultValue = "EN") String language, HttpServletRequest request) throws IOException {
 
+        //TODO
+        return null;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @GetMapping("/create_autio")
+    /**
+     * https://rapidapi.com/voicerss/api/text-to-speech-1/
+     * https://www.voicerss.org/personel/
+     */
+    public PointDto createAudio(@RequestParam String pointId,
+                              @RequestParam(value = "language", defaultValue = "EN") String language, HttpServletRequest request) throws IOException {
+
+        return null;
+        //return translateService.translate(pointId, language);
+    }
+
+    /*
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PostMapping(value = "/point/vote")
@@ -260,7 +285,7 @@ public class PointController {
             return new PointResponse("500", "Error to add point" + e.getMessage());
         }
         return response;
-    }
+    }*/
 
     private JSONObject getToken(HttpServletRequest request){
         String token = request.getHeader("Authorization").replace("Bearer ", "");
@@ -305,12 +330,12 @@ public class PointController {
         }
     }
 
-    private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
+  /*  private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
 
         JSONObject jsonObject = getToken(request);
 
         pointDto.setUserId(jsonObject.getString("usuario_id"));
 
         return pointDto.toString();
-    }
+    }*/
 }

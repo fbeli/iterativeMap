@@ -7,7 +7,6 @@ import com.becb.processnewpoint.service.PointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class SqsChronClient {
 
 
 
-    @Scheduled(cron = "10 * * * * *") // Cron expression for running every 2 minutes
+  //  @Scheduled(cron = "10 * * * * *") // Cron expression for running every 2 minutes
     public void receberMensagensChron() {
         receberMensagens();
     }
@@ -48,7 +47,7 @@ public class SqsChronClient {
         receiveMessageRequest.setMaxNumberOfMessages(5);
         List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
 
-        if (messages.size() > 0) {
+        if (!messages.isEmpty()) {
             messages.forEach(message -> {
                 pointService.addFileToPoint(message.getBody());
                 sqs.deleteMessage(queueUrl + queue, message.getReceiptHandle());

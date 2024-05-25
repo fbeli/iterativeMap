@@ -73,3 +73,26 @@ async function upload_point_photo(point_id, fileInput){
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
 }
+
+async function translate_point(point_id) {
+
+    let language = document.getElementById("lang_"+point_id).value;
+   
+    let data = {
+        title: title,
+        language: language,
+        description: description
+
+    };
+    fetch(config.update_point + point_id, {
+        method: "PUT",
+        headers: {
+            "Authorization": accessToken,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+
+
+
+}
