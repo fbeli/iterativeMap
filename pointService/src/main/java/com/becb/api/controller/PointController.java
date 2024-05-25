@@ -204,7 +204,10 @@ public class PointController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PutMapping(value="/v2/point")
-    public PointResponse updatePoint( @RequestParam String pointId, @RequestBody PointDto pointDto, HttpServletRequest request) throws IOException {
+    /**
+     * {{endpoint_service}}/v2/point/01HSF8GPB8DWWH4FW3K7Z753WR
+     */
+    public PointResponse updatePoint( @RequestParam String pointId, @RequestParam PointDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
 
         pointDto.setPointId(pointId);
         sqsService.sendMessage(pointDto.toString(), becbProperties.sqs.update_point);
@@ -225,7 +228,19 @@ public class PointController {
         sqsService.sendMessage(message, queue);
 
         return new PointResponse("Uploading to " + queue);
+    }
 
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @GetMapping("/point_translate")
+    /**
+     * https://rapidapi.com/gofitech/api/nlp-translation/
+     */
+    public PointDto translate(@RequestParam String pointId,
+                              @RequestParam(value = "language", defaultValue = "EN") String language, HttpServletRequest request) throws IOException {
+
+        //TODO
+        return null;
     }
 
 /*
@@ -301,13 +316,12 @@ public class PointController {
         }
     }
 
-    /*private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
+  /*  private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
 
         JSONObject jsonObject = getToken(request);
 
         pointDto.setUserId(jsonObject.getString("usuario_id"));
 
         return pointDto.toString();
-    }
-*/
+    }*/
 }

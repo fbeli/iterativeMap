@@ -40,7 +40,6 @@ public class FileService {
     @Value("${file.filetomap.lang}")
     String languages;
 
-
     @Autowired
     AmazonS3Service amazonS3Service;
 

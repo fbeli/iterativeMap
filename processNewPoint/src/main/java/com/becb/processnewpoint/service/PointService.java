@@ -7,10 +7,12 @@ import com.becb.processnewpoint.domain.AprovedEnum;
 import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
+import com.becb.processnewpoint.dto.PointDto;
 import com.becb.processnewpoint.repository.PointRepository;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
 import com.becb.processnewpoint.service.sqs.SqsChronClient;
+import com.becb.processnewpoint.service.translate.TranslateService;
 import com.github.f4b6a3.ulid.UlidCreator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,11 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,28 +35,33 @@ import java.util.Optional;
 public class PointService {
 
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    //@Autowired
+    SqsChronClient chron;
+    @Autowired
+    private TranslateService translateService;
+    private final FileService fileService;
+    private final DynamoDbClient dynamoDbClient;
+    private final PointRepository pointRepository;
+    private final MapService mapService;
+
     public PointService(@Autowired FileService fileService,
                         @Autowired DynamoDbClient dynamoDbClient,
                         @Autowired PointRepository pointRepository,
-                        @Autowired MapService mapService) {
+                        @Autowired MapService mapService,
+                        @Autowired TranslateService translateService) {
         this.fileService = fileService;
         this.dynamoDbClient = dynamoDbClient;
         this.pointRepository = pointRepository;
         this.mapService = mapService;
+        this.translateService = translateService;
     }
-
-    private FileService fileService;
-    private DynamoDbClient dynamoDbClient;
-    private PointRepository pointRepository;
-    private MapService mapService;
 
     public DynamoDbClient getDynamoDbClient() {
         return dynamoDbClient;
     }
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    public Point  messageToPoint(String message){
+    public Point messageToPoint(String message) {
         Point point = new Point();
         JSONObject jsonObject = new JSONObject(message);
 
@@ -62,7 +72,7 @@ public class PointService {
         }
         try {
             point.setTitle(jsonObject.optString("title"));
-            point.setDescription(jsonObject.optString("description").replace("\"","'").replace("\n","'"));
+            point.setDescription(jsonObject.optString("description").replace("\"", "'").replace("\n", "'"));
             point.setLongitude(jsonObject.optString("longitude"));
             point.setLatitude(jsonObject.optString("latitude"));
             point.setUser(new User());
@@ -75,7 +85,7 @@ public class PointService {
             point.setLanguage(jsonObject.optString("language"));
             point.setType(jsonObject.optString("type"));
 
-            if(jsonObject.optString("photo") != "")
+            if (jsonObject.optString("photo") != "")
                 point.addPhoto(jsonObject.optString("photo"));
 
             point.getUser().setGuide(jsonObject.optBoolean("guide"));
@@ -89,7 +99,7 @@ public class PointService {
 
     public Item savePoint(String message) {
         Point point = messageToPoint(message);
-        if(point != null)
+        if (point != null)
             return savePointDynamo(point);
         return null;
     }
@@ -101,10 +111,10 @@ public class PointService {
 
     public Point savePointDb(Point point) {
 
-        if(point != null) {
-            if(point.getAproved() == null)
+        if (point != null) {
+            if (point.getAproved() == null)
                 point.setAproved("false");
-            if(point.getCountry() == null)
+            if (point.getCountry() == null)
                 mapService.setPlace(point);
             pointRepository.save(point);
         }
@@ -112,20 +122,14 @@ public class PointService {
         return point;
     }
 
-
-
     public void aprovePoint(String message, String aprovedValue) {
         Point point = getUpdatePointValue(message);
-
         dynamoDbClient.updatePointToAproved(point, aprovedValue);
-
         Optional<Point> optionalPoint = pointRepository.findPointByPointId(point.getPointId());
-        if(optionalPoint.isPresent()) {
+        if (optionalPoint.isPresent()) {
             optionalPoint.get().setAproved(aprovedValue);
             savePointDb(optionalPoint.get());
         }
-
-
     }
 
     private Point getUpdatePointValue(String message) {
@@ -164,13 +168,14 @@ public class PointService {
     }
 
     //TODO: fix it
-    public  List<Point> getApprovedPoints() {
+    public List<Point> getApprovedPoints() {
         List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
         //List<Point> pointdy = convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
 
         return pointdb;
     }
-    public  List<Point> getApprovedPointsDb() {
+
+    public List<Point> getApprovedPointsDb() {
         List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
         //List<Point> pointdy = convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
 
@@ -219,7 +224,7 @@ public class PointService {
         point.getUser().setUserEmail(item.getString("user_email"));
         point.setType(item.getString("type"));
 
-        point.getUser().setShare((item.getString("share") != null) ? Boolean.parseBoolean(item.getString("share")) : true);
+        point.getUser().setShare(item.getString("share") == null || Boolean.parseBoolean(item.getString("share")));
         point.getUser().setGuide(item.getString("guide") != null && Boolean.parseBoolean(item.getString("guide")));
 
         point.setAproved(item.getString("aprovado"));
@@ -246,9 +251,7 @@ public class PointService {
 
         String[] array = photosArray.split(",");
         List<String> list = new ArrayList<String>();
-        for (String element : array) {
-            list.add(element);
-        }
+        Collections.addAll(list, array);
         return list;
     }
 
@@ -258,12 +261,12 @@ public class PointService {
         String path = (String) jsonObject.get("file_path");
 
 
-        addFileToPointDb( pointId, path);
-        return addFileToPointDynamo(pointId,path);
+        addFileToPointDb(pointId, path);
+        return addFileToPointDynamo(pointId, path);
     }
 
     @Deprecated
-    public boolean addFileToPointDynamo(String pointId,  String path){
+    public boolean addFileToPointDynamo(String pointId, String path) {
         Item item = dynamoDbClient.getPoint(pointId);
         Point point = this.convertItemToPoint(item);
         if (point == null || path == null) {
@@ -279,18 +282,18 @@ public class PointService {
         return dynamoDbClient.addAudioToPoint(point);
     }
 
-        public void addFileToPointDb(String pointId,  String path){
+    public void addFileToPointDb(String pointId, String path) {
 
-            Optional<Point> opPoint = pointRepository.findPointByPointId(pointId);
-            if (opPoint.isPresent()) {
-                Point point = opPoint.get();
-                if (path.endsWith("jpg") || path.endsWith("jpeg") || path.endsWith("png") || path.endsWith("gif")) {
-                    point.addPhoto(path);
-                }else {
-                    point.setAudio(path);
-                }
-                pointRepository.save(point);
+        Optional<Point> opPoint = pointRepository.findPointByPointId(pointId);
+        if (opPoint.isPresent()) {
+            Point point = opPoint.get();
+            if (path.endsWith("jpg") || path.endsWith("jpeg") || path.endsWith("png") || path.endsWith("gif")) {
+                point.addPhoto(path);
+            } else {
+                point.setAudio(path);
             }
+            pointRepository.save(point);
+        }
     }
 
     public boolean addFileLinkToPoint(String message) {
@@ -300,12 +303,12 @@ public class PointService {
         String path = (String) jsonObject.get("link");
 
         addFileToPointDb(pointId, path);
-        return addFileLinkToPointDynamo(pointId,path);
+        return addFileLinkToPointDynamo(pointId, path);
 
     }
 
-     @Deprecated
-    public boolean addFileLinkToPointDynamo(String pointId,  String path){
+    @Deprecated
+    public boolean addFileLinkToPointDynamo(String pointId, String path) {
         Point point = this.convertItemToPoint(dynamoDbClient.getPoint(pointId));
 
         if (point == null || path == null) {
@@ -323,35 +326,47 @@ public class PointService {
     public void addVotetoPoint(String message) {
         JSONObject jsonObject = new JSONObject(message);
 
-        String pointId =  jsonObject.optString("pointId");
+        String pointId = jsonObject.optString("pointId");
         Integer vote = jsonObject.optInt("vote");
 
 
     }
 
-    public Page<Point>  getPointsByUserId(Pageable pageable, String userId){
+    public Page<Point> getPointsByUserId(Pageable pageable, String userId) {
         Page<Point> page = pointRepository.findAllByUserNotBlocked(pageable, userId);
-        page.stream().filter( p -> p.getCountry() == null)
+        page.stream().filter(p -> p.getCountry() == null)
                 .forEach(p -> this.savePointDb(p));
         return page;
     }
-    public Point getPointById(String pointId){
+
+    public Page<PointDto> convertPointToDto(List<Point> points) {
+        List<PointDto> pointsDto = new ArrayList();
+        points.forEach(p -> pointsDto.add(new PointDto(p)));
+        return new PageImpl<>(pointsDto);
+    }
+
+    public Point getPointById(String pointId) {
         return pointRepository.findPointByPointId(pointId).orElse(null);
     }
 
     public Point updatePointObject(Point newPoint, Point oldPoint) {
 
-        if(newPoint == null || oldPoint == null || !newPoint.getPointId().equals(oldPoint.getPointId()) )
+        if (newPoint == null || oldPoint == null || !newPoint.getPointId().equals(oldPoint.getPointId()))
             return null;
+        return copyPoint(newPoint, oldPoint);
+    }
+
+    public Point copyPoint(Point pointFrom, Point pointTo) {
         Field[] fields = Point.class.getDeclaredFields();
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
-                Object newValue = field.get(newPoint);
+                Object newValue = field.get(pointFrom);
 
-                if (newValue != null && !newValue.toString().isBlank()) {
+                if (newValue != null && !newValue.toString().isBlank() && !field.getName().equals("id")
+                        && !field.getName().equals("pointId")) {
 
-                        field.set(oldPoint, newValue);
+                    field.set(pointTo, newValue);
 
                 }
             }
@@ -359,12 +374,28 @@ public class PointService {
             throw new RuntimeException(e);
         }
 
-        return oldPoint;
+        return pointTo;
     }
 
-    //@Autowired
-    SqsChronClient chron;
-    public void adiantarChron(){
+    public Point translate(String pointId, String languageDestino) throws IOException {
+
+        Point parentPoint = this.getPointById(pointId);
+        Point childPoint =  new Point(UlidCreator.getUlid().toString());
+        copyPoint(parentPoint,childPoint );
+        childPoint.setChildrenPoints(null);
+        if (parentPoint == null) {
+            return null;
+        }
+        if (!translateService.canChildForThatLanguage(parentPoint, languageDestino))
+            return null;
+
+        childPoint = translateService.translate(parentPoint,childPoint, languageDestino);
+
+        this.savePointDb(childPoint);
+        return childPoint;
+    }
+
+    public void adiantarChron() {
         //chron.receberMensagens();
     }
 
