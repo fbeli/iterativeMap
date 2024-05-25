@@ -71,7 +71,6 @@ class FileServiceTest {
         }).collect(Collectors.toList());
         assertEquals(3, listaRetorno.size());
 
-
     }
 
     private Point createPointLisboaSecreta(){
