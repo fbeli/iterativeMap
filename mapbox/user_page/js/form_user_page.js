@@ -63,7 +63,6 @@ function setToken(receicedToken) {
 }
     let tokenPayload;
 
-
     function split_token() {
         let arrayToken = accessToken.split('.');
         tokenPayload = JSON.parse(atob(arrayToken[1]));
@@ -114,7 +113,7 @@ function setToken(receicedToken) {
                         let language = "lang_"+item.pointId;
                         let description = "description_"+item.pointId;
                         let title = "title_"+item.pointId;
-
+                        let data = formaDate(item.createdAt);
                         const row = document.createElement('tr');
                         row.innerHTML = `
                     <td>
@@ -132,6 +131,7 @@ function setToken(receicedToken) {
                     </td>
                     <td><input type="text" id="${title}" value="${item.title}"></td>
                     <td>${item.aproved}</td>
+                    <td>${data}</td>
                     <td>
                         <select name="${language}" id="${language}">
                           <option value="${item.language}">${item.language}</option>
@@ -215,4 +215,18 @@ async function update_point(point_id){
             console.log(error);
             alert(error);
         });
+}
+
+function formaDate(dateString){
+    const month = parseInt(dateString.substring(5, 7)) - 1; // Months are 0-indexed in JavaScript
+    const day = parseInt(dateString.substring(8, 10));
+    const hour = parseInt(dateString.substring(11, 13));
+    const minute = parseInt(dateString.substring(14, 16));
+    const second = parseInt(dateString.substring(17, 19));
+    const year = parseInt(dateString.substring(0, 4));
+// Create a new Date object with the extracted values
+    const date = new Date(year, month, day, hour, minute, second);
+    const formattedDateTime = date.toLocaleString("en-US", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+    return formattedDateTime;
+
 }
