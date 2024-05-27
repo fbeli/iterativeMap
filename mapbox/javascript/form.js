@@ -218,8 +218,7 @@ function form_cadastro_is_ok(){
     }
 
     if(document.getElementById("cadastro_description").value === 'Description'){
-        error_div_event("cadastro_div", "Insert Description");
-        return false ;
+        edocument.getElementById("cadastro_description").value = document.getElementById("cadastro_titulo").value;
     }
     if(document.getElementById("cadastro_place_type").value === 'Place Type'){
         error_div_event("cadastro_div", "Insert Place Type");

@@ -69,8 +69,8 @@ function close_boomings(place) {
 
     }
     if( place === "rio_de_janeiro"){
-        la = "-43.19163";
-        lo ="-22.9318";
+        lo = "-43.19163";
+        la ="-22.9318";
     }
     if( place === "barcelona"){
         la = "51.509903";
