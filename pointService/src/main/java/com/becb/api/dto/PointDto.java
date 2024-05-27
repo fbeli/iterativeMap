@@ -46,8 +46,8 @@ public class PointDto{
         return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 
-
-    public String getCreatedAt() {
-        return createdAt;
+    public String getPointIdJson(){
+        return "{pointId : "+pointId+"}";
     }
+
 }
