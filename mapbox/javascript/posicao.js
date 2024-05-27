@@ -7,7 +7,7 @@ function fly_back(){
    if(firstTime){
        document.getElementById("starting").style.display="block";
    }
-   if((longitude == 'undefined' || longitude == undefined)
+   if((longitude == 'undefined' || longitude == 'undefined' )
                 && window.location.href.search("-9.135905") != -1){
        latitude = getLatitude();
        longitude = getLongitude();
@@ -30,8 +30,9 @@ function fly_back_map(){
 
 function timeoutLocation(){
     setTimeout(function(){
-        if(latitude == undefined || longitude == undefined){
+        if(latitude == 'undefined' || longitude == 'undefined'){
             alert("Não foi possível obter a sua localização.");
+            map.flyTo({center: [38.72091,-9.12751 ], zoom: 14});
             fechar_divs();
             return false;
         }else{
