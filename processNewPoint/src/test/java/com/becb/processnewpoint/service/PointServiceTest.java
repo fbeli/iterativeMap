@@ -4,21 +4,11 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.becb.processnewpoint.repository.PointRepository;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
-import com.becb.processnewpoint.service.sqs.SqsChronClient;
-import com.becb.processnewpoint.service.sqs.SqsConfiguration;
-import com.becb.processnewpoint.service.sqs.SqsService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import com.becb.processnewpoint.domain.Point;
 import java.time.LocalDateTime;
@@ -274,5 +264,11 @@ class PointServiceTest {
         Assert.assertTrue(photos.equals(point.getPhotosAsString()));
 
 
+    }
+
+    @Test
+    void createPointsFromParent() {
+        pointService.gerarArquivoParaMapa("{" +
+                "  \"pointId\": \"01HNG094DXF7A4HQPD8QKWHCBW\" } ");
     }
 }
