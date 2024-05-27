@@ -3,7 +3,6 @@ package com.becb.api.controller;
 import com.becb.api.core.Properties;
 import com.becb.api.dto.PointDto;
 import com.becb.api.dto.PointResponse;
-import com.becb.api.dto.PointVoteDto;
 import com.becb.api.service.ArquivoService;
 import com.becb.api.service.PointService;
 import com.becb.api.service.file.FileService;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -97,7 +95,7 @@ public class PointController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @RequestMapping(value = "/point")
-    public PointResponse cadastro(@RequestBody PointDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
+    public PointResponse cadastro(@RequestBody PointDto pointDto, HttpServletRequest request) throws IOException {
 
         if (pointDto.getPointId() == null)
             pointDto.setPointId(UlidCreator.getUlid().toString());
@@ -169,7 +167,7 @@ public class PointController {
     @ResponseBody
     public List<PointDto> getByUser(@RequestParam(value = "page", defaultValue = "0") int page,
                                  @RequestParam(value = "size", defaultValue = "10") int size,
-                                 @RequestParam("userId") String userId) throws IOException {
+                                 @RequestParam("userId") String userId) {
 
 
         return pointService.getPointsByUser(userId, size, page);
@@ -181,13 +179,13 @@ public class PointController {
         String filePath;
         String message;
 
-        InputStream inputStream = null;
+        InputStream inputStream ;
         if (files != null)
             inputStream = new BufferedInputStream(files.getInputStream());
         else
             return false;
 
-        if (files.getOriginalFilename().endsWith(".mp3")) {
+        if (files.getOriginalFilename()!= null && files.getOriginalFilename().endsWith(".mp3")) {
 
             filePath = fileService.saveFileMp3(inputStream, pointId);
             queue = addAudioPointQueueName;
@@ -206,7 +204,7 @@ public class PointController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PutMapping(value="/v2/point")
-    public PointResponse updatePoint( @RequestParam String pointId, @RequestBody PointDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
+    public PointResponse updatePoint( @RequestParam String pointId, @RequestBody PointDto pointDto, HttpServletRequest request) throws IOException {
 
         pointDto.setPointId(pointId);
         sqsService.sendMessage(pointDto.toString(), becbProperties.sqs.update_point);
@@ -214,12 +212,10 @@ public class PointController {
         return new PointResponse("point updated successfully");
     }
 
-
-
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PutMapping("/point/upload_file_link/{pointId}")
-    public PointResponse uploadFilelink(@PathVariable String pointId, @RequestParam("file") String link, HttpServletRequest request) throws IOException, InterruptedException {
+    public PointResponse uploadFilelink(@PathVariable String pointId, @RequestParam("file") String link, HttpServletRequest request){
 
 
         String queue = addPhotoPointQueueName;
@@ -232,7 +228,7 @@ public class PointController {
 
     }
 
-
+/*
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PostMapping(value = "/point/vote")
@@ -261,7 +257,7 @@ public class PointController {
         }
         return response;
     }
-
+*/
     private JSONObject getToken(HttpServletRequest request){
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String[] chunks = token.split("\\.");
@@ -305,7 +301,7 @@ public class PointController {
         }
     }
 
-    private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
+    /*private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
 
         JSONObject jsonObject = getToken(request);
 
@@ -313,4 +309,5 @@ public class PointController {
 
         return pointDto.toString();
     }
+*/
 }

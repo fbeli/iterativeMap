@@ -33,10 +33,10 @@ public class MapService {
 
     public Point setPlace(Point point )  {
         Logger logger = LoggerFactory.getLogger(getClass());
-        logger.info("Getting Country to point: {}", point.getTitle());
+        logger.info("Getting Country to point: {} long:  {}  lat: {}", point.getTitle(), point.getLongitude(), point.getLatitude());
 
         String url = geocodeUrl + "&longitude=" + point.getLongitude() + "&latitude=" + point.getLatitude();
-
+        logger.info("resquest endpoint: \n {}", url);
         try {
 
             HttpURLConnection connection = suporteService.getConnection(url);
@@ -50,6 +50,7 @@ public class MapService {
                     response.append(inputLine);
                 }
                 in.close();
+
                 configPoint(response.toString(), point);
 
             }else{
