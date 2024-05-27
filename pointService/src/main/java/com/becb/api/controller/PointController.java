@@ -88,7 +88,6 @@ public class PointController {
     @Autowired
     PointService pointService;
 
-
     /**
      * Cadastrar um ponto
      */
@@ -96,7 +95,7 @@ public class PointController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @RequestMapping(value = "/point")
-    public PointResponse cadastro(@RequestBody PointDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
+    public PointResponse cadastro(@RequestBody PointDto pointDto, HttpServletRequest request) throws IOException {
 
         if (pointDto.getPointId() == null)
             pointDto.setPointId(UlidCreator.getUlid().toString());
@@ -168,7 +167,7 @@ public class PointController {
     @ResponseBody
     public List<PointDto> getByUser(@RequestParam(value = "page", defaultValue = "0") int page,
                                  @RequestParam(value = "size", defaultValue = "10") int size,
-                                 @RequestParam("userId") String userId) throws IOException {
+                                 @RequestParam("userId") String userId) {
 
 
         return pointService.getPointsByUser(userId, size, page);
@@ -180,13 +179,13 @@ public class PointController {
         String filePath;
         String message;
 
-        InputStream inputStream = null;
+        InputStream inputStream ;
         if (files != null)
             inputStream = new BufferedInputStream(files.getInputStream());
         else
             return false;
 
-        if (files.getOriginalFilename().endsWith(".mp3")) {
+        if (files.getOriginalFilename()!= null && files.getOriginalFilename().endsWith(".mp3")) {
 
             filePath = fileService.saveFileMp3(inputStream, pointId);
             queue = addAudioPointQueueName;
@@ -219,7 +218,7 @@ public class PointController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PutMapping("/point/upload_file_link/{pointId}")
-    public PointResponse uploadFilelink(@PathVariable String pointId, @RequestParam("file") String link, HttpServletRequest request) throws IOException, InterruptedException {
+    public PointResponse uploadFilelink(@PathVariable String pointId, @RequestParam("file") String link, HttpServletRequest request){
 
         String queue = addPhotoPointQueueName;
         String message;
@@ -285,8 +284,8 @@ public class PointController {
             return new PointResponse("500", "Error to add point" + e.getMessage());
         }
         return response;
-    }*/
-
+    }
+*/
     private JSONObject getToken(HttpServletRequest request){
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String[] chunks = token.split("\\.");
@@ -330,12 +329,13 @@ public class PointController {
         }
     }
 
-  /*  private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
+    /*private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
 
         JSONObject jsonObject = getToken(request);
 
         pointDto.setUserId(jsonObject.getString("usuario_id"));
 
         return pointDto.toString();
-    }*/
+    }
+*/
 }
