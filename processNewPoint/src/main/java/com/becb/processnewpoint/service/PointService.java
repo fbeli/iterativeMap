@@ -377,6 +377,13 @@ public class PointService {
         return pointTo;
     }
 
+    public void createPointsFromParent(String message){
+        JSONObject jsonObject = new JSONObject(message);
+        String pointId = jsonObject.optString("pointId");
+
+
+
+    }
     public Point translate(String pointId, String languageDestino) throws IOException {
 
         Point parentPoint = this.getPointById(pointId);

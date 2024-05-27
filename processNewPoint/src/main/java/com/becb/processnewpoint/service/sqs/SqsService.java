@@ -178,6 +178,11 @@ public class SqsService {
         }
     }
 
+    @JmsListener(destination = "translate-queue")
+    public void traslatePoint(@Headers Map<String, Object> headers, String message) {
+
+    }
+
     @JmsListener(destination = "point-vote-queue")
     public void addVote(@Headers Map<String, Object> headers, String message) {
         log.info("Received message on sqs.queue.point_vote: {}", message);
