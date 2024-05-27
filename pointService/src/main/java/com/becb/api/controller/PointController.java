@@ -75,6 +75,9 @@ public class PointController {
     @Value("${sqs.queue.not_approved}")
     String notApprovedQueueName;
 
+    @Value("${sqs.queue.translate_point}")
+    String translateQueue;
+
     @Value("${file.endpoint}")
     String fileEndpoint;
 
@@ -112,13 +115,15 @@ public class PointController {
         logger.info("Point to Add: " + formatedPoint);
         try {
             sqsService.sendMessage(formatedPoint);
+            sqsService.sendMessage(pointDto.getPointIdJson(), translateQueue);
+
         } catch (Exception e) {
             logger.error("Error to add point: {}", e.getMessage());
             return new PointResponse("500", "Error to add point" + e.getMessage());
         }
         PointResponse response = new PointResponse("Point added successfully");
         response.setPointId(pointDto.getPointId());
-        logger.info("Point added: {}", response.toString());
+        logger.info("Point added: {}", response);
         return response;
     }
 
@@ -207,7 +212,7 @@ public class PointController {
     /**
      * {{endpoint_service}}/v2/point/01HSF8GPB8DWWH4FW3K7Z753WR
      */
-    public PointResponse updatePoint( @RequestParam String pointId, @RequestParam PointDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
+    public PointResponse updatePoint( @RequestParam String pointId, @RequestParam PointDto pointDto, HttpServletRequest request) throws IOException {
 
         pointDto.setPointId(pointId);
         sqsService.sendMessage(pointDto.toString(), becbProperties.sqs.update_point);
@@ -307,6 +312,7 @@ public class PointController {
         pointDto.setShare(jsonObject.getBoolean("guide"));
         return unicodeEscapeToUtf8(pointDto.toString());
     }
+
 
     private static String unicodeEscapeToUtf8(String unicodeEscapeString) {
         Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");

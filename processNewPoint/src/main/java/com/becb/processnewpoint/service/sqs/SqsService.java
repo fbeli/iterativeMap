@@ -8,6 +8,7 @@ import com.becb.processnewpoint.service.PointService;
 import com.becb.processnewpoint.service.SuportService;
 import com.becb.processnewpoint.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.Headers;
@@ -16,16 +17,17 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
 public class SqsService {
 
-    private PointService pointService;
+    private final PointService pointService;
 
-    private UserService userService;
+    private final UserService userService;
 
-    private BecbProperties becbProperties;
+    private final BecbProperties becbProperties;
 
     @Autowired
     public SqsService(PointService pointService, UserService userService, BecbProperties becbProperties) {
@@ -179,7 +181,16 @@ public class SqsService {
     }
 
     @JmsListener(destination = "translate-queue")
-    public void traslatePoint(@Headers Map<String, Object> headers, String message) {
+    public void traslatePoint(@Headers Map<String, Object> headers, String message) throws InterruptedException {
+        try{
+            pointService.createPointsFromParent(message);
+        }catch (ObjectNotFoundException objE){
+            TimeUnit.SECONDS.sleep(3);
+            throw objE;
+        }
+        catch (Exception e){
+            log.info("Erro para a mensagem: {}", message);
+        }
 
     }
 

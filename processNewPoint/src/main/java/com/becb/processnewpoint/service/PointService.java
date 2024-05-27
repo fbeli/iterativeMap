@@ -14,6 +14,7 @@ import com.becb.processnewpoint.service.file.FileService;
 import com.becb.processnewpoint.service.sqs.SqsChronClient;
 import com.becb.processnewpoint.service.translate.TranslateService;
 import com.github.f4b6a3.ulid.UlidCreator;
+import org.hibernate.ObjectNotFoundException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -55,10 +56,6 @@ public class PointService {
         this.pointRepository = pointRepository;
         this.mapService = mapService;
         this.translateService = translateService;
-    }
-
-    public DynamoDbClient getDynamoDbClient() {
-        return dynamoDbClient;
     }
 
     public Point messageToPoint(String message) {
@@ -167,17 +164,14 @@ public class PointService {
         }
     }
 
-    //TODO: fix it
     public List<Point> getApprovedPoints() {
         List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
-        //List<Point> pointdy = convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
 
         return pointdb;
     }
 
     public List<Point> getApprovedPointsDb() {
         List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
-        //List<Point> pointdy = convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asTrue.getValue()));
 
         return pointdb;
     }
@@ -261,8 +255,8 @@ public class PointService {
         String path = (String) jsonObject.get("file_path");
 
 
-        addFileToPointDb(pointId, path);
-        return addFileToPointDynamo(pointId, path);
+        addFileToPointDynamo(pointId, path);
+        return addFileToPointDb(pointId, path);
     }
 
     @Deprecated
@@ -282,8 +276,7 @@ public class PointService {
         return dynamoDbClient.addAudioToPoint(point);
     }
 
-    public void addFileToPointDb(String pointId, String path) {
-
+    public boolean addFileToPointDb(String pointId, String path) {
         Optional<Point> opPoint = pointRepository.findPointByPointId(pointId);
         if (opPoint.isPresent()) {
             Point point = opPoint.get();
@@ -292,8 +285,9 @@ public class PointService {
             } else {
                 point.setAudio(path);
             }
-            pointRepository.save(point);
+            return pointRepository.save(point)!=null?true:false;
         }
+        return false;
     }
 
     public boolean addFileLinkToPoint(String message) {
@@ -323,14 +317,7 @@ public class PointService {
         return dynamoDbClient.addAudioToPoint(point);
     }
 
-    public void addVotetoPoint(String message) {
-        JSONObject jsonObject = new JSONObject(message);
 
-        String pointId = jsonObject.optString("pointId");
-        Integer vote = jsonObject.optInt("vote");
-
-
-    }
 
     public Page<Point> getPointsByUserId(Pageable pageable, String userId) {
         Page<Point> page = pointRepository.findAllByUserNotBlocked(pageable, userId);
@@ -377,28 +364,36 @@ public class PointService {
         return pointTo;
     }
 
-    public void createPointsFromParent(String message){
-        JSONObject jsonObject = new JSONObject(message);
-        String pointId = jsonObject.optString("pointId");
+    public void createPointsFromParent(String message) throws Exception {
+        String pointId;
+        JSONObject jsonObject;
 
+        jsonObject = new JSONObject(message);
 
+        pointId = jsonObject.optString("pointId");
+
+        for (LanguageEnum language : LanguageEnum.values())
+            translate(pointId, language.getValue());
 
     }
     public Point translate(String pointId, String languageDestino) throws IOException {
 
         Point parentPoint = this.getPointById(pointId);
+        if(parentPoint == null)
+            throw new ObjectNotFoundException(Point.class,
+                    "Parent point not found, try again latter ");
+
         Point childPoint =  new Point(UlidCreator.getUlid().toString());
         copyPoint(parentPoint,childPoint );
         childPoint.setChildrenPoints(null);
-        if (parentPoint == null) {
-            return null;
-        }
+
         if (!translateService.canChildForThatLanguage(parentPoint, languageDestino))
             return null;
 
         childPoint = translateService.translate(parentPoint,childPoint, languageDestino);
 
         this.savePointDb(childPoint);
+        System.out.println("olha o item id: "+childPoint.getPointId()+" novo: "+childPoint.toString());
         return childPoint;
     }
 
