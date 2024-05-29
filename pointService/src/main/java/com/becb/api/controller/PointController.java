@@ -130,8 +130,7 @@ public class PointController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @PutMapping("/point/{pointId}")
-    public PointResponse uploadFile(@PathVariable String pointId, @RequestParam("files") MultipartFile files, HttpServletRequest request) throws IOException, InterruptedException {
-
+    public PointResponse uploadFile(@PathVariable String pointId, @RequestParam("files") MultipartFile files, HttpServletRequest request) throws IOException {
 
         String queue;
         String filePath;

@@ -7,9 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +30,6 @@ public class FileService {
     @Autowired
     AmazonS3Service amazonS3Service;
 
-
     public String saveAudio(String b64String, String fileName) throws JSONException, IOException {
 
         byte[] decodedBytes = Base64.decode(b64String);
@@ -41,29 +37,19 @@ public class FileService {
 
         return saveFileMp3(inputStream, fileName);
 
-
     }
-    public String saveFileMp3(InputStream inputStream, String fileName) throws IOException {
+    public String saveFileMp3(InputStream inputStream, String fileName)  {
 
         return amazonS3Service.saveFile(bucket, directoryFile,  inputStream,  fileName);
     }
 
-    public String saveFileJpg( InputStream inputStream, String fileName) throws IOException {
+    public String saveFileJpg( InputStream inputStream, String fileName)  {
 
         return amazonS3Service.saveFile(  inputStream, directoryPhotoFile, fileName, "image/jpeg" );
     }
 
     public String savePointPhoto(InputStream inputStream, String pointId) throws IOException {
-
             return saveFileJpg( inputStream, pointId+"_");
-
     }
-
-
-
-
-
-
-
 
 }

@@ -35,6 +35,17 @@ docker-compose run --service-ports point_service
 Startar o html executar os comandos python dentro da pasta mapbox 
 python -m SimpleHTTPServer 8000 ou python3 -m http.server 8000
 
+## Update jar para voice
+In directory resources
+
+``
+mvn install:install-file -Dfile=voicerss_tts.jar -DgroupId=com.voicerss.tts -DartifactId=voicerss -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
+``
+
+
+## DynamoDb
+
+
 Criar tabela no dynamo db:
 aws dynamodb create-table --table-name points --endpoint-url http://dynamodb:8000  --region ue-central-1 
 --attribute-definitions AttributeName=pointId,AttributeType=S AttributeName=aprovado,AttributeType=S 
