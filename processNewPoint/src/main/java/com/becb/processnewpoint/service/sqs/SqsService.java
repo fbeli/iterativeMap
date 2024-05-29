@@ -43,16 +43,16 @@ public class SqsService {
             Point point0 = pointService.messageToPoint(message);
             if (point0.getCreateTime() == null)
                 point0.setCreateTime(LocalDateTime.now());
-            Point point = pointService.convertItemToPoint(pointService.savePointDynamo(point0));
+
 
             userService.saveUser(point0.getUser());
             pointService.savePointDb(point0);
 
-            if (point.getUser().getInstagram() != null) {
+            if (point0.getUser().getInstagram() != null) {
                 Runnable runnable = () -> {
                     try {
                         Thread.sleep(100000); // pausa por 10 segundos
-                        userService.createUserMap(point.getUser());
+                        userService.createUserMap(point0.getUser());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -181,7 +181,7 @@ public class SqsService {
     }
 
     @JmsListener(destination = "translate-queue")
-    public void traslatePoint(@Headers Map<String, Object> headers, String message) throws InterruptedException {
+    public void traslatePoint(@Headers Map<String, Object> headers, String message) throws Exception {
         try{
             pointService.createPointsFromParent(message);
         }catch (ObjectNotFoundException objE){
@@ -190,6 +190,7 @@ public class SqsService {
         }
         catch (Exception e){
             log.info("Erro para a mensagem: {}", message);
+            throw e;
         }
 
     }

@@ -2,6 +2,7 @@ package com.becb.processnewpoint.service;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.becb.processnewpoint.repository.PointRepository;
+import com.becb.processnewpoint.service.audio.AudioService;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
 import org.junit.Assert;
@@ -14,6 +15,7 @@ import com.becb.processnewpoint.domain.Point;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,13 +39,14 @@ class PointServiceTest {
     @Mock
     DynamoDbClient dynamodbClient;
 
-
-
     @Mock
     MapService mapService;
 
     @Mock
     FileService fileService;
+
+    @Mock
+    AudioService audioService;
 
 
     @Test
@@ -270,5 +273,29 @@ class PointServiceTest {
     void createPointsFromParent() {
         pointService.gerarArquivoParaMapa("{" +
                 "  \"pointId\": \"01HNG094DXF7A4HQPD8QKWHCBW\" } ");
+    }
+
+    @Test
+    void createAudioToParent() throws Exception {
+        String pointId = "AAAAAA";
+        Point point = new Point(pointId);
+
+        when(pointRepository.findPointByPointId(pointId)).thenReturn(Optional.of(point));
+        when(audioService.saveAudio(any(), any(), any())).thenReturn("link");
+        Point pointRetorno = pointService.createAudioToParent(pointId);
+        Assert.assertTrue(pointRetorno.getAudio().equals("link"));
+
+    }
+    @Test
+    void notCreateAudioToParent() throws Exception {
+        String pointId = "AAAAAA";
+        Point point = new Point(pointId);
+        point.setAudio("bla");
+
+        when(pointRepository.findPointByPointId(pointId)).thenReturn(Optional.of(point));
+        when(audioService.saveAudio(any(), any(), any())).thenReturn("link");
+        Point pointRetorno = pointService.createAudioToParent(pointId);
+        Assert.assertTrue(pointRetorno.getAudio().equals("bla"));
+
     }
 }

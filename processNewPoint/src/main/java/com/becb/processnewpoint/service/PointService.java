@@ -9,6 +9,7 @@ import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
 import com.becb.processnewpoint.dto.PointDto;
 import com.becb.processnewpoint.repository.PointRepository;
+import com.becb.processnewpoint.service.audio.AudioService;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
 import com.becb.processnewpoint.service.sqs.SqsChronClient;
@@ -39,24 +40,29 @@ public class PointService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     //@Autowired
     SqsChronClient chron;
-    @Autowired
+
     private TranslateService translateService;
     private final FileService fileService;
     private final DynamoDbClient dynamoDbClient;
     private final PointRepository pointRepository;
     private final MapService mapService;
+    private final AudioService audioService;
 
     public PointService(@Autowired FileService fileService,
                         @Autowired DynamoDbClient dynamoDbClient,
                         @Autowired PointRepository pointRepository,
                         @Autowired MapService mapService,
-                        @Autowired TranslateService translateService) {
+                        @Autowired TranslateService translateService,
+                        @Autowired AudioService audioService) {
         this.fileService = fileService;
         this.dynamoDbClient = dynamoDbClient;
         this.pointRepository = pointRepository;
         this.mapService = mapService;
         this.translateService = translateService;
+        this.audioService = audioService;
     }
+
+    String no_audio = "NO_AUDIO";
 
     public Point messageToPoint(String message) {
         Point point = new Point();
@@ -144,9 +150,9 @@ public class PointService {
         Point point = new Point();
         JSONObject jsonObject = new JSONObject(message);
         point.setUser(new User());
-        point.getUser().setUserId(jsonObject.getString("user_id"));
-        point.getUser().setUserName(jsonObject.getString("user_name"));
-        point.getUser().setUserEmail(jsonObject.getString("user_email"));
+        point.getUser().setUserId(jsonObject.optString("user_id"));
+        point.getUser().setUserName(jsonObject.optString("user_name"));
+        point.getUser().setUserEmail(jsonObject.optString("user_email"));
 
         List<Point> points = getApprovedPoints();
 
@@ -364,18 +370,42 @@ public class PointService {
         return pointTo;
     }
 
+
     public void createPointsFromParent(String message) throws Exception {
         String pointId;
         JSONObject jsonObject;
 
         jsonObject = new JSONObject(message);
-
         pointId = jsonObject.optString("pointId");
 
-        for (LanguageEnum language : LanguageEnum.values())
-            translate(pointId, language.getValue());
+        createAudioToParent(pointId);
+
+        Point localPoint;
+        String audioEndpoint;
+        for (LanguageEnum language : LanguageEnum.values()){
+            localPoint = translate(pointId, language.getValue());
+            if(localPoint != null) {
+                if(!localPoint.getAudio().equals(no_audio)) {
+                    audioEndpoint = audioService.saveAudio(localPoint.getPointId(), localPoint.getDescription(), localPoint.getLanguage());
+                }else
+                    audioEndpoint = "";
+
+                localPoint.setAudio(audioEndpoint);
+                pointRepository.save(localPoint);
+            }
+        }
+    }
+
+    public Point createAudioToParent(String pointId) throws Exception {
+        Point parentPoint = this.getPointById(pointId);
+        if(parentPoint!= null && (parentPoint.getAudio() == null || parentPoint.getAudio().isBlank())){
+            parentPoint.setAudio(audioService.saveAudio(parentPoint.getPointId(), parentPoint.getDescription(), parentPoint.getLanguage()));
+        }
+
+        return parentPoint;
 
     }
+
     public Point translate(String pointId, String languageDestino) throws IOException {
 
         Point parentPoint = this.getPointById(pointId);
@@ -393,7 +423,6 @@ public class PointService {
         childPoint = translateService.translate(parentPoint,childPoint, languageDestino);
 
         this.savePointDb(childPoint);
-        System.out.println("olha o item id: "+childPoint.getPointId()+" novo: "+childPoint.toString());
         return childPoint;
     }
 

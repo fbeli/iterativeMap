@@ -42,6 +42,9 @@ public class AmazonS3Service {
         return saveFile(bucket, "", file, fileName);
     }
 
+
+
+
     /**
      * @param bucket
      * @param directory path do arquivo no s3
@@ -50,8 +53,6 @@ public class AmazonS3Service {
      */
     public PutObjectResult saveFile(String bucket, String directory, InputStream inputStream, String fileName) {
 
-
-
         try {
             String filePath = getFilePath(fileName, directory);
 
@@ -59,10 +60,16 @@ public class AmazonS3Service {
             if (fileName.contains("map")){
                 objectMetadata.setContentType("application/json");
                 cloudFrontService.invalidateCache();
-            } else {
+                objectMetadata.setContentEncoding("UTF-8");
+            } else
+                if(fileName.contains("mp3")){
+                    objectMetadata.setContentType("audio/mpeg3");
+                }
+            else {
                 objectMetadata.setContentType("text/html");
+                objectMetadata.setContentEncoding("UTF-8");
             }
-            objectMetadata.setContentEncoding("UTF-8");
+
             logger.info("Sending file {} to bucker {} in S3 region:{} ", filePath, bucket, amazonS3.getRegion());
             return amazonS3.putObject(bucket, filePath, inputStream, objectMetadata);
 
@@ -75,6 +82,7 @@ public class AmazonS3Service {
         }
         return null;
     }
+
 
 
     private String getFilePath(String fileName, String directory) {
