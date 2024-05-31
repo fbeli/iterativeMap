@@ -115,7 +115,7 @@ map.on('click', (event) => {
         const feature = features[0];
 
         let insideHtml = `<h3>${feature.properties.title}</h3>`;
-        insideHtml += `<p onclick="draw_route('${feature.geometry.coordinates}')"> Go There</p>`;
+        insideHtml += `<div style="width: 41%"> <p class="link_go" onclick="draw_route('${feature.geometry.coordinates}')">Let's Get It</p></div>`;
         if (feature.properties.audio !== undefined && feature.properties.audio.length > 2) {
             if (navigator.userAgent.indexOf("iPhone") > -1) {
                 insideHtml += `<div><button class="button_play" id="play" onclick="play_on_safari('${feature.properties.audio}')">Play</button><button style="display: none" class="button_play" id="stop" onclick="stop_on_safari()">Stop</button></div>`;
