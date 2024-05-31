@@ -45,7 +45,7 @@ async function read_cookies(){
             save_cookies(access, 1);
         }
     }
-    if(longitude == 'undefined' || latitude == ''){
+    if(longitude == 'undefined' || latitude == 'undefined'){
         longitude =    getLongitude();
         latitude =   getLatitude();
         save_cookies('latitude', latitude);

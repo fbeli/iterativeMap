@@ -8,16 +8,13 @@ function fly_back(){
        document.getElementById("starting").style.display="block";
    }
    if(window.location.href.search(defaultZoom)){
-       if(longitude == 'undefined' || longitude == 'undefined' )
-       //             && window.location.href.search(lat_start_lisbon) != -1)
-       {
+       if(latitude == 'undefined' || longitude == 'undefined' || latitude == null || longitude == null){
            latitude = getLatitude();
            longitude = getLongitude();
            if(timeoutLocation()){
                map.flyTo({center: [longitude, latitude], zoom: defaultZoom});
            }
        }else{
-
            map.flyTo({center: [longitude, latitude], zoom: defaultZoom});
            fechar_divs();
        }
@@ -34,13 +31,13 @@ function fly_back_map(){
 
 function timeoutLocation(){
     setTimeout(function(){
-        if(latitude == 'undefined' || longitude == 'undefined'){
-            alert("Não foi possível obter a sua localização.");
-            map.flyTo({center: [38.72091,-9.12751 ], zoom: 14});
+        if(latitude == 'undefined' || longitude == 'undefined' || latitude == null || longitude == null){
+            console.log("Não foi possível obter a sua localização.");
+            map.flyTo({center: [long_start_lisbon, lat_start_lisbon ], zoom: defaultZoom});
             fechar_divs();
             return false;
         }else{
-            map.flyTo({center: [longitude, latitude], zoom: 14});
+            map.flyTo({center: [longitude, latitude], zoom: defaultZoom});
             fly_back_map();
             fechar_divs();
             return true;
