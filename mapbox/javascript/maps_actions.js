@@ -133,7 +133,7 @@ map.on('click', (event) => {
             insideHtml += `<p>${feature.properties.user_instagram}</a></p>`
         }
         if (feature.properties.photo != null)
-            insideHtml += `<img style="width: 100%" src="${feature.properties.photo}" /><br/>`;
+            insideHtml += `<img style="width: 100%" src="${feature.properties.photo}" alt="${feature.properties.title}"/><br/>`;
         insideHtml += `<p>${feature.properties.description}</p><br/>`;
         const popup = new mapboxgl.Popup({offset: [0, 0]})
             .setLngLat(feature.geometry.coordinates)
@@ -149,7 +149,8 @@ map.on('click', (event) => {
 
 map.on('move',() => {
     zoom = map.getZoom();
-    document.getElementById("inside_zoom").innerHTML=zoom;
+    if(document.getElementById("inside_zoom") != null)
+        document.getElementById("inside_zoom").innerHTML=zoom;
 })
 
 class User{
