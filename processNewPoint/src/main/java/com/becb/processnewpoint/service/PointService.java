@@ -41,7 +41,7 @@ public class PointService {
     //@Autowired
     SqsChronClient chron;
 
-    private TranslateService translateService;
+    private final TranslateService translateService;
     private final FileService fileService;
     private final DynamoDbClient dynamoDbClient;
     private final PointRepository pointRepository;
@@ -61,8 +61,6 @@ public class PointService {
         this.translateService = translateService;
         this.audioService = audioService;
     }
-
-    String no_audio = "NO_AUDIO";
 
     public Point messageToPoint(String message) {
         Point point = new Point();
@@ -171,15 +169,12 @@ public class PointService {
     }
 
     public List<Point> getApprovedPoints() {
-        List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
+        return pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
 
-        return pointdb;
     }
 
     public List<Point> getApprovedPointsDb() {
-        List<Point> pointdb = pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
-
-        return pointdb;
+       return pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
     }
 
     public void gerarArquivoParaAprovacao(String message) {
@@ -260,8 +255,6 @@ public class PointService {
         String pointId = (String) jsonObject.get("point_id");
         String path = (String) jsonObject.get("file_path");
 
-
-        addFileToPointDynamo(pointId, path);
         return addFileToPointDb(pointId, path);
     }
 
@@ -270,7 +263,7 @@ public class PointService {
         Item item = dynamoDbClient.getPoint(pointId);
         Point point = this.convertItemToPoint(item);
         if (point == null || path == null) {
-            logger.info("PointId not found{}, trying again....", pointId);
+            logger.info("PointId not found {}, trying again....", pointId);
             return false;
         }
         if (path.endsWith("jpg") || path.endsWith("jpeg") || path.endsWith("png")) {
@@ -370,30 +363,27 @@ public class PointService {
         return pointTo;
     }
 
-
-    public void createPointsFromParent(String message) throws Exception {
+    public List<Point> createPointsFromParent(String message) throws Exception {
         String pointId;
         JSONObject jsonObject;
 
         jsonObject = new JSONObject(message);
         pointId = jsonObject.optString("pointId");
 
-        createAudioToParent(pointId);
+        List<Point> createdPoints = new ArrayList();
+        createdPoints.add(createAudioToParent(pointId));
 
         Point localPoint;
         String audioEndpoint;
         for (LanguageEnum language : LanguageEnum.values()){
             localPoint = translate(pointId, language.getValue());
             if(localPoint != null) {
-                if(!localPoint.getAudio().equals(no_audio)) {
-                    audioEndpoint = audioService.saveAudio(localPoint.getPointId(), localPoint.getDescription(), localPoint.getLanguage());
-                }else
-                    audioEndpoint = "";
-
+                audioEndpoint = audioService.saveAudio(localPoint.getPointId(), localPoint.getDescription(), localPoint.getLanguage());
                 localPoint.setAudio(audioEndpoint);
-                pointRepository.save(localPoint);
+                createdPoints.add(pointRepository.save(localPoint));
             }
         }
+        return createdPoints;
     }
 
     public Point createAudioToParent(String pointId) throws Exception {
@@ -402,6 +392,8 @@ public class PointService {
             parentPoint.setAudio(audioService.saveAudio(parentPoint.getPointId(), parentPoint.getDescription(), parentPoint.getLanguage()));
         }
 
+        if(parentPoint != null)
+            pointRepository.save(parentPoint);
         return parentPoint;
 
     }

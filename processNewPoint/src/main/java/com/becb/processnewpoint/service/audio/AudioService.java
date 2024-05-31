@@ -20,13 +20,14 @@ public class AudioService {
 
     @Value("${becb.storage.s3.bucket}")
     private String bucket;
-    private AmazonS3Service amazonS3Service;
+
+    private final AmazonS3Service amazonS3Service;
 
     @Value("${vss.key}")
     private String vssKey;
 
 
-    public String saveAudio(String point_id, String text, LanguageEnum languageEnum) throws Exception {
+    public String saveAudio(String point_id, String text, LanguageEnum languageEnum) {
 
         VoiceProvider tts = new VoiceProvider(vssKey);
 
@@ -37,25 +38,37 @@ public class AudioService {
         params.setSSML(false);
         params.setRate(0);
 
-        byte[] voice = tts.speech(params);
-        InputStream inputStream= new ByteArrayInputStream(voice);
+        try {
+            byte[] voice;
 
-        String namefile = point_id+"_ia.mp3";
+            voice = tts.speech(params);
 
-        amazonS3Service.saveFile(bucket, "audio", inputStream,namefile );
-        return "audio/"+namefile;
+            InputStream inputStream = new ByteArrayInputStream(voice);
 
+            String namefile = point_id + "_ia.mp3";
+
+            amazonS3Service.saveFile(bucket, "audio", inputStream, namefile);
+            return "audio/" + namefile;
+        } catch (Exception e) {
+            return "";
+        }
     }
 
-    private String getLanguage(LanguageEnum language){
+    private String getLanguage(LanguageEnum language) {
 
         switch (language.getValue()) {
-            case "PT": return Languages.Portuguese_Brazil;
-            case "DE": return Languages.German_Germany;
-            case "FR": return Languages.French_France;
-            case "ES": return Languages.Spanish_Spain;
-            case "EN": return Languages.English_GreatBritain;
-            default:return  Languages.English_UnitedStates;
+            case "PT":
+                return Languages.Portuguese_Brazil;
+            case "DE":
+                return Languages.German_Germany;
+            case "FR":
+                return Languages.French_France;
+            case "ES":
+                return Languages.Spanish_Spain;
+            case "EN":
+                return Languages.English_GreatBritain;
+            default:
+                return Languages.English_UnitedStates;
         }
 
     }

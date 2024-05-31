@@ -3,9 +3,7 @@ package com.becb.processnewpoint.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -188,17 +186,6 @@ public class Point {
             type = TypeEnum.museum;
         }
         return type;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public String getPhoto() {
-        if (photos != null && photos.size() > 0) {
-            photo = photos.get(0);
-        }
-        return photo;
     }
 
     public List<Point> getChildrenPoints(){

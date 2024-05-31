@@ -54,7 +54,7 @@ class FileServiceTest {
     }
 
     @Test
-    void createFileToMap() throws IOException {
+    void createFileToMap(){
         ArrayList<Point> points = new ArrayList<>();
 
         PutObjectResult result = new PutObjectResult();
@@ -98,12 +98,14 @@ class FileServiceTest {
         point.setUser(new User());
         point.getUser().setUserEmail("fred.belisario@gmail.com");
         point.setLongitude("0000");
-        point.setLatitude("0000");        point.setLanguage(LanguageEnum.EN);
+        point.setLatitude("0000");
+        point.setLanguage(LanguageEnum.EN);
+
         return point;
     }
 
     @Test
-    void getBodyHtml() throws JSONException {
+    void getBodyJson() throws JSONException {
         String str = fileService.getBodyJson(createPointEN());
         JSONObject jsonObject = new JSONObject(str);
 
@@ -112,6 +114,27 @@ class FileServiceTest {
         assertEquals("false", object.get("user_guide"));
 
         assertEquals( createPointEN().getPointId(), object.get("pointId"));
+        assertEquals("", object.get("photo"));
+
+
+    }
+
+
+    @Test
+    void getBodyWithPhotoJson() throws JSONException {
+        Point point = createPointEN();
+        List<String> listaPhotos = List.of("photo/vista_mouros.jpeg","photo/cruz.jpeg");
+        point.setPhotos(listaPhotos);
+        String photo = "photo/this_one.jpeg";
+        point.setPhoto(photo);
+        String str = fileService.getBodyJson(point);
+        JSONObject jsonObject = new JSONObject(str);
+        JSONObject object = new JSONObject(jsonObject.get("properties").toString());
+
+        assertEquals("false", object.get("user_guide"));
+
+        assertEquals( createPointEN().getPointId(), object.get("pointId"));
+        assertTrue(object.getString("photo").contains(photo) );
 
     }
 }
