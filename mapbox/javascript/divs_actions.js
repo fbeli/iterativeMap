@@ -110,6 +110,8 @@ function fechar_divs() {
     document.getElementById("forget_password_div").style.display = 'none';
     document.getElementById("sidebar_logout_div").style.display = 'none';
     document.getElementById("booming_places").style.display = 'none';
+    if(document.getElementsByClassName("mapboxgl-popup").length > 0)
+        document.getElementsByClassName("mapboxgl-popup").item(0).style.display = 'none';
 
 }
 

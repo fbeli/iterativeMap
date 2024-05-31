@@ -203,6 +203,7 @@ function myLocation() {
     save_cookies("latitude", map.getCenter().lat);
     save_cookies("longitude", map.getCenter.lng);
 }
+
 let atual_pos;
 
 function getAtualLocation() {
@@ -217,11 +218,12 @@ function getAtualLocation() {
 
                 });
         }, 5000);
-    }else{
+    } else {
         alert("Please, give us access to your geolocation");
     }
     return atual_pos;
 }
+
 // create a function to make a directions request
 async function getRoute(end) {
     // make a directions request using cycling profile
@@ -317,6 +319,8 @@ function draw_route(coords) {
         });
     }
     getRoute(coords);
+    map.flyTo({center: [getLongitude(), getLatitude()], zoom: defaultZoom});
+    fechar_divs();
 }
 
 getAtualLocation();
