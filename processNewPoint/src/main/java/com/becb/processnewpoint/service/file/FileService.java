@@ -256,7 +256,7 @@ public class FileService {
     public String getBodyJson(Point point) {
         String audioEndpoint = "";
         String photoEndpoint = "";
-        if (point.getAudio() != null) {
+        if (point.getAudio() != null && !point.getAudio().isBlank()) {
             if (appEndpoint.startsWith("https")) {
                 audioEndpoint = appEndpoint.trim() + "/" + point.getAudio();
             } else {
@@ -264,7 +264,6 @@ public class FileService {
             }
         }
         if (point.getPhoto() != null) {
-
                 photoEndpoint = "https://" + appEndpoint.trim() + "/" + point.getPhoto();
         }
 

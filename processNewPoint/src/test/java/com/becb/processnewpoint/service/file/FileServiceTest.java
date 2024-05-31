@@ -115,10 +115,9 @@ class FileServiceTest {
 
         assertEquals( createPointEN().getPointId(), object.get("pointId"));
         assertEquals("", object.get("photo"));
-
+        assertEquals("", object.get("audio"));
 
     }
-
 
     @Test
     void getBodyWithPhotoJson() throws JSONException {
@@ -127,14 +126,41 @@ class FileServiceTest {
         point.setPhotos(listaPhotos);
         String photo = "photo/this_one.jpeg";
         point.setPhoto(photo);
+
         String str = fileService.getBodyJson(point);
         JSONObject jsonObject = new JSONObject(str);
         JSONObject object = new JSONObject(jsonObject.get("properties").toString());
 
         assertEquals("false", object.get("user_guide"));
-
         assertEquals( createPointEN().getPointId(), object.get("pointId"));
         assertTrue(object.getString("photo").contains(photo) );
+
+
+    }
+    @Test()
+    void getBodyJsonTestAudio() throws JSONException {
+        Point point = createPointEN();
+        String audio = "audio.mp3";
+        point.setAudio(audio);
+        String str = fileService.getBodyJson(point);
+
+        JSONObject jsonObject = new JSONObject(str);
+        JSONObject object = new JSONObject(jsonObject.get("properties").toString());
+
+        assertEquals("false", object.get("user_guide"));
+        assertEquals( createPointEN().getPointId(), object.get("pointId"));
+        assertTrue(object.getString("audio").contains(audio) );
+
+        point.setAudio("");
+        str = fileService.getBodyJson(point);
+        jsonObject = new JSONObject(str);
+        object = new JSONObject(jsonObject.get("properties").toString());
+        assertEquals("", object.get("audio"));
+
+        point.setAudio(null);
+        jsonObject = new JSONObject(str);
+        object = new JSONObject(jsonObject.get("properties").toString());
+        assertEquals("", object.get("audio"));
 
     }
 }
