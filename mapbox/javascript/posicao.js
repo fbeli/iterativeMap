@@ -1,22 +1,26 @@
 //var latitude = 38.702314954617066;
 //var longitude = -9.249271785242797;
 
-
+var defaultZoom = 14.03;
 function fly_back(){
    read_cookies();
    if(firstTime){
        document.getElementById("starting").style.display="block";
    }
-   if((longitude == 'undefined' || longitude == 'undefined' )
-                && window.location.href.search("-9.135905") != -1){
-       latitude = getLatitude();
-       longitude = getLongitude();
-       if(timeoutLocation()){
-           map.flyTo({center: [longitude, latitude], zoom: 14});
+   if(window.location.href.search(defaultZoom)){
+       if(longitude == 'undefined' || longitude == 'undefined' )
+       //             && window.location.href.search(lat_start_lisbon) != -1)
+       {
+           latitude = getLatitude();
+           longitude = getLongitude();
+           if(timeoutLocation()){
+               map.flyTo({center: [longitude, latitude], zoom: defaultZoom});
+           }
+       }else{
+
+           map.flyTo({center: [longitude, latitude], zoom: defaultZoom});
+           fechar_divs();
        }
-   }else{
-       map.flyTo({center: [longitude, latitude], zoom: 14});
-       fechar_divs();
    }
     add_logo();
 }
@@ -77,14 +81,15 @@ function save_cookies(cookie_name, cookie_value){
     document.cookie = cookie_name+"="+cookie_value;
 }
 
-
-
 function get_li_after_login(nome){
     if(nome.indexOf(' ') >= 0){
         nome = nome.split(" ")[0];
     }
-        document.getElementById("li_login_a_link").innerHTML = nome ;
+    if(nome != null && nome.length > 0 && document.getElementById("li_login_a_link") != null
+            && document.getElementById("sidebar_login_div") != null) {
+        document.getElementById("li_login_a_link").innerHTML = nome;
         document.getElementById("sidebar_login_div").setAttribute("onclick", "open_div_login()");
+    }
 
 }
 read_cookies();

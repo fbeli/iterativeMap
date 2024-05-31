@@ -24,7 +24,7 @@ async function read_cookies(){
         }
         if (c.indexOf(name) == 0) {
             userName = c.substring(name.length, c.length);
-            get_li_after_login(userName);
+            //get_li_after_login(userName);
         }
         if (c.indexOf(token) == 0) {
             accessToken = c.substring(token.length, c.length);
@@ -34,16 +34,22 @@ async function read_cookies(){
             latitude = c.substring(lat.length, c.length);
         }
         if (c.indexOf(long) == 0) {
-            longitude = c.substring(long.length, c.length);
+           longitude = c.substring(long.length, c.length);
         }
         if(c.indexOf(userId) == 0){
-            user_id = c.substring(userId.length, c.length);;
+            user_id = c.substring(userId.length, c.length);
         }
         if (c.indexOf(access) == 0) {
             firstTime = false;
         }else{
             save_cookies(access, 1);
         }
+    }
+    if(longitude == 'undefined' || latitude == ''){
+        longitude =    getLongitude();
+        latitude =   getLatitude();
+        save_cookies('latitude', latitude);
+        save_cookies('longitude', longitude);
     }
 }
 

@@ -4,12 +4,14 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmJlbGkiLCJhIjoiY2xyM3N2Z2NxMW1zaDJpbXlmN2tydXRwaCJ9.IKxTu4ci2HIp_yOdWhn8Rg';
 let point;
 
+var lat_start_lisbon =  -9.135905;
+var long_start_lisbon =  38.709844;
 const map = new mapboxgl.Map({
     container: 'map',
     // Replace YOUR_STYLE_URL with your style URL.
     style: 'mapbox://styles/fbeli/clr407wxw018b01r5bt6oht1o',
-    center: [ -9.135905, 38.709844],
-    zoom: 16,
+    center: [lat_start_lisbon,long_start_lisbon],
+    zoom: defaultZoom,
     hash: true,
 
 });

@@ -77,10 +77,9 @@ function close_boomings(place) {
         lo ="-0.134511";
     }
 
-
     map.flyTo({
         center: [lo, la],
-        zoom: 13
+        zoom: defaultZoom
     });
 }
 
