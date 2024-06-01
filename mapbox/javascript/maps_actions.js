@@ -115,7 +115,7 @@ map.on('click', (event) => {
         const feature = features[0];
 
         let insideHtml = `<h3>${feature.properties.title}</h3>`;
-        insideHtml += `<div style="width: 41%" onclick="draw_route('${feature.geometry.coordinates}')"> <p class="link_go" >Let's Get It</p></div>`;
+        insideHtml += `<div style="width: 41%" onclick="draw_route('${feature.geometry.coordinates}')"> <p class="link_go" >Get The Route</p></div>`;
         if (feature.properties.audio !== undefined && feature.properties.audio.length > 2) {
             if (navigator.userAgent.indexOf("iPhone") > -1) {
                 insideHtml += `<div><button class="button_play" id="play" onclick="play_on_safari('${feature.properties.audio}')">Play</button><button style="display: none" class="button_play" id="stop" onclick="stop_on_safari()">Stop</button></div>`;
@@ -133,7 +133,7 @@ map.on('click', (event) => {
         if (feature.properties.user_share === 'true') {
             insideHtml += `<p>${feature.properties.user_instagram}</a></p>`
         }
-        if (feature.properties.photo != null)
+        if (feature.properties.photo !== undefined && feature.properties.photo.length > 2)
             insideHtml += `<img style="width: 100%" src="${feature.properties.photo}" alt="${feature.properties.title}"/><br/>`;
         insideHtml += `<p>${feature.properties.description}</p><br/>`;
         const popup = new mapboxgl.Popup({offset: [0, 0]})

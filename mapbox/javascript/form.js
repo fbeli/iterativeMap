@@ -21,7 +21,7 @@ function afterLogin(){
     if(instagram !== undefined || instagram !== "" || instagram != "@null") {
         link = "https://www.mygmap.com/" + instagram.replace("@", "");
         document.getElementById("span_msg").innerHTML = "Now you have your own map <br>" + link +
-            "<br><a href='#' onclick='copyLink()' title='Copy'> <img aria-label='copy' src='img/copy.png' id='copy' style='width:20px'/></a>";
+            "<br><a href='#' onclick='copyLink()' title='Copy'> <img alt='Copy' aria-label='copy' src='img/copy.png' id='copy' style='width:20px'/></a>";
         document.getElementById("span_msg").style.fontSize = "small"
     }
     get_li_after_login(nome);
@@ -63,7 +63,6 @@ function execute_login(){
             }
         })
         .catch(error => {
-           // document.getElementById("erro_alert_text").innerHTML = data.error;
             error_div_event("login_div", data.error);
         });
 }
@@ -91,12 +90,11 @@ async function forget_password(){
 
 
             }else{
-              //  document.getElementById("erro_alert_text").innerHTML = data.error;
+
                 error_div_event("forget_password_div", data.error);
             }
         })
         .catch(error => {
-            //document.getElementById("erro_alert_text").innerHTML = data.error;
             error_div_event("forget_password_div", data.error);
         });
 }
@@ -218,7 +216,7 @@ function form_cadastro_is_ok(){
     }
 
     if(document.getElementById("cadastro_description").value === 'Description'){
-        edocument.getElementById("cadastro_description").value = document.getElementById("cadastro_titulo").value;
+        document.getElementById("cadastro_description").value = document.getElementById("cadastro_titulo").value;
     }
     if(document.getElementById("cadastro_place_type").value === 'Place Type'){
         error_div_event("cadastro_div", "Insert Place Type");

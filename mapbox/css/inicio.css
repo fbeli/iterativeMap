@@ -247,21 +247,18 @@ audio
 }
 
 .link_go{
-    background-color: rgb(35 55 75 / 90%);
-    color: #fff;
+
     font-family: Poppins-Regular;
     font-size: 14px;
     line-height: 1.7;
-    color: #a6a64a;
+    color: #898946;
     text-align: center;
 }
 
 h3{
-    background-color: rgb(35 55 75 / 90%);
-    color: #fff;
     font-family: Poppins-Regular;
     font-size: 19px;
     line-height: 1.7;
-    color: #a6a64a;
-    text-align: center;
+    color: rgb(35 55 75);
+
 }
