@@ -1,10 +1,12 @@
 package com.becb.processnewpoint.service;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
+import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.repository.PointRepository;
 import com.becb.processnewpoint.service.audio.AudioService;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
 import com.becb.processnewpoint.service.file.FileService;
+import com.becb.processnewpoint.service.translate.TranslateService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -48,10 +49,12 @@ class PointServiceTest {
     @Mock
     AudioService audioService;
 
+    @Mock
+    TranslateService translateService;
 
     @Test
     void gerarArquivoParaMapa() {
-        ArrayList lista = new ArrayList();
+        ArrayList<Point> lista = new ArrayList();
         for(int i =0; i < 3; i++) {
             Point point = new Point();
             point.setTitle("Title "+i);
@@ -76,7 +79,8 @@ class PointServiceTest {
     @Test
     void savePoint() {
         when(dynamodbClient.savePoint(any())).thenReturn(new Item());
-        Assert.assertNotNull(pointService.savePoint(getMessageFromStack()));
+
+        assertNotNull(pointService.savePoint(getMessageFromStack()));
     }
 
     @Test
@@ -279,10 +283,10 @@ class PointServiceTest {
     void createAudioToParent() throws Exception {
         String pointId = "AAAAAA";
         Point point = new Point(pointId);
-
-        when(pointRepository.findPointByPointId(pointId)).thenReturn(Optional.of(point));
+        point.setDescription("blá");
         when(audioService.saveAudio(any(), any(), any())).thenReturn("link");
-        Point pointRetorno = pointService.createAudioToParent(pointId);
+        when(audioService.needCreateAudio(any())).thenReturn(true);
+        Point pointRetorno = pointService.createAudioToParent(point);
         Assert.assertTrue(pointRetorno.getAudio().equals("link"));
 
     }
@@ -296,6 +300,24 @@ class PointServiceTest {
         when(audioService.saveAudio(any(), any(), any())).thenReturn("link");
         Point pointRetorno = pointService.createAudioToParent(pointId);
         Assert.assertTrue(pointRetorno.getAudio().equals("bla"));
+
+    }
+    @Test
+    void notCreateAudioToEmptyDescription() throws Exception {
+        String pointId = "AAAAAA";
+        Point point = new Point(pointId);
+        point.setDescription("");
+        point.setLanguage(LanguageEnum.PT);
+
+        when(translateService.canChildForThatLanguage(any(), any())).thenReturn(true);
+        when(translateService.canChildForThatLanguage(point, LanguageEnum.PT.getValue())).thenReturn(false);
+        when(translateService.translate(any(), any(), any())).thenCallRealMethod();
+        when(translateService.translateText(any(), any())).thenReturn("translated");
+
+        when(pointRepository.findPointByPointId(pointId)).thenReturn(Optional.of(point));
+        when(audioService.saveAudio(any(), any(), any())).thenCallRealMethod();
+        List<Point> points = pointService.createPointsFromParent(point);
+        Assert.assertTrue(points.get(0).getAudio()==null);
 
     }
 }

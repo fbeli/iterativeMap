@@ -1,18 +1,11 @@
 package com.becb.processnewpoint.dto;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.TypeEnum;
-import com.becb.processnewpoint.domain.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +35,7 @@ public class PointDto {
         this.userId = point.getUser().getUserId();
     }
     private List<String> getChildrenPoints(List<Point> childrenPoints){
-        if(childrenPoints==null || childrenPoints.size()==0){
+        if(childrenPoints==null || childrenPoints.isEmpty()){
             return null;
         }
         List<String> childrenPointsId = new ArrayList<>();
@@ -62,7 +55,7 @@ public class PointDto {
     private TypeEnum type;
     private LocalDateTime createTime;
     private String aproved;
-    private LanguageEnum language = LanguageEnum.PT;
+    private LanguageEnum language;
     private String pointParent_id;
     private List<String> childrenPoints;
 

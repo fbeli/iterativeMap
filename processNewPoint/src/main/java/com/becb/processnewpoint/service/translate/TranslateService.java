@@ -59,7 +59,7 @@ public class TranslateService {
         connection.setRequestProperty("X-RapidAPI-Key", key);
         connection.setRequestProperty("X-RapidAPI-Host", host);
 
-        log.info("Connecting in Translat Endpoint, URL: {}", url);
+        log.info("Connecting in Translate Endpoint, URL: {}", url);
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -74,7 +74,7 @@ public class TranslateService {
 
             return getTranslateFromJason(response.toString(), languageDestino);
         }
-       return "Impossible to translate";
+       return "";
     }
 
     public String getTranslateFromJason(String str, String lang){

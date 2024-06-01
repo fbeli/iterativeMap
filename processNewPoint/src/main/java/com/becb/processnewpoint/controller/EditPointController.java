@@ -37,9 +37,7 @@ public class EditPointController {
 
         Page<Point> points = pointService.getPointsByUserId(pageable, userId);
         Page<PointDto> resultPage = pointService.convertPointToDto(points.toList());
-        var result = resultPage.getContent();
-        return result;
-
+        return resultPage.getContent();
     }
 
     @GetMapping( value = "/point/hi")
@@ -51,14 +49,12 @@ public class EditPointController {
     @GetMapping( value = "/point/")
     @ResponseBody
     public Point getByPointId(@RequestParam("pointId") String pointId) {
-        Point point = pointService.getPointById(pointId);
-        return point;
+        return pointService.getPointById(pointId);
     }
     @GetMapping( value = "/point2/{pointId}")
     @ResponseBody
     public Point getByPointId2(@PathVariable("pointId") String pointId) {
-        Point point = pointService.getPointById(pointId);
-        return point;
+        return  pointService.getPointById(pointId);
     }
 
     @GetMapping( value = "/point/reload_queue")
@@ -75,12 +71,10 @@ public class EditPointController {
     @GetMapping ( value = "/point/translate")
     @ResponseBody
     public ResponseEntity<PointDto> getByUser(@RequestParam String pointId, @RequestParam String language)  throws IOException {
-        PointDto  point = new PointDto(pointService.translate(pointId, language));
-        if(point == null)
-            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        pointService.getPointById(pointId);
+        PointDto  point = new PointDto(pointService.translate(pointService.getPointById(pointId), language));
+
         return new ResponseEntity<>(point, HttpStatus.CREATED);
-
     }
-
 
 }

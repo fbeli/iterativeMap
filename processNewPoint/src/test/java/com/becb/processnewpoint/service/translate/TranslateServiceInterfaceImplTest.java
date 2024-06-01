@@ -64,6 +64,20 @@ class TranslateServiceInterfaceImplTest {
         Assert.assertEquals(oldPoint.getPointId(),createdPoint.getPointParent().getPointId());
     }
 
+    @Test
+    void testImpossibleToTranslateError() throws IOException {
+        Point oldPoint = getPoint();
+        Point newPoint = getPoint();
+        doReturn("Bláblá").when(translateService).translateText(anyString(), any());
+
+        HttpURLConnection mockHttpURLConnection = mock(HttpURLConnection.class);
+        when(suporteService.getConnection(any())).thenReturn(mockHttpURLConnection);
+        when(mockHttpURLConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        when(mockHttpURLConnection.getInputStream()).thenReturn(new ByteArrayInputStream(retornoFromTranlationService().getBytes()));
+
+        Point createdPoint  = translateService.translate(oldPoint, new Point(UlidCreator.getUlid().toString()),"PT");
+        Assert.assertEquals(oldPoint.getPointId(),createdPoint.getPointParent().getPointId());
+    }
 
     private Point getPoint(){
 
@@ -104,7 +118,7 @@ class TranslateServiceInterfaceImplTest {
 
         childEN.setLanguage(LanguageEnum.EN);
         Assert.assertTrue(translateService.canChildForThatLanguage(fatherPoint, LanguageEnum.DE.toString()));
-        Assert.assertTrue(translateService.canChildForThatLanguage(fatherPoint, "pt"));
+        Assert.assertTrue(translateService.canChildForThatLanguage(fatherPoint, "PT"));
         fatherPoint.addChildPoint(childSP);
         fatherPoint.addChildPoint(childPT);
         fatherPoint.addChildPoint(childFR);

@@ -28,10 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PointService {
@@ -229,7 +226,7 @@ public class PointService {
         } else
             point.getUser().setInstagram("");
         if (item.getString("language") != null)
-            point.setLanguage(Enum.valueOf(LanguageEnum.class, item.getString("language")));
+            point.setLanguage(Enum.valueOf(LanguageEnum.class, item.getString("language").toUpperCase()));
         if (item.getString("photos") != null)
             point.setPhotos(addPhotos(item.getString("photos")));
         return point;
@@ -284,7 +281,8 @@ public class PointService {
             } else {
                 point.setAudio(path);
             }
-            return pointRepository.save(point)!=null?true:false;
+            pointRepository.save(point);
+            return true;
         }
         return false;
     }
@@ -369,38 +367,50 @@ public class PointService {
 
         jsonObject = new JSONObject(message);
         pointId = jsonObject.optString("pointId");
+        Point parentPoint = this.getPointById(pointId);
+        if(parentPoint != null)
+            return  createPointsFromParent(parentPoint);
+        return null;
 
+    }
+
+    public List<Point> createPointsFromParent(Point parentPoint) throws Exception{
         List<Point> createdPoints = new ArrayList();
-        createdPoints.add(createAudioToParent(pointId));
+        createdPoints.add(createAudioToParent(parentPoint));
 
         Point localPoint;
         String audioEndpoint;
         for (LanguageEnum language : LanguageEnum.values()){
-            localPoint = translate(pointId, language.getValue());
+            localPoint = translate(parentPoint, language.getValue());
             if(localPoint != null) {
-                audioEndpoint = audioService.saveAudio(localPoint.getPointId(), localPoint.getDescription(), localPoint.getLanguage());
-                localPoint.setAudio(audioEndpoint);
-                createdPoints.add(pointRepository.save(localPoint));
+                if(audioService.needCreateAudio(localPoint)) {
+                    audioEndpoint = audioService.saveAudio(localPoint.getPointId(), localPoint.getDescription(), localPoint.getLanguage());
+                    localPoint.setAudio(audioEndpoint);
+                }
+                createdPoints.add(this.savePointDb(localPoint));
             }
         }
         return createdPoints;
     }
 
-    public Point createAudioToParent(String pointId) throws Exception {
+    public Point createAudioToParent(String pointId) {
         Point parentPoint = this.getPointById(pointId);
-        if(parentPoint!= null && (parentPoint.getAudio() == null || parentPoint.getAudio().isBlank())){
+        return createAudioToParent(parentPoint);
+    }
+
+    public Point createAudioToParent(Point parentPoint) {
+
+        if(audioService.needCreateAudio(parentPoint)){
             parentPoint.setAudio(audioService.saveAudio(parentPoint.getPointId(), parentPoint.getDescription(), parentPoint.getLanguage()));
         }
-
         if(parentPoint != null)
             pointRepository.save(parentPoint);
         return parentPoint;
-
     }
 
-    public Point translate(String pointId, String languageDestino) throws IOException {
 
-        Point parentPoint = this.getPointById(pointId);
+    public Point translate(Point parentPoint, String languageDestino) throws IOException {
+
         if(parentPoint == null)
             throw new ObjectNotFoundException(Point.class,
                     "Parent point not found, try again latter ");
@@ -417,6 +427,8 @@ public class PointService {
         this.savePointDb(childPoint);
         return childPoint;
     }
+
+
 
     public void adiantarChron() {
         //chron.receberMensagens();

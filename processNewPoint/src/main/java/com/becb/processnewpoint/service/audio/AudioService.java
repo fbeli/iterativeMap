@@ -1,15 +1,17 @@
 package com.becb.processnewpoint.service.audio;
 
 import com.becb.processnewpoint.domain.LanguageEnum;
+import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.service.file.AmazonS3Service;
 import com.voicerss.tts.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
+@Slf4j
 @Service
 public class AudioService {
 
@@ -26,32 +28,39 @@ public class AudioService {
     @Value("${vss.key}")
     private String vssKey;
 
+    public boolean needCreateAudio(Point point){
+        return point != null && (point.getAudio() == null || point.getAudio().isBlank()) && point.getDescription() !=null || point.getDescription().isBlank();
+    }
 
     public String saveAudio(String point_id, String text, LanguageEnum languageEnum) {
 
-        VoiceProvider tts = new VoiceProvider(vssKey);
+        if(text!=null && !text.isBlank()) {
+            VoiceProvider tts = new VoiceProvider(vssKey);
 
-        VoiceParameters params = new VoiceParameters(text, getLanguage(languageEnum));
-        params.setCodec(AudioCodec.WAV);
-        params.setFormat(AudioFormat.Format_44KHZ.AF_44khz_16bit_stereo);
-        params.setBase64(false);
-        params.setSSML(false);
-        params.setRate(0);
+            VoiceParameters params = new VoiceParameters(text, getLanguage(languageEnum));
+            params.setCodec(AudioCodec.WAV);
+            params.setFormat(AudioFormat.Format_44KHZ.AF_44khz_16bit_stereo);
+            params.setBase64(false);
+            params.setSSML(false);
+            params.setRate(0);
 
-        try {
-            byte[] voice;
+            try {
+                byte[] voice;
 
-            voice = tts.speech(params);
+                voice = tts.speech(params);
 
-            InputStream inputStream = new ByteArrayInputStream(voice);
+                InputStream inputStream = new ByteArrayInputStream(voice);
 
-            String namefile = point_id + "_ia.mp3";
+                String namefile = point_id + "_ia.mp3";
 
-            amazonS3Service.saveFile(bucket, "audio", inputStream, namefile);
-            return "audio/" + namefile;
-        } catch (Exception e) {
-            return "";
+                amazonS3Service.saveFile(bucket, "audio", inputStream, namefile);
+                return "audio/" + namefile;
+            } catch (Exception e) {
+                log.info("Error to create Audio for point: {} and text: {}", point_id, text);
+                log.info(e.getMessage());
+            }
         }
+        return "";
     }
 
     private String getLanguage(LanguageEnum language) {

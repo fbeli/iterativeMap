@@ -64,7 +64,7 @@ public class LocalIntegrationTest {
 
         userService.saveUser(getUser());
         pointService.savePointDb(createNewPoint());
-        pointService.translate(createNewPoint().getPointId(),"PT");
+        pointService.translate(createNewPoint(),"PT");
 
         Pageable pageable = PageRequest.of(0, 10);
         List<Point> points = pointService.getPointsByUserId(pageable, userId).toList();

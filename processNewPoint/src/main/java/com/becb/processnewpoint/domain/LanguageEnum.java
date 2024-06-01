@@ -6,13 +6,8 @@ public enum LanguageEnum {
     EN("EN"),
     ES("ES"),
     FR("FR"),
-    DE("DE"),
-    pt("PT"),
-    en("EN"),
-    es("ES"),
-    fr("FR"),
-    @Deprecated SP("ES"),
-    de("DE");
+    DE("DE");
+
     private final String value;
 
     LanguageEnum(String value) {
