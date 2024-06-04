@@ -7,7 +7,7 @@ function fly_back(){
    if(firstTime){
        document.getElementById("starting").style.display="block";
    }
-   if(window.location.href.search(defaultZoom)){
+   if(window.location.href.search(defaultZoom) != -1 ){
        if(latitude == 'undefined' || longitude == 'undefined' || latitude == null || longitude == null){
            latitude = getLatitude();
            longitude = getLongitude();
@@ -57,7 +57,7 @@ function getLatitude(){
             },
             {timeout:7000});
     }
-
+    save_cookies("longitude",latitude);
         return latitude;
 }
 function getLongitude(){
@@ -69,9 +69,8 @@ function getLongitude(){
             (error) => {
                 console.log(error);
             } ,{timeout:7000});
-        
-        
     }
+    save_cookies("longitude",longitude);
     return longitude;
 }
 function save_cookies(cookie_name, cookie_value){

@@ -24,7 +24,7 @@ async function read_cookies(){
         }
         if (c.indexOf(name) == 0) {
             userName = c.substring(name.length, c.length);
-            //get_li_after_login(userName);
+            get_li_after_login(userName);
         }
         if (c.indexOf(token) == 0) {
             accessToken = c.substring(token.length, c.length);

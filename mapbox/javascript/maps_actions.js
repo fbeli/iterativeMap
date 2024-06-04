@@ -114,39 +114,13 @@ map.on('click', (event) => {
     } else {
         const feature = features[0];
 
-        let insideHtml = `<h3>${feature.properties.title}</h3>`;
-        insideHtml += `<div style="width: 41%" onclick="draw_route('${feature.geometry.coordinates}')"> <p class="link_go" >Get The Route</p></div>`;
-        if (feature.properties.audio !== undefined && feature.properties.audio.length > 2) {
-            if (navigator.userAgent.indexOf("iPhone") > -1) {
-                insideHtml += `<div><button class="button_play" id="play" onclick="play_on_safari('${feature.properties.audio}')">Play</button><button style="display: none" class="button_play" id="stop" onclick="stop_on_safari()">Stop</button></div>`;
-
-            } else {
-                insideHtml += `<div ><audio class="audio"  controls><source src="${feature.properties.audio}" type="audio/mpeg"/>Your browser does not support the audio element.</audio></div>`;
-            }
-        }
-        insideHtml += `<p>Created by: ${feature.properties.user_name}.</p><br/>`;
-        if (feature.properties.user_guide === 'true') {
-            insideHtml += `<p id="sh_professional">${feature.properties.user_name} is professional guide, <a href="#" onclick="getUser('${feature.properties.user_id}')"> contact.</a></p><br/>`;
-        }/*else{
-            insideHtml += `<p id="sh_professional">${feature.properties.user_name} is part of our community. </p>`;
-        }*/
-        if (feature.properties.user_share === 'true') {
-            insideHtml += `<p>${feature.properties.user_instagram}</a></p>`
-        }
-        if (feature.properties.photo !== undefined && feature.properties.photo.length > 2)
-            insideHtml += `<img style="width: 100%" src="${feature.properties.photo}" alt="${feature.properties.title}"/><br/>`;
-        insideHtml += `<p>${feature.properties.description}</p><br/>`;
-        const popup = new mapboxgl.Popup({offset: [0, 0]})
-            .setLngLat(feature.geometry.coordinates)
-            .setHTML(
-                insideHtml
-            )
-            .addTo(map);
         setLatLong(feature.geometry.coordinates);
         console.log(feature.properties.pointId + " " + feature.properties.title);
 
+        show_infos(feature);
     }
 });
+
 
 map.on('move', () => {
     zoom = map.getZoom();
@@ -275,6 +249,11 @@ async function getRoute(end) {
     // add turn instructions here at the end
 }
 
+let coords
+
+function draw_route(){
+    draw_route(coords)
+}
 
 function draw_route(coords) {
     const end = {

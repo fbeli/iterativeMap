@@ -111,8 +111,12 @@ function stop_on_safari(){
     document.getElementById("play").style.display = "flex";
     document.getElementById("stop").style.display = "none";
 }
+let audio_link;
+async function play_on_safari(){
+    play_on_safari(audio_link);
+}
 async function play_on_safari(URL) {
-
+    URL = audio_link;
     // Check if the browser supports web audio. Safari wants a prefix.
     if ('AudioContext' in window || 'webkitAudioContext' in window) {
 
@@ -146,7 +150,7 @@ async function play_on_safari(URL) {
                         console.error(error)
                 ))
 
-        document.getElementById("play").style.display = "none";
+        document.getElementById("point_info_audio_apple_bt").style.display = "none";
         document.getElementById("stop").style.display = "flex";
 
         await play(yodelBuffer);

@@ -6,16 +6,20 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJH5ERQBXB"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
 
         gtag('config', 'G-FJH5ERQBXB');
     </script>
 
     <script>
-        function handler(event)  {
-            var response  = event.response;
-            var headers  = response.headers;
+        function handler(event) {
+            var response = event.response;
+            var headers = response.headers;
 
             // If Access-Control-Allow-Origin CORS header is missing, add it.
             // Since JavaScript doesn't allow for hyphens in variable names, we use the dict["key"] notation.
@@ -33,508 +37,585 @@
     <script src="./javascript/const.js"></script>
     <script src="/javascript/suport.js"></script>
     <script src="/javascript/posicao.js"></script>
-        <meta name='viewport'  content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
+    <meta name='viewport' content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+    <link rel="stylesheet"
+          href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
+          type="text/css">
 
     <!--LOGIN-->
     <!--===============================================================================================-->
-        <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">  
-        <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">   
-        <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css"> 
-        <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">   
-        <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-        <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
 
-        <link rel="stylesheet" type="text/css" href="css/util.css">
-        <link rel="stylesheet" type="text/css" href="css/button.css">
-        <link rel="stylesheet" type="text/css" href="css/main.css">
-        <link rel="stylesheet" type="text/css" href="css/inicio.css">
-        <link rel="stylesheet" type="text/css" href="css/start_divs.css">
+    <link rel="stylesheet" type="text/css" href="css/util.css">
+    <link rel="stylesheet" type="text/css" href="css/button.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/inicio.css">
+    <link rel="stylesheet" type="text/css" href="css/start_divs.css">
 
-        <script src="/javascript/addtohomescreem.js">   </script>
-        <link rel="stylesheet" type="text/css" href="css/addtohomescreem.css">
+    <script src="/javascript/addtohomescreem.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/addtohomescreem.css">
 
-        <script src="javascript/form.js">   </script>
+    <script src="javascript/form.js"></script>
 </head>
 
 <body onload="fly_back()">
 
-            <div id='map'>
-              <div id="sidebar" class="sidebar">
-                  <div class="div_side_bar" id="sidebar_login_div" onclick="login()">
-                      <img  class="image" src="img/ico_login.png">
-                          <a href="#" id="li_login_a_link">Login</a>
-                  </div>
-                  <div class="div_side_bar"  >
-                      <img class="image" src="img/ico_about.png">
-                          <a href="https://www.guidemapper.com/landing/index.html" id="li_introduce_a_link" >About Us</a>
-                  </div>
-                  <div class="div_side_bar" onclick="option_create_points()" >
-                      <img class="image" src="img/ico_mapa.png">
-                      <a  href="#" id="a_create_points">Add Spot</a>
-                  </div>
-                  <div class="div_side_bar" onclick="open_boomings()" >
-                      <img class="image" src="img/ico_mapa.png">
-                      <a  href="#" id="booming">Booming</a>
-                  </div>
-              </div>
-                <div class="sidebar_sub_left" id="sidebar_logout_div" style="display: none;" >
-                    <a  href="#" onclick="logout()" id="logout">Logout</a><br>
-                    <a href="#" onclick="copyLink()" >Copy My Link</a><br>
-                    <a href="/user_page/login.html"  >Edit My Points</a>
+<div id="container">
+    <div id='map'>
+        <div id="sidebar" class="sidebar">
+            <div class="div_side_bar" id="sidebar_login_div" onclick="login()">
+                <img class="image" src="img/ico_login.png">
+                <a href="#" id="li_login_a_link">Login</a>
+            </div>
+            <div class="div_side_bar">
+                <img class="image" src="img/ico_about.png">
+                <a href="https://www.guidemapper.com/landing/index.html" id="li_introduce_a_link">About Us</a>
+            </div>
+            <div class="div_side_bar" onclick="option_create_points()">
+                <img class="image" src="img/ico_mapa.png">
+                <a href="#" id="a_create_points">Add Spot</a>
+            </div>
+            <div class="div_side_bar" onclick="open_boomings()">
+                <img class="image" src="img/ico_mapa.png">
+                <a href="#" id="booming">Booming</a>
+            </div>
+        </div>
+        <div class="sidebar_sub_left" id="sidebar_logout_div" style="display: none;">
+            <a href="#" onclick="logout()" id="logout">Logout</a><br>
+            <a href="#" onclick="copyLink()">Copy My Link</a><br>
+            <a href="/user_page/login.html">Edit My Points</a>
+        </div>
+        <div class="sidebar_sub_left" id="booming_places" style="display: none;">
+            <a href="#" onclick="close_boomings('lisbon')">Lisbon</a><br>
+            <a href="#" onclick="close_boomings('london')">London</a><br>
+            <a href="#" onclick="close_boomings('madrid')">Madrid</a><br>
+            <a href="#" onclick="close_boomings('porto')">Porto</a><br>
+            <a href="#" onclick="close_boomings('rio_de_janeiro')">Rio de Janeiro</a><br>
+            <a href="#" onclick="close_boomings('valencia')">Valencia</a><br>
+        </div>
+
+
+        <div id='starting' class="modal_body" style="display: none">
+            <div class="child"><img id="img_back_start" class="child" src="img/ponto1.png" alt=""></div>
+
+            <div id="start_welcome" class="start_welcome" style="display: block">
+                <div onclick="next('start_welcome')"><img class="btn_close" src="img/close.png" alt="Next"></div>
+                <p>Welcome to Guide Mapper.</p>
+                <p>Here you will never be lost, you can find spots and history informations, everything about your
+                    trip</p>
+                <p>You can share your knowledge and trip with your customers and friends</p>
+                <br>
+                <p class="p_br">Bem vindo ao Guide Mapper.</p>
+                <p class="p_br">Aqui você não ficará mais perdido, vai encontrar informações pontos de interesse e tudo
+                    para sua viagem</p>
+                <p class="p_br">Aproveite e compartilhe seu conhecimento e sua viagem com clientes e amigo</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
                 </div>
-                <div class="sidebar_sub_left" id="booming_places" style="display: none;" >
-                    <a  href="#" onclick="close_boomings('lisbon')" >Lisbon</a><br>
-                    <a href="#" onclick="close_boomings('london')" >London</a><br>
-                    <a  href="#" onclick="close_boomings('madrid')" >Madrid</a><br>
-                    <a href="#" onclick="close_boomings('porto')" >Porto</a><br>
-                    <a  href="#" onclick="close_boomings('rio_de_janeiro')" >Rio de Janeiro</a><br>
-                    <a href="#" onclick="close_boomings('valencia')" >Valencia</a><br>
+            </div>
+            <div id="start_here_you_are" class="start_here_you_are" style="display: none">
+                <div onclick="next('start_here_you_are')"><img class="btn_close" src="img/close.png" alt="Next"></div>
+                <p>Here you are. This blue point shows exactly point you are in the map</p>
+                <br>
+                <p class="p_br">Você está aqui, esse ponto mostra onde você está no mapa.</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
                 </div>
-
-
-
-                <div id='starting' class="modal_body"  style="display: none" >
-                    <div class="child" ><img id="img_back_start" class="child" src="img/ponto1.png" alt=""></div>
-
-                    <div id="start_welcome" class="start_welcome" style="display: block">
-                        <div onclick="next('start_welcome')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>Welcome to Guide Mapper.</p>
-                        <p>Here you will never be lost, you can find spots and history informations, everything about your trip</p>
-                        <p>You can share your knowledge and trip with your customers and friends</p>
-                        <br>
-                        <p class="p_br">Bem vindo ao Guide Mapper.</p>
-                        <p class="p_br">Aqui você não ficará mais perdido, vai encontrar informações pontos de interesse e tudo para sua viagem</p>
-                        <p class="p_br">Aproveite e compartilhe seu conhecimento e sua viagem com clientes e amigo</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
-                    <div id="start_here_you_are" class="start_here_you_are" style="display: none">
-                        <div onclick="next('start_here_you_are')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>Here you are. This blue point shows exactly point you are in the map</p>
-                        <br>
-                        <p class="p_br">Você está aqui, esse ponto mostra onde você está no mapa.</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
-                    <div id="start_back_to_point" class="start_back_to_point" style="display: none">
-                        <div onclick="next('start_back_to_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>This button makes you back to your point in map, if you don't know where you are :-)</p>
-                        <p>And bellow, search for specific place</p>
-                        <br>
-                        <p class="p_br">Se estiver perdido, aqui pode voltar ao seu local no mapa.</p>
-                        <p class="p_br">E abaixo, procurar por um local qualquer.</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
-                    <div id="start_zoom" class="start_zoom" style="display: none">
-                        <div onclick="next('start_zoom')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>Zoom up and down with your fingers. Bigger zoom can show more flags and details, try it in museuns and places with more interesting points. </p>
-                        <br>
-                        <p class="p_br">Zoom pode aumentar e diminuir usando seus dedos, zoom maior pode mostrar mais detalhes. Teste zoom maiores próximo a museus e luares com muitos pontos de interesse</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
-                    <div id="start_point" class="start_point" style="display: none">
-                        <div onclick="next('start_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>Flags and simbols are interesting points on map, you can click to know more </p>
-                        <br>
-                        <p class="p_br">Bandeiras e síbolos são pontos que você pode clicar e aprender mais.</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
-                    <div id="start_about_point" class="start_about_point" style="display: none">
-                        <div onclick="next('start_about_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>The info box opens to you.</p>
-                        <br>
-                        <p class="p_br">Abrirá a caixa com informações do ponto</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
-
-                    <div id="start_description_point" class="start_description_point" style="display: none">
-                        <div onclick="next('start_description_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>Pictures, audio and infos to you know for where you are looking at.</p>
-                        <br>
-                        <p class="p_br">Foto, audios e informações sobe o ponto, aqui você sabe pra onde está a olhar.</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
-
-                    <div id="start_login" class="start_login" style="display: none">
-                        <div onclick="next('start_login')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>Here you can signup, create your own map, routes and share with friends.</p>
-                        <br><p class="p_br">Aqui você se cadastra, cria seu próprio mapa, rotas e compartilha com amigos.</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
-                    <div id="start_add_point" class="start_add_point" style="display: none">
-                        <div onclick="next('start_add_point')"><img  class="btn_close" src="img/close.png" alt="Next"></div>
-                        <p>If you are interested in create points, here is the place to start, 'Add Spot'. Enjoy and share your map with friends</p>
-                        <br><p class="p_br">Para criar um novo ponto, 'Add Spot', crie seus pontos and share it with your friends.</p>
-                        <br>
-                        <div onclick="next('start_add_point')">
-                            <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
-                            <label style="top: -5px" >SKIP TUTORIAL</label>
-                        </div>
-                    </div>
+            </div>
+            <div id="start_back_to_point" class="start_back_to_point" style="display: none">
+                <div onclick="next('start_back_to_point')"><img class="btn_close" src="img/close.png" alt="Next"></div>
+                <p>This button makes you back to your point in map, if you don't know where you are :-)</p>
+                <p>And bellow, search for specific place</p>
+                <br>
+                <p class="p_br">Se estiver perdido, aqui pode voltar ao seu local no mapa.</p>
+                <p class="p_br">E abaixo, procurar por um local qualquer.</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
                 </div>
-              
-                <div class="wrap-login100 to_front" id="login_div" style="display: none;">
-                    <form class="login100-form validate-form">
+            </div>
+            <div id="start_zoom" class="start_zoom" style="display: none">
+                <div onclick="next('start_zoom')"><img class="btn_close" src="img/close.png" alt="Next"></div>
+                <p>Zoom up and down with your fingers. Bigger zoom can show more flags and details, try it in museuns
+                    and places with more interesting points. </p>
+                <br>
+                <p class="p_br">Zoom pode aumentar e diminuir usando seus dedos, zoom maior pode mostrar mais detalhes.
+                    Teste zoom maiores próximo a museus e luares com muitos pontos de interesse</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
+                </div>
+            </div>
+            <div id="start_point" class="start_point" style="display: none">
+                <div onclick="next('start_point')"><img class="btn_close" src="img/close.png" alt="Next"></div>
+                <p>Flags and simbols are interesting points on map, you can click to know more </p>
+                <br>
+                <p class="p_br">Bandeiras e síbolos são pontos que você pode clicar e aprender mais.</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
+                </div>
+            </div>
+            <div id="start_about_point" class="start_about_point" style="display: none">
+                <div onclick="next('start_about_point')"><img class="btn_close" src="img/close.png" alt="Next"></div>
+                <p>The info box opens to you.</p>
+                <br>
+                <p class="p_br">Abrirá a caixa com informações do ponto</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
+                </div>
+            </div>
+
+            <div id="start_description_point" class="start_description_point" style="display: none">
+                <div onclick="next('start_description_point')"><img class="btn_close" src="img/close.png" alt="Next">
+                </div>
+                <p>Pictures, audio and infos to you know for where you are looking at.</p>
+                <br>
+                <p class="p_br">Foto, audios e informações sobe o ponto, aqui você sabe pra onde está a olhar.</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
+                </div>
+            </div>
+
+            <div id="start_login" class="start_login" style="display: none">
+                <div onclick="next('start_login')"><img class="btn_close" src="img/close.png" alt="Next"></div>
+                <p>Here you can signup, create your own map, routes and share with friends.</p>
+                <br>
+                <p class="p_br">Aqui você se cadastra, cria seu próprio mapa, rotas e compartilha com amigos.</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
+                </div>
+            </div>
+            <div id="start_add_point" class="start_add_point" style="display: none">
+                <div onclick="next('start_add_point')"><img class="btn_close" src="img/close.png" alt="Next"></div>
+                <p>If you are interested in create points, here is the place to start, 'Add Spot'. Enjoy and share your
+                    map with friends</p>
+                <br>
+                <p class="p_br">Para criar um novo ponto, 'Add Spot', crie seus pontos and share it with your
+                    friends.</p>
+                <br>
+                <div onclick="next('start_add_point')">
+                    <img style="margin-left: 10px" class="btn_close" src="img/close.png" alt="Next">
+                    <label style="top: -5px">SKIP TUTORIAL</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrap-login100 to_front" id="login_div" style="display: none;">
+            <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Welcome
                         </span>
-                
-                        <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                            <input class="input100" type="text" id="login_email" value="Email" onfocus="this.value='';"
-                                   onblur="if (this.value=='') this.value='Email'" >
-                        </div>
-    
-                        <div class="wrap-input100 validate-input" data-validate="Enter password">
-                            <span class="btn-show-pass" onclick="tipo_pass = document.getElementById('login_password'); if(tipo_pass.type=='text') {tipo_pass.type='login_password'}else tipo_pass.type='text' ">
-                                <i class="zmdi zmdi-eye"></i>
-                            </span>
-                            <label for="login_password">Password (min 8 digits)</label>
-                            <input class="input100" type="password" id="login_password" minlength="8" >
-                        </div>
 
-                        <div class="div_btn">
-                            <button type="button" class="button-53"  onclick="execute_login()" id="btn-login-get-token" >Login</button>
-                        </div>
-    
-                        <div class="text-center p-t-25">
-                            <a class="txt2" onclick="sign_up()">
-                                Sign Up
-                            </a>
-                        </div>
-                        <div class="text-center p-t-25">
-                            <a class="txt2" onclick="forgetPassword()">
-                               Forget Password
-                            </a>
-                        </div>
-                        <div class="text-center p-t-25">
-                            <a class="txt2" onclick="fechar_divs()" href="#">
-                                Close
-                            </a>
-                        </div>
-                    </form>
+                <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
+                    <input class="input100" type="text" id="login_email" value="Email" onfocus="this.value='';"
+                           onblur="if (this.value=='') this.value='Email'">
                 </div>
 
-                <div class="wrap-login100 to_front" id="forget_password_div" style="display: none;">
-                    <form class="login100-form validate-form">
+                <div class="wrap-input100 validate-input" data-validate="Enter password">
+                            <span class="btn-show-pass"
+                                  onclick="tipo_pass = document.getElementById('login_password'); if(tipo_pass.type=='text') {tipo_pass.type='login_password'}else tipo_pass.type='text' ">
+                                <i class="zmdi zmdi-eye"></i>
+                            </span>
+                    <label for="login_password">Password (min 8 digits)</label>
+                    <input class="input100" type="password" id="login_password" minlength="8">
+                </div>
+
+                <div class="div_btn">
+                    <button type="button" class="button-53" onclick="execute_login()" id="btn-login-get-token">Login
+                    </button>
+                </div>
+
+                <div class="text-center p-t-25">
+                    <a class="txt2" onclick="sign_up()">
+                        Sign Up
+                    </a>
+                </div>
+                <div class="text-center p-t-25">
+                    <a class="txt2" onclick="forgetPassword()">
+                        Forget Password
+                    </a>
+                </div>
+                <div class="text-center p-t-25">
+                    <a class="txt2" onclick="fechar_divs()" href="#">
+                        Close
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="wrap-login100 to_front" id="forget_password_div" style="display: none;">
+            <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Forget Password
                         </span>
 
-                        <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                            <input class="input100" type="text" id="forget_login_email" value="Email" onfocus="this.value='';"
-                                   onblur="if (this.value=='') this.value='Email'" >
-                        </div>
-
-
-                        <div class="div_btn">
-                            <button type="button" class="button-53"  onclick="forget_password()" id="btn-forget-password-get-token" >Reset Password</button>
-                        </div>
-
-                        <div class="text-center p-t-25">
-                            <a class="txt2" onclick="fechar_divs()" href="#">
-                                Close
-                            </a>
-                        </div>
-                    </form>
+                <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
+                    <input class="input100" type="text" id="forget_login_email" value="Email" onfocus="this.value='';"
+                           onblur="if (this.value=='') this.value='Email'">
                 </div>
 
-                <div class="wrap-login100 to_front" id="sign_up_div" style="display: none;">
-                    <form class="login100-form validate-form">
+
+                <div class="div_btn">
+                    <button type="button" class="button-53" onclick="forget_password()"
+                            id="btn-forget-password-get-token">Reset Password
+                    </button>
+                </div>
+
+                <div class="text-center p-t-25">
+                    <a class="txt2" onclick="fechar_divs()" href="#">
+                        Close
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="wrap-login100 to_front" id="sign_up_div" style="display: none;">
+            <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Welcome
                         </span>
-                        <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text" id="sign_up_name" minlength="8" value="Name" onfocus="this.value='';"
-                                   onblur="if (this.value=='') this.value='Name'" >
-                        </div>
-                        <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-                            <input class="input100" type="text" id="sign_up_email" value="Email" onfocus="this.value='';"
-                                   onblur="if (this.value=='') this.value='Email'" >
-                        </div>
-    
-                        <div class="wrap-input100 validate-input" data-validate="Enter password">
-                            <span class="btn-show-pass" onclick="tipo_pass = document.getElementById('sign_up_password'); if(tipo_pass.type=='text') {tipo_pass.type='password'}else tipo_pass.type='text' ">
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" id="sign_up_name" minlength="8" value="Name"
+                           onfocus="this.value='';"
+                           onblur="if (this.value=='') this.value='Name'">
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
+                    <input class="input100" type="text" id="sign_up_email" value="Email" onfocus="this.value='';"
+                           onblur="if (this.value=='') this.value='Email'">
+                </div>
+
+                <div class="wrap-input100 validate-input" data-validate="Enter password">
+                            <span class="btn-show-pass"
+                                  onclick="tipo_pass = document.getElementById('sign_up_password'); if(tipo_pass.type=='text') {tipo_pass.type='password'}else tipo_pass.type='text' ">
                                 <i class="zmdi zmdi-eye"></i>
                             </span>
-                            <label for="sign_up_password">Password (min 8 digits)</label>
-                            <input class="input100" type="password" id="sign_up_password" minlength="8"  >
-                        </div>
-
-                        <div class="wrap-input100 validate-input">
-                            <input class="input100" type="text" id="sign_up_phone" value="Phone (+xxx xxxxxxxxx)" onfocus="this.value='';"
-                                   onblur="if (this.value=='') this.value='Phone'" >
-                        </div>
-                        <div class="wrap-input100 validate-input">
-                            <input class="input100" type="text" id="sign_up_description" value="Descript Yourself" onfocus="this.value='';"
-                                   onblur="if (this.value=='') this.value='Descript Yourself'" >
-                        </div>
-
-                        <div class="wrap-input100 validate-input">
-                            <input class="input100" type="text" id="sign_up_instagram" value="Instagram - add it if you want your own map link" onfocus="this.value='';"
-                                   onblur="if (this.value=='') this.value='Instagram - add it if you want your own map link'" >
-                        </div>
-                        <div class="wrap-input100 validate-input">
-                            <input class="input100" type="date" id="sign_up_born_date" minlength="6">
-                        </div>
-
-                        <div class="wrap-input100 validate-input" data-validate="Country">
-
-                            <select name="country" id="sign_up_country">
-                            <option value="" disabled selected>Select a country...</option>
-                                <script>
-                                    var countries = ['Country',
-                                        'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia',
-                                        'Czech Republic', 'Denmark', 'Egypt', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'India', 'Indonesia',
-                                        'Ireland', 'Israel', 'Italy', 'Japan', 'Malaysia', 'Mexico', 'Morocco', 'Netherlands', 'New Zealand', 'Norway',
-                                        'Peru', 'Philippines', 'Poland', 'Portugal', 'Romania', 'Russia', 'Saudi Arabia', 'Singapore', 'South Africa',
-                                        'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates',
-                                        'United Kingdom', 'United States', 'Vietnam', 'Other'];
-
-                                    let selectOptions = "";
-                                    for (let i = 0; i < countries.length; i++) {
-                                        selectOptions += `<option value="${countries[i]}">${countries[i]}</option>`;
-                                    }
-
-                                    const selectElement = document.getElementById("sign_up_country");
-                                        selectElement.innerHTML = selectOptions;
-                                </script>
-                             </select>
-                        </div>
-                        <div class="wrap-input100 validate-input">
-                            <div><input type="checkbox"  id="sign_up_guide" >
-                            <label for="sign_up_guide" >I'm a guide - Can we share your contact with users to business</label></div>
-                            <div><input type="checkbox"  id="sign_up_user" >
-                            <label for="sign_up_user" >I'm a user and maybe I will share my knowledge</label>
-                            </div><div><input  type="checkbox"  id="sign_up_share">
-                            <label for="sign_up_guide" >Can show my instagram to users</label></div>
-                        </div>
-
-
-                        <div class="div_btn">
-                            <button type="button" class="button-53"  onclick="execute_sign_in()"  >Sign Up</button>
-                        </div>
-
-                        <div class="text-center p-t-25">
-                            <a class="txt2" onclick="fechar_divs()" href="#">
-                                Close
-                            </a>
-                        </div>
-                    </form>
+                    <label for="sign_up_password">Password (min 8 digits)</label>
+                    <input class="input100" type="password" id="sign_up_password" minlength="8">
                 </div>
-              <!-- Erro Modal-->
-                <div class="wrap-login100 to_front" id="erro_alert_div" style="display: none;">
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Error!</h4>
-                        <p id="erro_alert_text" class="p.erro"></p><br/>
-                        <hr>
-                        <p class="mb-0">Please check data and try again.</p>
-                    </div>
-                    <div class="text-center p-t-25">
-                        <a class="txt2" onclick="close_error_div()" href="#">
-                            Close
-                        </a>
-                    </div>
+
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" id="sign_up_phone" value="Phone (+xxx xxxxxxxxx)"
+                           onfocus="this.value='';"
+                           onblur="if (this.value=='') this.value='Phone'">
                 </div>
-                <div class=" wrap-login100 to_front" id="welcome_div_id"  style="display: none;">
-                    <div class=" welcome_div validate-input" >
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" id="sign_up_description" value="Descript Yourself"
+                           onfocus="this.value='';"
+                           onblur="if (this.value=='') this.value='Descript Yourself'">
+                </div>
+
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" id="sign_up_instagram"
+                           value="Instagram - add it if you want your own map link" onfocus="this.value='';"
+                           onblur="if (this.value=='') this.value='Instagram - add it if you want your own map link'">
+                </div>
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="date" id="sign_up_born_date" minlength="6">
+                </div>
+
+                <div class="wrap-input100 validate-input" data-validate="Country">
+
+                    <select name="country" id="sign_up_country">
+                        <option value="" disabled selected>Select a country...</option>
+                        <script>
+                            var countries = ['Country',
+                                'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia',
+                                'Czech Republic', 'Denmark', 'Egypt', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'India', 'Indonesia',
+                                'Ireland', 'Israel', 'Italy', 'Japan', 'Malaysia', 'Mexico', 'Morocco', 'Netherlands', 'New Zealand', 'Norway',
+                                'Peru', 'Philippines', 'Poland', 'Portugal', 'Romania', 'Russia', 'Saudi Arabia', 'Singapore', 'South Africa',
+                                'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates',
+                                'United Kingdom', 'United States', 'Vietnam', 'Other'];
+
+                            let selectOptions = "";
+                            for (let i = 0; i < countries.length; i++) {
+                                selectOptions += `<option value="${countries[i]}">${countries[i]}</option>`;
+                            }
+
+                            const selectElement = document.getElementById("sign_up_country");
+                            selectElement.innerHTML = selectOptions;
+                        </script>
+                    </select>
+                </div>
+                <div class="wrap-input100 validate-input">
+                    <div><input type="checkbox" id="sign_up_guide">
+                        <label for="sign_up_guide">I'm a guide - Can we share your contact with users to
+                            business</label></div>
+                    <div><input type="checkbox" id="sign_up_user">
+                        <label for="sign_up_user">I'm a user and maybe I will share my knowledge</label>
+                    </div>
+                    <div><input type="checkbox" id="sign_up_share">
+                        <label for="sign_up_guide">Can show my instagram to users</label></div>
+                </div>
+
+
+                <div class="div_btn">
+                    <button type="button" class="button-53" onclick="execute_sign_in()">Sign Up</button>
+                </div>
+
+                <div class="text-center p-t-25">
+                    <a class="txt2" onclick="fechar_divs()" href="#">
+                        Close
+                    </a>
+                </div>
+            </form>
+        </div>
+        <!-- Erro Modal-->
+        <div class="wrap-login100 to_front" id="erro_alert_div" style="display: none;">
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Error!</h4>
+                <p id="erro_alert_text" class="p.erro"></p><br/>
+                <hr>
+                <p class="mb-0">Please check data and try again.</p>
+            </div>
+            <div class="text-center p-t-25">
+                <a class="txt2" onclick="close_error_div()" href="#">
+                    Close
+                </a>
+            </div>
+        </div>
+        <div class=" wrap-login100 to_front" id="welcome_div_id" style="display: none;">
+            <div class=" welcome_div validate-input">
                         <span class="welcome_div login100-form-title p-b-26">
                             Welcome,
                         </span>
-                    </div>
-                    <div class=" validate-input" >
+            </div>
+            <div class=" validate-input">
                         <span class="login100-form-title p-b-36" id="welcome_name">
                             Jojo Todinho
                         </span>
-                    </div>
-                    <div class=" validate-input" >
-                         <span class="welcome_div login100-form-title p-b-26" >
+            </div>
+            <div class=" validate-input">
+                         <span class="welcome_div login100-form-title p-b-26">
                            You are logged in!
                         </span>
-                    </div>
-                    <div class=" validate-input" >
-                         <span id="span_msg" class="welcome_div login100-form-title p-b-26" >
+            </div>
+            <div class=" validate-input">
+                         <span id="span_msg" class="welcome_div login100-form-title p-b-26">
 
                         </span>
-                    </div>
-                    <div class="text-center p-t-25">
-                        <a class="txt2" onclick="fechar_divs()" href="#">
-                            Close
-                        </a>
-                    </div>
-                </div>
-                <div class="wrap-login100 to_front" id="cadastro_div" style="display: none;">
-                    <form class="login100-form validate-form" enctype="multipart/form-data">
+            </div>
+            <div class="text-center p-t-25">
+                <a class="txt2" onclick="fechar_divs()" href="#">
+                    Close
+                </a>
+            </div>
+        </div>
+        <div class="wrap-login100 to_front" id="cadastro_div" style="display: none;">
+            <form class="login100-form validate-form" enctype="multipart/form-data">
                         <span class="login100-form-title p-b-26">
                             Novo Cadastro
                         </span>
-                        <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text"  id="cadastro_lng" readonly=“true”>
-                        </div>
-                        <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text"  id="cadastro_lat" readonly=“true”>
-                        </div>
-                        <div class="wrap-input100 validate-input" >
-                            <input class="input100" type="text" id="cadastro_titulo" value='Title' onfocus="clearOnFocus(this.id,'Title')"
-                                   onblur="if (this.value=='') this.value='Title'" >
-                        </div>
-
-                        <div class="wrap-input100 validate-input" >
-                            <textarea rows="1" class="input100"  id="cadastro_description" value='Description' onfocus="clearOnFocus(this.id,'Description')" onblur="if (this.value=='') this.value='Description'"  >Description</textarea>
-                        </div>
-                        <div class="wrap-input100 validate-input" data-validate="Type">
-                            <select name="cadastro_place_type" id="cadastro_place_type">
-                                <option class="fa-optin-monster" value="" disabled selected>Select Place Type...</option>
-                                <script>
-                                    var place_type = ['Place Type',
-                                        'Museum - Historic - Place', 'Spot - Gem', 'Interesting Restaurant', 'Other'];
-                                    let selectPlaceTypeOptions = "";
-                                    for (let i = 0; i < place_type.length; i++) {
-                                        selectPlaceTypeOptions += `<option value="${place_type[i]}">${place_type[i]}</option>`;
-                                    }
-
-                                    const selectTypeElement = document.getElementById("cadastro_place_type");
-                                    selectTypeElement.innerHTML = selectPlaceTypeOptions;
-                                </script>
-                            </select>
-                        </div>
-
-                        <div class="wrap-input100 validate-input" data-validate="Country">
-                            <select name="cadastro_language" id="cadastro_language">
-                                <option class="fa-optin-monster" value="" disabled selected>Select a Language...</option>
-                                <script>
-                                    var language = ['Language',
-                                        'English', 'Português', 'Español', 'Other'];
-                                    let selectLanguageOptions = "";
-                                    for (let i = 0; i < language.length; i++) {
-                                        selectLanguageOptions += `<option value="${language[i]}">${language[i]}</option>`;
-                                    }
-
-                                    const selectLanguageElement = document.getElementById("cadastro_language");
-                                    selectLanguageElement.innerHTML = selectLanguageOptions;
-                                </script>
-                            </select>
-                        </div>
-                       <div style="border-bottom: 0" class="div_btn" >
-                            <button type="button" class="button-53"  id="btn_cadastro_img" onclick="uploadClick('cadastro_img', 'btn_cadastro_img')">Select Image</button>
-                            <input class="file_out" style="display:none" type="file" id="cadastro_img" name="cadastro_img" value='Add Picture' >
-                        </div>
-
-                        <!--<div class="div_btn">
-                            <button type="button" class="button-53"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
-                            <input style="display:none" type="text" id="cadastro_audio">
-                        </div>-->
-                        <div class="div_btn">
-                           <div class="div-audio-left">
-                               <button type="button" class="button-53 button-audio"  onclick="gravar()" id="btn_gravar" style="font-size: 12px;">Start Recorder</button>
-                               <input style="display:none" type="text" id="cadastro_audio">
-                            </div>
-                            <div class="div-audio-right">
-                                <button type="button" class="button-53 button-audio" id="btn_upload_audio" style="font-size: 12px;" onclick="uploadClick('cadastro_audio_upload', 'btn_upload_audio')">Upload Audio</button>
-                                <input class="file_out" style="display:none" type="file" id="cadastro_audio_upload" name="cadastro_audio_upload" value='Add Audio' >
-                            </div>
-                        </div>
-                        <div class="div_btn" style="margin-top: 95px">
-                            <button type="button" class="button-53"  onclick="create_new_point()" id="btn_criar_ponto" >Create Point</button>
-                        </div>
-
-                        <div class="text-center p-t-25">
-                            <a class="txt2" onclick="fechar_divs()" href="#">
-                                Close
-                            </a>
-                        </div>
-                    </form>
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" id="cadastro_lng" readonly=“true”>
+                </div>
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" id="cadastro_lat" readonly=“true”>
+                </div>
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" id="cadastro_titulo" value='Title'
+                           onfocus="clearOnFocus(this.id,'Title')"
+                           onblur="if (this.value=='') this.value='Title'">
                 </div>
 
-                <div class="create_point wrap-login100 to_front" id="create_points_warning" style="display: none;">
-                    <div class="alert alert-danger" role="alert">
-                        <p  class="title alert-heading">Now You Can Create New Point</p>
-                        <p  class="p.erro">From now you are a Guide!</p><br/>
-                        <hr>
-                        <p class="mb-0">When you zoom near a point ( >16.5 ) and know about it, you can add infos and
-                            make
-                            money. Each time a not free user click on it and your comment shows you get points and
-                            can change for money</p>
-                    </div>
-                    <div class="text-center p-t-25">
-                        <a class="txt2" onclick="fechar_divs()" href="#">
-                            Close
-                        </a>
-                    </div>
+                <div class="wrap-input100 validate-input">
+                    <textarea rows="1" class="input100" id="cadastro_description" value='Description'
+                              onfocus="clearOnFocus(this.id,'Description')"
+                              onblur="if (this.value=='') this.value='Description'">Description</textarea>
                 </div>
-                <div class="create_point wrap-login100 to_front" id="div_please_login" style="display: none;">
-                    <div class="alert alert-danger" role="alert">
-                        <p  class="title alert-heading">You Must be Logged In</p>
-                        <p  class="p.erro"></p><br/>
-                        <hr>
-                        <p class="mb-0">Create your account and login, after it be part of out community and add spots
-                        to be shared with our community</p>
-                    </div>
-                    <div class="text-center p-t-25">
-                        <a class="txt2" onclick="fechar_divs(); login();" href="#">
-                            Close
-                        </a>
-                    </div>
+                <div class="wrap-input100 validate-input" data-validate="Type">
+                    <select name="cadastro_place_type" id="cadastro_place_type">
+                        <option class="fa-optin-monster" value="" disabled selected>Select Place Type...</option>
+                        <script>
+                            var place_type = ['Place Type',
+                                'Museum - Historic - Place', 'Spot - Gem', 'Interesting Restaurant', 'Other'];
+                            let selectPlaceTypeOptions = "";
+                            for (let i = 0; i < place_type.length; i++) {
+                                selectPlaceTypeOptions += `<option value="${place_type[i]}">${place_type[i]}</option>`;
+                            }
+
+                            const selectTypeElement = document.getElementById("cadastro_place_type");
+                            selectTypeElement.innerHTML = selectPlaceTypeOptions;
+                        </script>
+                    </select>
                 </div>
 
-                <div class="create_point wrap-login100 to_front" id="info_div" style="display: none;">
-                    <div class="alert alert-danger" role="alert">
-                        <p  class="title alert-heading" id="info_title">New point added</p>
-                        <p  class="p.erro" id="info_highlight"></p><br/>
-                        <hr>
-                        <p class="mb-0" id="info_info">This point will be reviwed and add after it. It can take some
-                        minutes, hours or day</p>
-                    </div>
-                    <div class="text-center p-t-25">
-                        <a class="txt2" onclick="fechar_divs()" href="#">
-                            Close
-                        </a>
-                    </div>
+                <div class="wrap-input100 validate-input" data-validate="Country">
+                    <select name="cadastro_language" id="cadastro_language">
+                        <option class="fa-optin-monster" value="" disabled selected>Select a Language...</option>
+                        <script>
+                            var language = ['Language',
+                                'English', 'Português', 'Español', 'Other'];
+                            let selectLanguageOptions = "";
+                            for (let i = 0; i < language.length; i++) {
+                                selectLanguageOptions += `<option value="${language[i]}">${language[i]}</option>`;
+                            }
+
+                            const selectLanguageElement = document.getElementById("cadastro_language");
+                            selectLanguageElement.innerHTML = selectLanguageOptions;
+                        </script>
+                    </select>
+                </div>
+                <div style="border-bottom: 0" class="div_btn">
+                    <button type="button" class="button-53" id="btn_cadastro_img"
+                            onclick="uploadClick('cadastro_img', 'btn_cadastro_img')">Select Image
+                    </button>
+                    <input class="file_out" style="display:none" type="file" id="cadastro_img" name="cadastro_img"
+                           value='Add Picture'>
                 </div>
 
+                <!--<div class="div_btn">
+                    <button type="button" class="button-53"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
+                    <input style="display:none" type="text" id="cadastro_audio">
+                </div>-->
+                <div class="div_btn">
+                    <div class="div-audio-left">
+                        <button type="button" class="button-53 button-audio" onclick="gravar()" id="btn_gravar"
+                                style="font-size: 12px;">Start Recorder
+                        </button>
+                        <input style="display:none" type="text" id="cadastro_audio">
+                    </div>
+                    <div class="div-audio-right">
+                        <button type="button" class="button-53 button-audio" id="btn_upload_audio"
+                                style="font-size: 12px;"
+                                onclick="uploadClick('cadastro_audio_upload', 'btn_upload_audio')">Upload Audio
+                        </button>
+                        <input class="file_out" style="display:none" type="file" id="cadastro_audio_upload"
+                               name="cadastro_audio_upload" value='Add Audio'>
+                    </div>
+                </div>
+                <div class="div_btn" style="margin-top: 95px">
+                    <button type="button" class="button-53" onclick="create_new_point()" id="btn_criar_ponto">Create
+                        Point
+                    </button>
+                </div>
+
+                <div class="text-center p-t-25">
+                    <a class="txt2" onclick="fechar_divs()" href="#">
+                        Close
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="create_point wrap-login100 to_front" id="create_points_warning" style="display: none;">
+            <div class="alert alert-danger" role="alert">
+                <p class="title alert-heading">Now You Can Create New Point</p>
+                <p class="p.erro">From now you are a Guide!</p><br/>
+                <hr>
+                <p class="mb-0">When you zoom near a point ( >16.5 ) and know about it, you can add infos and
+                    make
+                    money. Each time a not free user click on it and your comment shows you get points and
+                    can change for money</p>
             </div>
-            <script src="/javascript/reset_pass.js">   </script>
-            <script src="/javascript/maps_actions.js">   </script>
-            <script src="/javascript/divs_actions.js">   </script>
-            <script src="/javascript/save_audio.js">   </script>
-            <script src="/javascript/start_divs.js">   </script>
-            <script src="/javascript/miscelanius.js">   </script>
+            <div class="text-center p-t-25">
+                <a class="txt2" onclick="fechar_divs()" href="#">
+                    Close
+                </a>
+            </div>
+        </div>
+        <div class="create_point wrap-login100 to_front" id="div_please_login" style="display: none;">
+            <div class="alert alert-danger" role="alert">
+                <p class="title alert-heading">You Must be Logged In</p>
+                <p class="p.erro"></p><br/>
+                <hr>
+                <p class="mb-0">Create your account and login, after it be part of out community and add spots
+                    to be shared with our community</p>
+            </div>
+            <div class="text-center p-t-25">
+                <a class="txt2" onclick="fechar_divs(); login();" href="#">
+                    Close
+                </a>
+            </div>
+        </div>
+
+        <div class="create_point wrap-login100 to_front" id="info_div" style="display: none;">
+            <div class="alert alert-danger" role="alert">
+                <p class="title alert-heading" id="info_title">New point added</p>
+                <p class="p.erro" id="info_highlight"></p><br/>
+                <hr>
+                <p class="mb-0" id="info_info">This point will be reviwed and add after it. It can take some
+                    minutes, hours or day</p>
+            </div>
+            <div class="text-center p-t-25">
+                <a class="txt2" onclick="fechar_divs()" href="#">
+                    Close
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <div id="point_info"  style="display: none;">
+        <div>
+            <div style="display: inline-block; width: 90%;
+    ">
+            <h3 id="desc_title"></h3></div>
+            <div style="display: inline-block;" onclick="close_info()">
+                <p style="margin: 0;" class="link_go">X</p></div></div>
+
+        <div id="point_info_media" >
+            <div id="point_info_img" class="photo" style="display: none"></div>
+            <div id="point_info_route">
+                <div id="point_info_audio" style="display: none;">
+                    <div id="point_info_audio_apple" style="display: none;">
+                        <button id="point_info_audio_apple_bt" class="button_play"
+                                onclick="play_on_safari()">Play
+                        </button>
+                        <button style="display: none" class="button_play" id="stop" onclick="stop_on_safari()">Stop
+                        </button>
+                    </div>
+                    <div id="point_info_audio_all" style="display: none;">
+                        <audio class="audio" controls>
+                            <source id="point_info_audio_all_source" src="" type="audio/mpeg"/>
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+                <div onclick="draw_route()"><p class="link_go">Get The Route</p></div>
+            </div>
+        </div>
+        <div id="point_info_div_user_info">
+            <p id="point_info_user_info"></p>
+            <p id="point_info_sh_professional"></p>
+            <p id="point_info_sh_share"></p>
+        </div>
+
+        <div id="point_info_description">
+            <p id="point_info_sh_description"></p>
+        </div>
+    </div>
+</div>
+<script src="/javascript/reset_pass.js"></script>
+<script src="/javascript/maps_actions.js"></script>
+<script src="/javascript/divs_actions.js"></script>
+<script src="/javascript/save_audio.js"></script>
+<script src="/javascript/start_divs.js"></script>
+<script src="/javascript/miscelanius.js"></script>
+
 
 </body>
 

@@ -22,7 +22,7 @@ function show_create_points_warning() {
 
 function option_create_points() {
     fechar_divs();
-    if(accessToken !== undefined && accessToken!== null && accessToken !== "") {
+    if (accessToken !== undefined && accessToken !== null && accessToken !== "") {
         if (create_point) {
             create_point = false;
             document.getElementById("a_create_points").innerHTML = 'Add Spot';
@@ -32,7 +32,7 @@ function option_create_points() {
             document.getElementById("a_create_points").innerHTML = 'Stop Add';
             map.setZoom(17);
         }
-    }else{
+    } else {
         document.getElementById("div_please_login").style.display = 'flex';
     }
 }
@@ -42,39 +42,41 @@ function open_boomings() {
 
     document.getElementById("booming_places").style.display = 'block';
 }
+
 function close_boomings(place) {
 
     fechar_divs();
     var la = latitude;
     var lo = longitude;
-    if( place === "lisbon"){
-        lo ="-9.13667";
+    if (place === "lisbon") {
+        lo = "-9.13667";
         la = "38.70796";
-    }if( place === "london"){
-        la = "51.509903";
-        lo ="-0.134511";
     }
-    if( place === "madrid"){
+    if (place === "london") {
+        la = "51.509903";
+        lo = "-0.134511";
+    }
+    if (place === "madrid") {
         la = "40.41223";
-        lo ="-3.70529";
+        lo = "-3.70529";
     }
-    if( place === "porto"){
+    if (place === "porto") {
         la = "41.143126";
-        lo ="-8.61069";
+        lo = "-8.61069";
 
     }
-    if( place === "valencia"){
+    if (place === "valencia") {
         la = "39.4789";
-        lo ="-0.37635";
+        lo = "-0.37635";
 
     }
-    if( place === "rio_de_janeiro"){
+    if (place === "rio_de_janeiro") {
         lo = "-43.19163";
-        la ="-22.9318";
+        la = "-22.9318";
     }
-    if( place === "barcelona"){
+    if (place === "barcelona") {
         la = "51.509903";
-        lo ="-0.134511";
+        lo = "-0.134511";
     }
 
     map.flyTo({
@@ -110,7 +112,7 @@ function fechar_divs() {
     document.getElementById("forget_password_div").style.display = 'none';
     document.getElementById("sidebar_logout_div").style.display = 'none';
     document.getElementById("booming_places").style.display = 'none';
-    if(document.getElementsByClassName("mapboxgl-popup").length > 0)
+    if (document.getElementsByClassName("mapboxgl-popup").length > 0)
         document.getElementsByClassName("mapboxgl-popup").item(0).style.display = 'none';
 
 }
@@ -130,25 +132,95 @@ function sign_up() {
 function forgetPassword() {
     show_div("forget_password_div");
 }
+
 function show_div(el) {
     fechar_divs();
     document.getElementById(el).style.display = 'block';
 }
 
-function add_logo(){
+function add_logo() {
     let div_left = document.getElementsByClassName("mapboxgl-ctrl-bottom-left");
     div_left[0].innerHTML = "<a class=\"mapboxgl-ctrl-logo\" target=\"_blank\" rel=\"noopener nofollow\" href=\"https://www.mapbox.com/\" aria-label=\"Mapbox logo\"></a>" +
         "<a class=\"mapboxgl-ctrl-logo\"  href=\"https://www.guidemapper.com/img/name_logo.png\" aria-label=\"GuideMapper\"><img class=\"img_logo\" src=\"https://guidemapper.com/img/name_logo.png\"></a>";
 
     let div_top_right = document.getElementsByClassName("mapboxgl-ctrl-top-right");
-    div_top_right[0].innerHTML = "<div class=\"zoom\" ><div class='inside_zoom' id='inside_zoom'>"+zoom+" </div></div>";
+    div_top_right[0].innerHTML = "<div class=\"zoom\" ><div class='inside_zoom' id='inside_zoom'>" + zoom + " </div></div>";
     div_top_right[0].class = "mapboxgl-ctrl-top-right zoom";
 }
 
 
 //const element = document.getElementsByClassName("mapboxgl-ctrl-geolocate");
 //element.addEventListener("click", myFunction);
-function myFunction(){
-    save_cookies("latitude",map.getCenter().lat);
+function myFunction() {
+    save_cookies("latitude", map.getCenter().lat);
     save_cookies("longitude", map.getCenter.lng);
+}
+
+function show_infos(feature) {
+
+    document.getElementById("desc_title").innerHTML = feature.properties.title;
+    document.getElementById("point_info").style.display = "block";
+
+    coords = feature.geometry.coordinates;
+
+    //test audio
+    if (feature.properties.audio !== undefined && feature.properties.audio.length > 2) {
+        audio_link = feature.properties.audio;
+        document.getElementById("point_info_audio").style.display = "block";
+        if (navigator.userAgent.indexOf("iPhone") > -1) {
+            document.getElementById("point_info_audio_apple").style.display = "block";
+            //document.getElementById("point_info_audio_apple_bt").onclick = "play_on_safari(" + feature.properties.audio + ")";
+        } else {
+            document.getElementById("point_info_audio_all").style.display = "block";
+            document.getElementById("point_info_audio_all").innerHTML = "<audio className='audio' controls> <source src=" + feature.properties.audio + " type='audio/mpeg'/> Your browser does not support the audio element.</audio>"
+            //document.getElementById("point_info_audio_all_source").src = feature.properties.audio;
+        }
+    }
+    //use_info
+    document.getElementById("point_info_user_info").innerHTML = "Created by: " + feature.properties.user_name;
+    if (feature.properties.user_guide === 'true') {
+        document.getElementById("point_info_sh_professional").innerHTML = "is professional guide, <a href='#' onclick='getUser( \' " + feature.properties.user_id + "\')'> contact.</a></p><br/>";
+    }
+    if (feature.properties.user_share === 'true') {
+        document.getElementById("point_info_sh_share").innerHTML = feature.properties.user_instagram;
+    }
+
+    if (feature.properties.photo !== undefined && feature.properties.photo.length > 2) {
+        document.getElementById("point_info_img").style.display = "block";
+        document.getElementById("point_info_img").innerHTML = "<img style='width: 100%' src=" + feature.properties.photo + " alt=" + feature.properties.title + "/> <br/>";
+
+    }
+    document.getElementById("point_info_sh_description").innerHTML = feature.properties.description;
+    configScreen();
+}
+
+let altura_tela;
+
+function configScreen() {
+    altura_tela = window.screen.height;
+    largura_tela = window.screen.width;
+    mapa_height = 0.5;
+    altura_div_info = altura_tela - (altura_tela * (1 - mapa_height));
+    mapa_height = 100 * mapa_height;
+    alterar_altura_mapa(mapa_height + "%");
+    document.getElementById("point_info").style.position = "relative";
+    document.getElementById("point_info").style.top = altura_div_info + "px";
+    document.getElementById("point_info_media").style.width = largura_tela;
+}
+
+function alterar_altura_mapa(altura) {
+    document.getElementById("map").style.height = altura;
+}
+
+function close_info() {
+
+    document.getElementById("point_info").style.display = "none";
+    document.getElementById("point_info_audio").style.display = "none";
+    document.getElementById("point_info_audio_apple").style.display = "none";
+    audio_link = "";
+    document.getElementById("point_info_audio_all").style.display = "none";
+    document.getElementById("point_info_img").style.display = "none";
+
+    alterar_altura_mapa("100%");
+
 }
