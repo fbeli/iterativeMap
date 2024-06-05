@@ -56,9 +56,13 @@ function getLatitude(){
                 console.log(error);
             },
             {timeout:7000});
+        save_cookies("latitude",latitude);
+    }else{
+        if(latitude == 'undefined'){
+            return lat_start_lisbon;
+        }
     }
-    save_cookies("longitude",latitude);
-        return latitude;
+    return latitude;
 }
 function getLongitude(){
     if('geolocation' in navigator){
@@ -69,8 +73,12 @@ function getLongitude(){
             (error) => {
                 console.log(error);
             } ,{timeout:7000});
+        save_cookies("longitude",longitude);
+    }else{
+        if(longitude == 'undefined'){
+            return long_start_lisbon;
+        }
     }
-    save_cookies("longitude",longitude);
     return longitude;
 }
 function save_cookies(cookie_name, cookie_value){

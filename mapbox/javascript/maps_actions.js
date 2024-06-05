@@ -208,7 +208,7 @@ async function getRoute(end) {
     atual_pos = await getAtualLocation();
 
     const query = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/walking/${atual_pos.split(',')[1]},${atual_pos.split(',')[0]};${end.split(',')[0]},${end.split(',')[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+        `https://api.mapbox.com/directions/v5/mapbox/walking/`+atual_pos.split(',')[1]+`,`+atual_pos.split(',')[0]+`;`+end[0]+`,`+end[1]+`?steps=true&geometries=geojson&access_token=`+mapboxgl.accessToken,
         {method: 'GET'}
     );
     const json = await query.json();
@@ -251,11 +251,8 @@ async function getRoute(end) {
 
 let coords
 
-function draw_route(){
-    draw_route(coords)
-}
 
-function draw_route(coords) {
+function draw_route() {
     const end = {
         type: 'FeatureCollection',
         features: [
