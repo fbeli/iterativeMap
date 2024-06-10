@@ -22,6 +22,8 @@ public interface PointRepository extends PagingAndSortingRepository<Point,String
     @Query(value = "SELECT p FROM Point p WHERE p.user.userId = ?1 and (p.aproved = 'true' or p.aproved = 'false') order by p.pointId desc ")
     Page<Point> findAllByUserNotBlocked(Pageable pageable, String userId);
 
+    @Query(value = "SELECT p FROM Point p WHERE p.user.userId = ?1 and (p.aproved = 'true' or p.aproved = 'false') and p.pointParent =null order by p.pointId desc ")
+    Page<Point> findFathersByUserNotBlocked(Pageable pageable, String userId);
 
     @Query(value = "SELECT p  FROM Point p  WHERE p.pointId = ?1")
     Optional<Point> findPointByPointId(String pointId);

@@ -59,6 +59,7 @@ class EditPointControllerTest {
         verify(pointService, times(1)).getPointsByUserId(any(Pageable.class), eq(userId));
     }
 
+
     @Test
     void testGetByPointId() {
         String pointId = "testPoint";
@@ -81,3 +82,4 @@ class EditPointControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
+

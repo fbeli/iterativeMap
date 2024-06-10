@@ -35,7 +35,7 @@ public class EditPointController {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Point> points = pointService.getPointsByUserId(pageable, userId);
+        Page<Point> points = pointService.getFatherPointsByUserId(pageable, userId);
         Page<PointDto> resultPage = pointService.convertPointToDto(points.toList());
         return resultPage.getContent();
     }

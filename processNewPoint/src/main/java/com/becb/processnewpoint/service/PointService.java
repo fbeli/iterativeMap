@@ -170,16 +170,11 @@ public class PointService {
 
     }
 
-    public List<Point> getApprovedPointsDb() {
-       return pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
-    }
-
     public void gerarArquivoParaAprovacao(String message) {
 
         JSONObject jsonObject = new JSONObject(message);
 
-        ArrayList<Point> points =
-                convertItemsToPoints(dynamoDbClient.getPointsByAproved(AprovedEnum.asFalse.getValue()));
+        List<Point> points = pointRepository.findAllByAproved(AprovedEnum.asFalse.getValue());
 
         logger.info("File :  {} is been created with {} points", jsonObject.getString("file_name"), points.size());
         try {
@@ -318,6 +313,12 @@ public class PointService {
 
     public Page<Point> getPointsByUserId(Pageable pageable, String userId) {
         Page<Point> page = pointRepository.findAllByUserNotBlocked(pageable, userId);
+        page.stream().filter(p -> p.getCountry() == null)
+                .forEach(p -> this.savePointDb(p));
+        return page;
+    }
+    public Page<Point> getFatherPointsByUserId(Pageable pageable, String userId) {
+        Page<Point> page = pointRepository.findFathersByUserNotBlocked(pageable, userId);
         page.stream().filter(p -> p.getCountry() == null)
                 .forEach(p -> this.savePointDb(p));
         return page;

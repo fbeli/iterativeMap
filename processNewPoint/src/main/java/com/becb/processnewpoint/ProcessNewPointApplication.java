@@ -66,7 +66,7 @@ public class ProcessNewPointApplication {
 	}
 
 
-	@Autowired
+
 	MigrationService migrationService;
 	//@PostConstruct
 	public void migrate() throws IOException {

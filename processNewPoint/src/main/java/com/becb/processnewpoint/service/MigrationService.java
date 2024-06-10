@@ -13,19 +13,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Service
+//@Service
 public class MigrationService {
 
-    @Autowired
+    //@Autowired
     DynamoDbClient dynamoDbClient;
 
-    @Autowired
+   // @Autowired
     PointService pointService;
 
-    @Autowired
+    //@Autowired
     UserService userService;
 
-    @Autowired
+    //@Autowired
     MapService mapService;
 
     private List<Point> pointsDb;
@@ -34,7 +34,7 @@ public class MigrationService {
     @SneakyThrows
     public void migrate() {
         List<Point> points = pointService.getApprovedPoints();
-        pointsDb = pointService.getApprovedPointsDb();
+        pointsDb = pointService.getApprovedPoints();
 
         points.parallelStream().forEach(
                     this::migrateAll
