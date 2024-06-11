@@ -53,7 +53,6 @@ public class Point {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "point_parent", referencedColumnName = "pointId")
-
     @JsonIgnore
     private Point pointParent;
 

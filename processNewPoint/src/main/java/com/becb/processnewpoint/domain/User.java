@@ -18,6 +18,7 @@ public class User {
 
     @Id
     private String userId;
+
     @Column private String userName;
     @Column private String userEmail;
     @Column private String instagram;
@@ -26,6 +27,9 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Point> points;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userOwner")
+    private Set<Roteiro> roteiros;
 
     public String getInstagram(){
         if (instagram == null)

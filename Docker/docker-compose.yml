@@ -104,7 +104,6 @@ services:
       - DB_URL=mysql:3306
     depends_on:
       - mysql
-      - dynamodb
       - sqs
     command: ["/wait-for-it.sh", "mysql:3306", "-t", "180", "--", "/entrypoint.sh"]
 
