@@ -15,6 +15,8 @@
 	<description>processNewPoint</description>
 	<properties>
 		<java.version>11</java.version>
+		<oauth2-oidc-sdk.version>9.19</oauth2-oidc-sdk.version>
+
 		<spring-cloud.version>Hoxton.SR9</spring-cloud.version>
 		<aws-version>1.11.792</aws-version>
 	</properties>
@@ -112,6 +114,21 @@
 			<artifactId>aws-java-sdk-sqs</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-aws-messaging</artifactId>
+			<version>2.2.5.RELEASE</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>oauth2-oidc-sdk</artifactId>
+			<version>${oauth2-oidc-sdk.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.voicerss.tts</groupId>
 			<artifactId>voicerss</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
@@ -150,12 +167,12 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
+		<!--dependency>
             <groupId>com.becb</groupId>
             <artifactId>pointService</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
-        </dependency>
+        </dependency-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -163,6 +180,11 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

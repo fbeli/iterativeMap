@@ -4,7 +4,17 @@ Interesting point on map.
 
 ## How to run ##
 
+
+
 First of all, you need to have docker and docker-compose installed in your machine.
+## Update jar para voice
+In directory resources
+
+``
+mvn install:install-file -Dfile=voicerss_tts.jar -DgroupId=com.voicerss.tts -DartifactId=voicerss -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
+``
+
+## you need docker
 You can download docker from [here](https://www.docker.com/products/docker-desktop) and docker-compose from [here](https://docs.docker.com/compose/install/).
 
 You have 2 docker-compose.yml, firs to run with your code, you need build it and create jar files using maven:
@@ -34,13 +44,6 @@ docker-compose run --service-ports point_service
 ```
 Startar o html executar os comandos python dentro da pasta mapbox 
 python -m SimpleHTTPServer 8000 ou python3 -m http.server 8000
-
-## Update jar para voice
-In directory resources
-
-``
-mvn install:install-file -Dfile=voicerss_tts.jar -DgroupId=com.voicerss.tts -DartifactId=voicerss -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
-``
 
 
 ## DynamoDb
