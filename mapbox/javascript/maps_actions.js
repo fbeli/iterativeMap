@@ -18,12 +18,20 @@ map.on('load', () => {
     map.addSource('s_mapfile_pt', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_pt_.geojson'
+        data: 'https://www.guidemapper.com/file/mapFile_pt_.geojson',
+        cluster: true,
+        clusterMaxZoom: 16, // Max zoom to cluster points on
+        clusterRadius: 10, // Radius of each cluster when clustering points (defaults to 50)
+        clusterMinPoints: 4
     });
     map.addSource('s_mapfile_en', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_en_.geojson'
+        data: 'https://www.guidemapper.com/file/mapFile_en_.geojson',
+        cluster: true,
+        clusterMaxZoom: 16, // Max zoom to cluster points on
+        clusterRadius: 10, // Radius of each cluster when clustering points (defaults to 50)
+        clusterMinPoints: 4
     });
     map.addSource('s_mapfile_lisboasecreta', {
         type: 'geojson',
@@ -42,7 +50,7 @@ map.on('load', () => {
         'type': 'symbol',
         'layout': {
             'icon-image': 'pt',
-            'icon-size': 0.2
+            'icon-size': 0.15
         },
         'source': 's_mapfile_pt'
     });
@@ -52,7 +60,7 @@ map.on('load', () => {
         'type': 'symbol',
         'layout': {
             'icon-image': 'en',
-            'icon-size': 0.2
+            'icon-size': 0.15
         },
         'source': 's_mapfile_en'
     });
@@ -61,7 +69,7 @@ map.on('load', () => {
         'type': 'symbol',
         'layout': {
             'icon-image': 'lisboa_secreta',
-            'icon-size': 0.2
+            'icon-size': 0.15
         },
         'source': 's_mapfile_lisboasecreta'
     });
@@ -70,10 +78,46 @@ map.on('load', () => {
         'type': 'symbol',
         'layout': {
             'icon-image': 'sp',
-            'icon-size': 0.2
+            'icon-size': 0.15
         },
         'source': 's_mapfile_sp'
     });
+    map.addLayer({
+        id: 'cluster-count_en',
+        type: 'symbol',
+        source: 's_mapfile_en',
+        filter: ['has', 'point_count'],
+        paint: {
+            'text-color': '#fff',
+            'icon-opacity': 0.6,
+        },
+        layout: {
+            'icon-image': 'bola',
+            'icon-opacity': 0.4,
+            'icon-size': 0.2,
+            'text-field': ['get', 'point_count_abbreviated'],
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+
+        }
+    });
+    map.addLayer({
+        id: 'cluster-count_pt',
+        type: 'symbol',
+        source: 's_mapfile_pt',
+        filter: ['has', 'point_count'],
+        paint: {
+            'text-color': '#fff',
+            'icon-opacity': 0.6,
+        },
+        layout: {
+            'icon-image': 'bola',
+            'icon-size': 0.2,
+            'text-field': ['get', 'point_count_abbreviated'],
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+
+        }
+    });
+
 
 });
 map.addControl(
@@ -98,7 +142,7 @@ Add an event listener that runs
 map.on('click', (event) => {
     // If the user clicked on one of your markers, get its information.
     const features = map.queryRenderedFeatures(event.point, {
-        layers: ['l_mapFile_pt', 'l_mapFile_en', 'l_lisboa_secreta', 'l_mapFile_sp'] // replace with your layer name
+        layers: ['cluster-count_en','cluster-count_pt', 'l_mapFile_pt', 'l_mapFile_en', 'l_lisboa_secreta', 'l_mapFile_sp'] // replace with your layer name
 
     });
     fechar_divs();
@@ -115,9 +159,14 @@ map.on('click', (event) => {
         const feature = features[0];
 
         setLatLong(feature.geometry.coordinates);
-        console.log(feature.properties.pointId + " " + feature.properties.title);
+        if(feature.layer.id.indexOf("cluster") == -1){
 
-        show_infos(feature);
+            console.log(feature.properties.pointId + " " + feature.properties.title);
+
+            show_infos(feature);
+        }else{
+            map.flyTo({center: [feature.geometry.coordinates[0],feature.geometry.coordinates[1]], zoom: map.getZoom()+2 });
+        }
     }
 });
 
@@ -165,17 +214,13 @@ function show_guide(user) {
 }
 
 function setLatLong(latLong) {
-    //longitude = latLong[0];
-    //latitude = latLong[1];
     save_cookies("latitude", latitude);
     save_cookies("longitude", longitude);
 }
 
-//const element = document.getElementById("mapboxgl-ctrl-geolocate");
-//element.addEventListener("click", myFunction);
 function myLocation() {
     save_cookies("latitude", map.getCenter().lat);
-    save_cookies("longitude", map.getCenter.lng);
+    save_cookies("longitude", map.getCenter().lng);
 }
 
 let atual_pos;
