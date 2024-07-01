@@ -236,47 +236,28 @@ public class PointController {
 
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
-    @GetMapping("/point_translate")
+    @PutMapping("/v2/point/translate")
     /**
      * https://rapidapi.com/gofitech/api/nlp-translation/
      */
-    public PointDto translate(@RequestParam String pointId,
-                              @RequestParam(value = "language", defaultValue = "EN") String language, HttpServletRequest request) throws IOException {
+    public PointResponse translate(@RequestParam String pointId,
+                              @RequestParam(value = "language", defaultValue = "EN") String language
+                                ,HttpServletRequest request)
+            throws IOException {
+        PointDto pointDto = new PointDto();
+        pointDto.setPointId(pointId);
+        pointDto.setLanguage(language);
 
-        //TODO
-        return null;
+        String formatedPoint = configPoint(pointDto, request);
+
+        logger.info("Point to Add: " + formatedPoint);
+
+        sqsService.sendMessage(pointDto.getPointIdJson(), translateQueue);
+
+        return new PointResponse("point updated successfully");
     }
 
-/*
-    @PreAuthorize("isAuthenticated()")
-    @ResponseBody
-    @PostMapping(value = "/point/vote")
-    public PointResponse vote(@RequestBody PointVoteDto pointDto, HttpServletRequest request) throws IOException, InterruptedException {
 
-        PointResponse response = new PointResponse("Vote added successfully");
-
-        if (pointDto.getPointId() == null){
-            response.setStatus(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
-            response.setError("Point Id not received.");
-            return response;
-        }
-        if (pointDto.getVote() == null){
-            response.setStatus(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
-            response.setError("Vote not received.");
-            return response;
-        }
-
-        String formatedPoint = configPointVote(pointDto, request);
-
-        try {
-            sqsService.sendMessage(formatedPoint, becbProperties.sqs.point_vote);
-        } catch (Exception e) {
-            logger.error("Error to add point: {}", e.getMessage());
-            return new PointResponse("500", "Error to add point" + e.getMessage());
-        }
-        return response;
-    }
-*/
     private JSONObject getToken(HttpServletRequest request){
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String[] chunks = token.split("\\.");
@@ -321,12 +302,5 @@ public class PointController {
         }
     }
 
-  /*  private String configPointVote(PointVoteDto pointDto, HttpServletRequest request) {
 
-        JSONObject jsonObject = getToken(request);
-
-        pointDto.setUserId(jsonObject.getString("usuario_id"));
-
-        return pointDto.toString();
-    }*/
 }

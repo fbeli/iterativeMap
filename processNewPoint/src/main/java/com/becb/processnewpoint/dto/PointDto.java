@@ -52,7 +52,7 @@ public class PointDto {
     private String latitude;
     private String longitude;
     private String audio;
-    private TypeEnum type;
+    private String type;
     private LocalDateTime createTime;
     private String aproved;
     private LanguageEnum language;

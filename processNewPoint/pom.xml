@@ -16,10 +16,16 @@
 	<properties>
 		<java.version>11</java.version>
 		<oauth2-oidc-sdk.version>9.19</oauth2-oidc-sdk.version>
-
 		<spring-cloud.version>Hoxton.SR9</spring-cloud.version>
 		<aws-version>1.11.792</aws-version>
 	</properties>
+	<repositories>
+
+		<repository>
+			<id>clojars.org</id>
+			<url>https://repo.clojars.org</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -59,6 +65,11 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-sqs</artifactId>
 			<version>1.12.62</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>
@@ -132,6 +143,11 @@
 			<groupId>com.voicerss.tts</groupId>
 			<artifactId>voicerss</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.clojars.suuft</groupId>
+			<artifactId>libretranslate-java</artifactId>
+			<version>1.0.5</version>
 		</dependency>
 
 		<dependency>

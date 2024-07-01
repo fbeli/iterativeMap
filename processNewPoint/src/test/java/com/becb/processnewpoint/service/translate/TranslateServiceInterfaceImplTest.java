@@ -4,7 +4,6 @@ import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.domain.User;
 import com.becb.processnewpoint.service.SuportService;
-import com.github.f4b6a3.ulid.UlidCreator;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -60,7 +59,7 @@ class TranslateServiceInterfaceImplTest {
         when(mockHttpURLConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(mockHttpURLConnection.getInputStream()).thenReturn(new ByteArrayInputStream(retornoFromTranlationService().getBytes()));
 
-        Point createdPoint  = translateService.translate(oldPoint, new Point(UlidCreator.getUlid().toString()),"PT");
+        Point createdPoint  = translateService.translate(oldPoint, newPoint,"PT");
         Assert.assertEquals(oldPoint.getPointId(),createdPoint.getPointParent().getPointId());
     }
 
@@ -75,7 +74,7 @@ class TranslateServiceInterfaceImplTest {
         when(mockHttpURLConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(mockHttpURLConnection.getInputStream()).thenReturn(new ByteArrayInputStream(retornoFromTranlationService().getBytes()));
 
-        Point createdPoint  = translateService.translate(oldPoint, new Point(UlidCreator.getUlid().toString()),"PT");
+        Point createdPoint  = translateService.translate(oldPoint, newPoint,"PT");
         Assert.assertEquals(oldPoint.getPointId(),createdPoint.getPointParent().getPointId());
     }
 
@@ -93,6 +92,8 @@ class TranslateServiceInterfaceImplTest {
         oldPoint.setPointId(generatedString);
         oldPoint.setLanguage(LanguageEnum.EN);
         oldPoint.setUser(getUser());
+        oldPoint.setDescription("Hello, world!!");
+        oldPoint.setTitle("Hello, world!!");
         return oldPoint;
     }
     private User getUser(){

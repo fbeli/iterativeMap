@@ -3,6 +3,8 @@ package com.becb.processnewpoint.service.translate;
 import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.service.SuportService;
+import net.suuft.libretranslate.Language;
+import net.suuft.libretranslate.Translator;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,22 +35,35 @@ public class TranslateService {
     SuportService suporteService;
 
 
+    private Language getLanguage(String language){
+        if(language.equals("EN"))
+            return Language.ENGLISH;
+        if(language.equals("PT"))
+            return Language.PORTUGUESE;
+        if(language.equals("ES"))
+            return Language.SPANISH;
+        if(language.equals("DE"))
+            return Language.DUTCH;
+        if(language.equals("FR"))
+            return Language.FRENCH;
+        return null;
+    }
     public Point translate(Point parentPoint, Point point, String languageDestino) throws IOException {
 
-        if(parentPoint.getLanguage().equals(languageDestino)){
-            if(languageDestino.equals("EN"))
-                    point.setLanguage("PT");
-            else
-                point.setLanguage("EN");
-        }else {
-            point.setLanguage(LanguageEnum.valueOf(languageDestino).getValue());
-        }
-        point.setDescription(translateText(point.getDescription(), point.getLanguage().getValue()));
-        point.setTitle(translateText(point.getTitle(), point.getLanguage().getValue()));
+        Language languageTo = getLanguage(languageDestino);
+        point.setLanguage(languageDestino);
+
+        point.setDescription(Translator.translate(getLanguage(parentPoint.getLanguage().getValue()),
+                                                  languageTo, point.getDescription()));
+        point.setTitle(Translator.translate(getLanguage(parentPoint.getLanguage().getValue()),
+                                             languageTo,
+                                             point.getTitle()));
+
         point.setPointParent(parentPoint);
         //TODO create audio
         parentPoint.addChildPoint(point);
         point.setAudio(null);
+
 
         return point;
     }

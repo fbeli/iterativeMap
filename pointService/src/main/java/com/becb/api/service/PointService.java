@@ -14,7 +14,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.util.ArrayList;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PointService {
@@ -139,8 +143,24 @@ public class PointService {
         pointDto.setPhoto(jsonObject.optString("photo"));
         pointDto.setAproved(jsonObject.optString("aproved"));
         pointDto.setCreatedAt(jsonObject.optString("createTime"));
+        pointDto.setChildren(setChildren(jsonObject));
+
 
         return pointDto;
     }
+    private List<String> setChildren(JSONObject jsonObject) {
+        JSONArray childrensArray = jsonObject.optJSONArray("childrenPoints");
+
+        Set<String> children = new HashSet<>();
+        if (childrensArray != null) {
+            for (int i = 0; i < childrensArray.length(); i++) {
+                children.add(childrensArray.optString(i));
+            }
+        }
+
+        return children.stream().collect(Collectors.toList());
+
+    }
+
 
 }

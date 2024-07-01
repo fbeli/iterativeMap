@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,6 +41,7 @@ public class PointDto{
     private String aproved;
     private String createdAt;
 
+    private List<String> children;
 
     public String toString() {
         if(description != null)

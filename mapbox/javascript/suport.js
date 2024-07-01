@@ -83,22 +83,25 @@ async function upload_point_photo(point_id, fileInput){
 async function translate_point(point_id) {
 
     let language = document.getElementById("lang_"+point_id).value;
-   
-    let data = {
-        title: title,
-        language: language,
-        description: description
-
-    };
-    fetch(config.update_point + point_id, {
+    let url = config.translate_point + point_id + "&language=" + language;
+    fetch(url, {
         method: "PUT",
         headers: {
             "Authorization": accessToken,
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
+        }
+    }) .then(response => response.json())
+        .then(data => {
+            if(data.status == "200"){
+                alert("Point translated");
+            }else{
+                alert(data.error);
+            }
+        })
 
+        .catch(error => {
+            console.log(error);
+           alert(error);
 
-
+        });
 }

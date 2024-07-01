@@ -119,7 +119,6 @@ public class AdminController {
     }
 
     @PostMapping("/testConnection")
-    //@PreAuthorize("isAuthenticated()")
     @ResponseBody
     public String testConnection(@RequestParam String endpoint)  {
 
