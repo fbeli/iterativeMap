@@ -26,7 +26,7 @@ public class RouterPoint {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Point point;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     @JoinColumn(name = "roteiro_id")
     private Roteiro roteiro;

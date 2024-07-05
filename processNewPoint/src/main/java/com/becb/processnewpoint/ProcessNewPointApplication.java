@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -23,7 +24,6 @@ import java.io.IOException;
 @EnableScheduling
 @SpringBootApplication
 public class ProcessNewPointApplication {
-
 
 	@Value("${becb.sqs.access-key}")
 	String sqsAccessKey;

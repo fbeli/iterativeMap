@@ -33,6 +33,7 @@ select{
     border-radius: 0.25rem;
     cursor: pointer;
 }
+
 .welcome_div{
     font-size: 38px;
     border: 0;
@@ -60,7 +61,7 @@ select{
 
 .sidebar_sub_left{
     margin-top: 65px;
-    background-color: rgb(35 55 75 / 90%);
+    background-color: #6200EE;
     color: #fff;
     padding: 6px 12px;
     font-family: monospace;
@@ -70,9 +71,14 @@ select{
     left: 0;
     width:30%;
 }
-
+.menu_name{
+    font-family: Poppins-Regular;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #fff;
+}
 .sidebar {
-    background-color: rgb(35 55 75 / 90%);
+    background-color: #6200EE;
     color: #fff;
     padding: 6px 12px;
     font-family: monospace;
@@ -96,6 +102,111 @@ select{
 .sidebar .div_side_bar .image{
     height: 25px;
     width: 25px;
+}
+
+.lang_style{
+    bottom: 12%;
+    right: 12%;
+    position: absolute;
+    z-index: 1;
+}
+.select_language{
+    background-color: #fff;
+    padding: 1px 14px 5px 4px;
+    width: 100px;
+    border: 1px solid #caced1;
+    font-family: Poppins-Regular;
+    font-size: 14px;
+    height: 31px;
+
+}
+
+.route_bar{
+    margin-top: 65px;
+    background-color: #fff;
+    color: #fff;
+    padding: 6px 12px;
+    font-family: monospace;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 95%;
+    height: 90%;
+    margin-left: 2%;
+    margin-right: 2%;
+    z-index:5;
+
+
+}
+.div_bloom{
+font-family: Poppins-Regular;
+font-size: 14px;
+line-height: 1.7;
+color: #666666;
+margin: 0px;
+    display: inline;
+}
+.route_bar_left{
+    padding: 2px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.route_bar_list{
+    padding: 2px;
+    display: inline-block;
+    height: 80%;
+}
+.foto_rota{
+    height: 50px;
+    width: 60px;
+}
+.linha_rota{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+.route_bar_form{
+    width: 100%;
+    padding: 2px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 10%;
+}
+.route_bar_form_title_rota{
+    color: #141313;
+    font-size: 15px;
+}
+.route_bar_form input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 95%;
+    font-family: Poppins-Regular;
+    font-size: 14px;
+    color: #555555;
+    padding: 0.675em 1em;
+    background-color: #fff;
+    border-bottom: 2px solid black;
+    cursor: text;
+    line-height: 0.8;
+
+    display: inline;
+}
+
+.route_bar_form select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 97%;
+    font-family: Poppins-Regular;
+    font-size: 12px;
+    color: #555555;
+    padding: 0.675em 6em 0.675em 1em;
+    background-color: #fff;
+    border: 1px solid #caced1;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    line-height: 0.8;
 }
 
 .horizontal {
@@ -197,19 +308,21 @@ label {
 .audio{
    width: 100%;
 }
+
 #point_info_media{
     display: flex;
     width: 500px;
 }
+
 .photo{
     width: 34%;;
 }
 #point_info{
-    display: flow;
+    top: 60%;
+    max-height: 40%;
+    margin-left: 5%;
     position: relative;
-    top: 370px;
-    height: 50%;
-    width: 100%;
+    width: 94%;
     overflow: auto;
 }
 #point_info_description{
@@ -278,20 +391,20 @@ audio
     padding-top: 9px;
 }
 
-.link_go{
 
+.menu{
     font-family: Poppins-Regular;
     font-size: 14px;
     line-height: 1.7;
-    color: #717136;
+    color: #31312b;
     margin-left: 54px;
     margin-top: 5px;
 }
-
 h3{
     font-family: Poppins-Regular;
     font-size: 19px;
     line-height: 1.7;
     color: rgb(35 55 75);
+    margin-left: 10px;
 
 }

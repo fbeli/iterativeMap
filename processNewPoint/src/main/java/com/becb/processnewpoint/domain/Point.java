@@ -41,7 +41,7 @@ public class Point {
     @Column
     private String audio;
     @Column
-    private TypeEnum type;
+    private String type;
     @Column
     private LocalDateTime createTime;
 
@@ -126,12 +126,7 @@ public class Point {
             case "ES":
                 this.language = LanguageEnum.ES;
                 break;
-            case "FR":
-                this.language = LanguageEnum.FR;
-                break;
-            case "DE":
-                this.language = LanguageEnum.DE;
-                break;
+
 
             default:
                 this.language = LanguageEnum.PT;
@@ -166,23 +161,29 @@ public class Point {
 
     public void setType(String typestr) {
         if (typestr == null) {
-            type = TypeEnum.museum;
+            type = TypeEnum.museum.getValue();
         } else {
             if (typestr.toLowerCase().contains("museum")) {
-                type = TypeEnum.museum;
+                type = TypeEnum.museum.getValue();
             }
             if (typestr.toLowerCase().contains("gem")) {
-                type = TypeEnum.gem;
+                type = TypeEnum.gem.getValue();
             }
             if (typestr.toLowerCase().contains("rest")) {
-                type = TypeEnum.restaurant;
+                type = TypeEnum.restaurant.getValue();
+            }
+            if (typestr.toLowerCase().contains("mont")) {
+                type = TypeEnum.montain.getValue();
+            }
+            if (typestr.toLowerCase().contains("beach")) {
+                type = TypeEnum.beach.getValue();
             }
         }
     }
 
-    public TypeEnum getType() {
+    public String getType() {
         if (type == null) {
-            type = TypeEnum.museum;
+            type = TypeEnum.museum.getValue();
         }
         return type;
     }

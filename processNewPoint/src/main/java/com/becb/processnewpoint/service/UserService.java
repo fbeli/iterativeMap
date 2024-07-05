@@ -28,26 +28,29 @@ public class UserService {
     @Value("${auth.server.url}")
     String auth_url;
 
-    @Autowired
-    @Qualifier("sendMailCourier")
     SendEmailService sendEmailService;
+    PointService pointService;
+    FileService fileService;
+    UserRepository userRepository;
 
     @Autowired
     DynamoDbClient dynamoDbClient;
 
-    @Autowired
-    PointService pointService;
-
-    @Autowired
-    FileService fileService;
-
-    @Autowired
-    UserRepository userRepository;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public boolean sendEmailResetPassword(String message, String code) {
 
+    public UserService( @Autowired @Qualifier("sendMailCourier") SendEmailService sendEmailService,
+                        @Autowired PointService pointService,
+                        @Autowired FileService fileService,
+                        @Autowired UserRepository userRepository) {
+        this.sendEmailService = sendEmailService;
+        this.pointService = pointService;
+        this.fileService = fileService;
+        this.userRepository = userRepository;
+    }
+
+    public boolean sendEmailResetPassword(String message, String code) {
         try {
             ResetRequestDto resetDto = new ResetRequestDto(message);
             String html = sendEmailService.createHtmlContentForgotPasswod(resetDto.name, resetDto.email, code);
@@ -95,7 +98,7 @@ public class UserService {
         }
 
     }
-
+//TODO - change to db
     public boolean createUserMap(User user) throws IOException {
 
         List<Point> points = pointService.convertItemsToPoints(dynamoDbClient.getPointsByUserId(user.getUserId()));
@@ -129,6 +132,17 @@ public class UserService {
 
     public User getUserByPointId(String pointId) {
         return userRepository.findUserByPoints(pointId);
+    }
+    public User getUserByUserId(String userId) {
+        return userRepository.findByUserId(userId);
+    }
+
+    public User getUserByInstagramId(String instagramId) {
+        List<User> lista = userRepository.findByUserByInstgram(instagramId);
+        if (lista != null && !lista.isEmpty()) {
+            return lista.get(0);
+        }
+        return null;
     }
 
 

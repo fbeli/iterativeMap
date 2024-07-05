@@ -3,7 +3,10 @@ package com.becb.processnewpoint.domain;
 public enum TypeEnum {
     museum("museum"),
     restaurant("restaurant"),
-    gem("gem");
+    gem("gem"),
+    beach("beach"),
+    montain("montain"),
+    other("other");
 
     private final String value;
 

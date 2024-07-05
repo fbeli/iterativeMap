@@ -82,6 +82,7 @@ function setToken(receicedToken) {
         }
     }
 
+    let orderby;
     function ler_pontos_usuario(page) {
         let url;
         if(page != undefined){
@@ -115,18 +116,22 @@ function setToken(receicedToken) {
                         let title = "title_"+item.pointId;
                         let data = formaDate(item.createdAt);
                         const row = document.createElement('tr');
+                        let translate_opt = "";
+                        if(item.children.length < 1){
+                            translate_opt = `<p> Translate to: <select name="${language}" id="${language}">
+                                <option value="">Choose...</option>
+                                <option value="PT">PT</option>
+                                <option value="SP">SP</option>
+                                <option value="EN">EN</option>
+                            </select>
+                                <img  style="height: 30px" src="update.png" onclick="translate_point('${item.pointId}' )">
+                            </p>`;
+                        }
                         row.innerHTML = `
                     <td>
                         Update: <img  style="height: 30px" src="update.png" onclick="update_point('${item.pointId}' )">
                          
-                         <p> Translate to: <select name="${language}" id="${language}">
-                          <option value="">Choose...</option>
-                          <option value="PT">PT</option>
-                          <option value="SP">SP</option>
-                          <option value="EN">EN</option>
-                        </select>
-                        <img  style="height: 30px" src="update.png" onclick="translate_point('${item.pointId}' )">
-                        </p>
+                         ${translate_opt}
                         
                     </td>
                     <td><input type="text" id="${title}" value="${item.title}"></td>

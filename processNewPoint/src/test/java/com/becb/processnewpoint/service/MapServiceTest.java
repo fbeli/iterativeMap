@@ -1,15 +1,10 @@
 package com.becb.processnewpoint.service;
 
 import com.becb.processnewpoint.domain.Point;
-import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
-import com.becb.processnewpoint.service.sqs.SqsChronClient;
-import com.becb.processnewpoint.service.sqs.SqsConfiguration;
-import com.becb.processnewpoint.service.sqs.SqsService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.ByteArrayInputStream;
@@ -44,7 +39,6 @@ class MapServiceTest {
         when(mockHttpURLConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(mockHttpURLConnection.getInputStream()).thenReturn(new ByteArrayInputStream(getResponse().getBytes()));
 
-        StringBuffer response = new StringBuffer();
 
         Point point = new Point();
         point.setLatitude("-9.999");

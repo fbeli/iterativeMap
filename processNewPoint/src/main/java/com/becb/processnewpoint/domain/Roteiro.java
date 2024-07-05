@@ -3,7 +3,6 @@ package com.becb.processnewpoint.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.List;
 
@@ -22,22 +21,24 @@ public class Roteiro {
     }
 
     @Id
-    @GeneratedValue(generator = "ulid-generator")
-    @GenericGenerator(name = "ulid-generator", strategy = "com.becb.processnewpoint.core.UlidGenerator")
     private String id;
 
     @Column
     private String title;
+
     @Column
     private String city;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "roteiro")
+    @Column
+    private String description;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "roteiro")
     private List<RouterPoint> points;
 
     @Column
     private boolean publico = true;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     @JoinColumn(name = "user_owner_id")
     private User userOwner;

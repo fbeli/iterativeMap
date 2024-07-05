@@ -44,7 +44,7 @@ public class TestEndpoint {
     TranslateService translateService;
 
     @Test
-    public void getSeatsEmpty() throws Exception {
+    public void testeEndpointExample() throws Exception {
 
         when(pointService.getPointsByUserId(any(), any())).thenReturn(createPageResult());
         when(pointService.getFatherPointsByUserId(any(), any())).thenReturn(createPageResultWithChild());
@@ -62,7 +62,6 @@ public class TestEndpoint {
         System.out.println(mvcResult.getResponse().getContentAsString());
         JSONArray jsonArray = new JSONArray(mvcResult.getResponse().getContentAsString());
         Assert.assertEquals("point1", jsonArray.getJSONObject(0).optString("pointId"));
-
 
     }
 

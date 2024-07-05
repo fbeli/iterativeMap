@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartException;
 
 import java.io.IOException;
 
-@ControllerAdvice
+    @ControllerAdvice
 public class ErrorsController {
 
 

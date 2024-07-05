@@ -43,7 +43,7 @@ docker-compose build
 docker-compose run --service-ports point_service   
 ```
 Startar o html executar os comandos python dentro da pasta mapbox 
-python -m SimpleHTTPServer 8000 ou python3 -m http.server 8000
+python -m SimpleHTTPServer 8000 ou python -m http.server 8000
 
 
 ## DynamoDb

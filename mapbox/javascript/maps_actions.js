@@ -6,14 +6,58 @@ let long_start_lisbon = -9.135905;
 let lat_start_lisbon = 38.709844;
 const map = new mapboxgl.Map({
     container: 'map',
-    // Replace YOUR_STYLE_URL with your style URL.
     style: 'mapbox://styles/fbeli/clr407wxw018b01r5bt6oht1o',
     center: [long_start_lisbon, lat_start_lisbon],
     zoom: defaultZoom,
     hash: true,
 
 });
+let map_lang = 'pt';
 
+function change_language(){
+    map.removeLayer('point_layer');
+    map.removeLayer('cluster-count_layer');
+
+    lang_selected = document.getElementById("loc_language").value;
+    if(lang_selected == 'Português'){
+        map_lang = 'pt';
+    }else if(lang_selected == 'Spanish'){
+        map_lang = 'sp';
+    }else if(lang_selected == 'English'){
+        map_lang = 'en';
+    }
+    add_layers();
+}
+
+function add_layers(){
+    map.addLayer({
+        'id': 'point_layer',
+        'type': 'symbol',
+        'layout': {
+            'icon-image': 'bola',
+            'icon-size': 0.1
+        },
+        'source': 's_mapfile_'+map_lang
+    });
+    map.addLayer({
+        id: 'cluster-count_layer',
+        type: 'symbol',
+        source: 's_mapfile_'+map_lang,
+        filter: ['has', 'point_count'],
+        paint: {
+            'text-color': '#fff',
+            'icon-opacity': 0.6,
+        },
+        layout: {
+            'icon-image': 'bola',
+            'icon-size': 0.2,
+            'text-field': ['get', 'point_count_abbreviated'],
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+
+        }
+    });
+
+}
 map.on('load', () => {
     map.addSource('s_mapfile_pt', {
         type: 'geojson',
@@ -44,80 +88,8 @@ map.on('load', () => {
         data: 'https://www.guidemapper.com/file/mapFile_sp_.geojson'
     });
 
-
-    map.addLayer({
-        'id': 'l_mapFile_pt',
-        'type': 'symbol',
-        'layout': {
-            'icon-image': 'pt',
-            'icon-size': 0.15
-        },
-        'source': 's_mapfile_pt'
-    });
-
-    map.addLayer({
-        'id': 'l_mapFile_en',
-        'type': 'symbol',
-        'layout': {
-            'icon-image': 'en',
-            'icon-size': 0.15
-        },
-        'source': 's_mapfile_en'
-    });
-    map.addLayer({
-        'id': 'l_lisboa_secreta',
-        'type': 'symbol',
-        'layout': {
-            'icon-image': 'lisboa_secreta',
-            'icon-size': 0.15
-        },
-        'source': 's_mapfile_lisboasecreta'
-    });
-    map.addLayer({
-        'id': 'l_mapFile_sp',
-        'type': 'symbol',
-        'layout': {
-            'icon-image': 'sp',
-            'icon-size': 0.15
-        },
-        'source': 's_mapfile_sp'
-    });
-    map.addLayer({
-        id: 'cluster-count_en',
-        type: 'symbol',
-        source: 's_mapfile_en',
-        filter: ['has', 'point_count'],
-        paint: {
-            'text-color': '#fff',
-            'icon-opacity': 0.6,
-        },
-        layout: {
-            'icon-image': 'bola',
-            'icon-opacity': 0.4,
-            'icon-size': 0.2,
-            'text-field': ['get', 'point_count_abbreviated'],
-            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-
-        }
-    });
-    map.addLayer({
-        id: 'cluster-count_pt',
-        type: 'symbol',
-        source: 's_mapfile_pt',
-        filter: ['has', 'point_count'],
-        paint: {
-            'text-color': '#fff',
-            'icon-opacity': 0.6,
-        },
-        layout: {
-            'icon-image': 'bola',
-            'icon-size': 0.2,
-            'text-field': ['get', 'point_count_abbreviated'],
-            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-
-        }
-    });
-
+    add_layers();
+    show_zoom();
 
 });
 map.addControl(
@@ -142,8 +114,7 @@ Add an event listener that runs
 map.on('click', (event) => {
     // If the user clicked on one of your markers, get its information.
     const features = map.queryRenderedFeatures(event.point, {
-        layers: ['cluster-count_en','cluster-count_pt', 'l_mapFile_pt', 'l_mapFile_en', 'l_lisboa_secreta', 'l_mapFile_sp'] // replace with your layer name
-
+        layers: ['cluster-count_layer', 'point_layer'] // replace with your layer name
     });
     fechar_divs();
     if (!features.length) {
@@ -170,11 +141,12 @@ map.on('click', (event) => {
     }
 });
 
-
-map.on('move', () => {
+function show_zoom(){
     zoom = map.getZoom();
-    if (document.getElementById("inside_zoom") != null)
-        document.getElementById("inside_zoom").innerHTML = zoom;
+    document.getElementById("zoom").value = "Zoom: " + zoom;
+}
+map.on('move', () => {
+    show_zoom();
 })
 
 class User {
@@ -243,7 +215,7 @@ function getAtualLocation() {
     return atual_pos;
 }
 
-// create a function to make a directions request
+
 async function getRoute(end) {
     // make a directions request using cycling profile
     // an arbitrary start will always be the same
@@ -252,8 +224,19 @@ async function getRoute(end) {
 
     atual_pos = await getAtualLocation();
 
+    let position_str= ""
+        if(end.length < 2){
+            position_str = atual_pos.split(',')[1]+`,`+atual_pos.split(',')[0]+`;`+end[0].longitude+`,`+end[0].latitude;
+        }else{
+            for(let i=0; i<end.length; i++){
+                position_str = position_str+end[i].longitude+`,`+end[i].latitude;
+                if(i < end.length-1){
+                    position_str = position_str+`;`;
+                }
+            }
+        }
     const query = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/walking/`+atual_pos.split(',')[1]+`,`+atual_pos.split(',')[0]+`;`+end[0]+`,`+end[1]+`?steps=true&geometries=geojson&access_token=`+mapboxgl.accessToken,
+        `https://api.mapbox.com/directions/v5/mapbox/walking/`+position_str+`?steps=true&geometries=geojson&access_token=`+mapboxgl.accessToken,
         {method: 'GET'}
     );
     const json = await query.json();
@@ -295,8 +278,6 @@ async function getRoute(end) {
 }
 
 let coords
-
-
 function draw_route() {
     const end = {
         type: 'FeatureCollection',
@@ -334,14 +315,37 @@ function draw_route() {
                 }
             },
             paint: {
-                'circle-radius': 10,
-                'circle-color': '#f30'
+                'circle-radius': 5,
+                'circle-color': '#4c4444'
             }
         });
     }
     getRoute(coords);
-    map.flyTo({center: [getLongitude(), getLatitude()], zoom: defaultZoom});
+
+    if(coords.length > 2){
+        map.flyTo({center: [coords[0].longitude, coords[0].latitude], zoom: defaultZoom });
+    }else {
+        if (atual_pos === undefined)
+            getAtualLocation();
+        map.flyTo({center: [atual_pos.split(',')[1], atual_pos.split(',')[0]], zoom: defaultZoom - 2});
+    }
     fechar_divs();
 }
 
+function show_route(roteiroId){
+    roteiroId = ''+roteiroId;
+    coords = mapaRotas.get(roteiroId)
+    draw_route();
+}
+
+function create_path(){
+    ponto  = new Ponto();
+    ponto.longitude = coords[0];
+    ponto.latitude = coords[1];
+
+    coords = [];
+    coords[0] = ponto;
+    draw_route();
+
+}
 getAtualLocation();

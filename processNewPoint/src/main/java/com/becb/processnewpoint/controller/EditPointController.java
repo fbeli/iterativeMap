@@ -70,7 +70,8 @@ public class EditPointController {
 
     @GetMapping ( value = "/point/translate")
     @ResponseBody
-    public ResponseEntity<PointDto> getByUser(@RequestParam String pointId, @RequestParam String language)  throws IOException {
+    public ResponseEntity<PointDto> getByUser(@RequestParam String pointId,
+                                              @RequestParam(value = "language", defaultValue = "all") String language)  throws IOException {
         pointService.getPointById(pointId);
         PointDto  point = new PointDto(pointService.translate(pointService.getPointById(pointId), language));
 

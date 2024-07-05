@@ -5,6 +5,7 @@ import com.becb.processnewpoint.domain.AprovedEnum;
 import com.becb.processnewpoint.domain.Point;
 import com.becb.processnewpoint.exception.SQSMessageException;
 import com.becb.processnewpoint.service.PointService;
+import com.becb.processnewpoint.service.RoteiroService;
 import com.becb.processnewpoint.service.SuportService;
 import com.becb.processnewpoint.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +29,14 @@ public class SqsService {
     private final UserService userService;
 
     private final BecbProperties becbProperties;
+    private final RoteiroService roteiroService;
 
     @Autowired
-    public SqsService(PointService pointService, UserService userService, BecbProperties becbProperties) {
+    public SqsService(PointService pointService, UserService userService, BecbProperties becbProperties, RoteiroService roteiroService) {
         this.pointService = pointService;
         this.userService = userService;
         this.becbProperties = becbProperties;
+        this.roteiroService = roteiroService;
     }
 
     @JmsListener(destination = "new-point-queue")
@@ -192,6 +195,13 @@ public class SqsService {
             log.info("Erro para a mensagem: {}", message);
             throw e;
         }
+
+    }
+
+    @JmsListener(destination = "add-roteiro-queue")
+    public void addRoteiro(String message) throws Exception {
+        log.info("Received message on sqs.add-roteiro-queue: {}", message);
+        roteiroService.addNewRoute(message);
 
     }
 

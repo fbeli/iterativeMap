@@ -50,7 +50,7 @@ public class DynamoDbClient {
                 .withBoolean("guide", point.getUser().getGuide())
                 .withString("instagram", point.getUser().getInstagram())
                 .withString("language", point.getLanguage().getValue())
-                .withString("type", point.getType().getValue());
+                .withString("type", point.getType());
 
         if(point.getAudio() != null && !point.getAudio().isBlank()) {
                 item.withString("audio", point.getAudio());

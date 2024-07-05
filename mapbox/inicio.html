@@ -33,6 +33,8 @@
     </script>
 
     <title>Be your own Guide</title>
+
+    <link rel="shortcut icon" type="imagex/png" href="../../favicon.ico">
     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
     <script src="./javascript/const.js"></script>
     <script src="/javascript/suport.js"></script>
@@ -76,36 +78,82 @@
         <div id="sidebar" class="sidebar">
             <div class="div_side_bar" id="sidebar_login_div" onclick="login()">
                 <img class="image" src="img/ico_login.png">
-                <a href="#" id="li_login_a_link">Login</a>
+                <p class="menu_name" id="li_login_a_link">Login</p>
             </div>
-            <div class="div_side_bar">
+            <div class="div_side_bar" onclick="document.getElementById('li_introduce_a_link').click()">
                 <img class="image" src="img/ico_about.png">
-                <a href="https://www.guidemapper.com/landing/index.html" id="li_introduce_a_link">About Us</a>
+                <a href="https://www.guidemapper.com/landing/index.html" id="li_introduce_a_link"></a>
+                <p class="menu_name">About Us</p>
             </div>
             <div class="div_side_bar" onclick="option_create_points()">
-                <img class="image" src="img/ico_mapa.png">
-                <a href="#" id="a_create_points">Add Spot</a>
+                <img class="image" src="img/ico_mapa_.png">
+                <p class="menu_name" id="a_create_points">Add Spot</p>
             </div>
+
             <div class="div_side_bar" onclick="open_boomings()">
                 <img class="image" src="img/ico_mapa.png">
-                <a href="#" id="booming">Booming</a>
+                <p class="menu_name">Routes</p>
             </div>
+
         </div>
         <div class="sidebar_sub_left" id="sidebar_logout_div" style="display: none;">
-            <a href="#" onclick="logout()" id="logout">Logout</a><br>
-            <a href="#" onclick="copyLink()">Copy My Link</a><br>
-            <a href="/user_page/login.html">Edit My Points</a>
+            <p class="menu_name" onclick="logout()" id="logout">Logout</p>
+            <p class="menu_name"  href="#" onclick="copyLink()">Copy My Link</p>
+            <p class="menu_name" href="/user_page/login.html">Edit My Points</p>
         </div>
-        <div class="sidebar_sub_left" id="booming_places" style="display: none;">
-            <a href="#" onclick="close_boomings('lisbon')">Lisbon</a><br>
-            <a href="#" onclick="close_boomings('london')">London</a><br>
-            <a href="#" onclick="close_boomings('madrid')">Madrid</a><br>
-            <a href="#" onclick="close_boomings('porto')">Porto</a><br>
-            <a href="#" onclick="close_boomings('rio_de_janeiro')">Rio de Janeiro</a><br>
-            <a href="#" onclick="close_boomings('valencia')">Valencia</a><br>
+        <div id="booming_places" class="route_bar"  style="display: none;">
+            <div style="display: inline-block;     margin-left: 96%;" onclick="fechar_divs()">
+                <img src="img/close.png" style="width: 20px; height: 20px;"></p>
+            </div>
+            <div id='routes' class="route_bar_form">
+                <form class="route_bar_form">
+                    <p>Route: <input id="search_value"  type="text"  label="Route" style="width: 68%" class="input100"/>
+                        <img src="img/search.png" alt="search" class="search_icon" onclick="search_route(0)" style="width: 25px" ></p>
+                </form>
+            </div>
+            <div id="route_list" class="route_bar_list" >
+                <!--
+                <div id="linha_rota" class="linha_rota">
+                   <div id="foto_rota" class="foto_rota">
+                        <img src="img/bola.png" style="width: 50px; height: 50px;" alt="See Route">
+                   </div>
+                    <div id="info_rota" >
+                        <p id="rota_info" class="route_bar_form_title_rota">Um dia em Lisboa</p>
+                        <p id="rota_name">comece sua rota aqui e termine </p>
+                    </div>
+                    <div id="rota_desenhar" onclick="show_route()" style=" margin-left: 25px;">
+                        <img src="img/walk.png" alt="Get The Route" style="width: 20px; height: 20px;">
+                    </div>
+                </div>
+                -->
+            </div>
+            <div class="route_bar_left">
+                <hr>
+                <div class="div_bloom" onclick="close_boomings('lisbon')">Lisbon</div>
+                <div class="div_bloom" onclick="close_boomings('london')">London</div>
+                <div class="div_bloom"  onclick="close_boomings('madrid')">Madrid</div>
+                <div class="div_bloom"  onclick="close_boomings('porto')">Porto</div>
+                <div class="div_bloom" onclick="close_boomings('rio_de_janeiro')">Rio de Janeiro</div>
+                <div class="div_bloom"  onclick="close_boomings('valencia')">Valencia</div>
+            </div>
         </div>
-
-
+        <div id="lang_div" class="lang_style" >
+            <form class="lang_form">
+                <input type="text" id="zoom" class="select_language" value="Zoom:" readonly>
+                <select name="loc_language" id="loc_language" class="select_language" onchange="change_language()">
+                    <option value="">Select a Language...</option>
+                    <script>
+                        var map_lang_select = ['Português', 'Spanish', 'English'];
+                        let selectOptionsLang = "";
+                        for (let i = 0; i < map_lang_select.length; i++) {
+                            selectOptionsLang += `<option value="${map_lang_select[i]}">${map_lang_select[i]}</option>`;
+                        }
+                        const selectElementLang = document.getElementById("loc_language");
+                        selectElementLang.innerHTML = selectOptionsLang;
+                    </script>
+                </select>
+            </form>
+        </div>
         <div id='starting' class="modal_body" style="display: none">
             <div class="child"><img id="img_back_start" class="child" src="img/ponto1.png" alt=""></div>
 
@@ -224,8 +272,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="wrap-login100 to_front" id="login_div" style="display: none;">
+        <div id="login_div" class="wrap-login100 to_front"  style="display: none;">
             <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Welcome
@@ -267,25 +314,20 @@
                 </div>
             </form>
         </div>
-
-        <div class="wrap-login100 to_front" id="forget_password_div" style="display: none;">
+        <div id="forget_password_div" class="wrap-login100 to_front"  style="display: none;">
             <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Forget Password
                         </span>
-
                 <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
                     <input class="input100" type="text" id="forget_login_email" value="Email" onfocus="this.value='';"
                            onblur="if (this.value=='') this.value='Email'">
                 </div>
-
-
                 <div class="div_btn">
                     <button type="button" class="button-53" onclick="forget_password()"
                             id="btn-forget-password-get-token">Reset Password
                     </button>
                 </div>
-
                 <div class="text-center p-t-25">
                     <a class="txt2" onclick="fechar_divs()" href="#">
                         Close
@@ -293,8 +335,7 @@
                 </div>
             </form>
         </div>
-
-        <div class="wrap-login100 to_front" id="sign_up_div" style="display: none;">
+        <div id="sign_up_div" class="wrap-login100 to_front"  style="display: none;">
             <form class="login100-form validate-form">
                         <span class="login100-form-title p-b-26">
                             Welcome
@@ -308,7 +349,6 @@
                     <input class="input100" type="text" id="sign_up_email" value="Email" onfocus="this.value='';"
                            onblur="if (this.value=='') this.value='Email'">
                 </div>
-
                 <div class="wrap-input100 validate-input" data-validate="Enter password">
                             <span class="btn-show-pass"
                                   onclick="tipo_pass = document.getElementById('sign_up_password'); if(tipo_pass.type=='text') {tipo_pass.type='password'}else tipo_pass.type='text' ">
@@ -317,7 +357,6 @@
                     <label for="sign_up_password">Password (min 8 digits)</label>
                     <input class="input100" type="password" id="sign_up_password" minlength="8">
                 </div>
-
                 <div class="wrap-input100 validate-input">
                     <input class="input100" type="text" id="sign_up_phone" value="Phone (+xxx xxxxxxxxx)"
                            onfocus="this.value='';"
@@ -328,7 +367,6 @@
                            onfocus="this.value='';"
                            onblur="if (this.value=='') this.value='Descript Yourself'">
                 </div>
-
                 <div class="wrap-input100 validate-input">
                     <input class="input100" type="text" id="sign_up_instagram"
                            value="Instagram - add it if you want your own map link" onfocus="this.value='';"
@@ -337,7 +375,6 @@
                 <div class="wrap-input100 validate-input">
                     <input class="input100" type="date" id="sign_up_born_date" minlength="6">
                 </div>
-
                 <div class="wrap-input100 validate-input" data-validate="Country">
 
                     <select name="country" id="sign_up_country">
@@ -371,12 +408,9 @@
                     <div><input type="checkbox" id="sign_up_share">
                         <label for="sign_up_guide">Can show my instagram to users</label></div>
                 </div>
-
-
                 <div class="div_btn">
                     <button type="button" class="button-53" onclick="execute_sign_in()">Sign Up</button>
                 </div>
-
                 <div class="text-center p-t-25">
                     <a class="txt2" onclick="fechar_divs()" href="#">
                         Close
@@ -384,8 +418,7 @@
                 </div>
             </form>
         </div>
-        <!-- Erro Modal-->
-        <div class="wrap-login100 to_front" id="erro_alert_div" style="display: none;">
+        <div id="erro_alert_div" class="wrap-login100 to_front"  style="display: none;">
             <div class="alert alert-danger" role="alert">
                 <h4 class="alert-heading">Error!</h4>
                 <p id="erro_alert_text" class="p.erro"></p><br/>
@@ -398,7 +431,7 @@
                 </a>
             </div>
         </div>
-        <div class=" wrap-login100 to_front" id="welcome_div_id" style="display: none;">
+        <div id="welcome_div_id" class=" wrap-login100 to_front" style="display: none;">
             <div class=" welcome_div validate-input">
                         <span class="welcome_div login100-form-title p-b-26">
                             Welcome,
@@ -425,7 +458,7 @@
                 </a>
             </div>
         </div>
-        <div class="wrap-login100 to_front" id="cadastro_div" style="display: none;">
+        <div id="cadastro_div" class="wrap-login100 to_front" style="display: none;">
             <form class="login100-form validate-form" enctype="multipart/form-data">
                         <span class="login100-form-title p-b-26">
                             Novo Cadastro
@@ -441,7 +474,6 @@
                            onfocus="clearOnFocus(this.id,'Title')"
                            onblur="if (this.value=='') this.value='Title'">
                 </div>
-
                 <div class="wrap-input100 validate-input">
                     <textarea rows="1" class="input100" id="cadastro_description" value='Description'
                               onfocus="clearOnFocus(this.id,'Description')"
@@ -452,7 +484,7 @@
                         <option class="fa-optin-monster" value="" disabled selected>Select Place Type...</option>
                         <script>
                             var place_type = ['Place Type',
-                                'Museum - Historic - Place', 'Spot - Gem', 'Interesting Restaurant', 'Other'];
+                                'Museum - Historic - Place', 'Spot - Gem', 'Interesting Restaurant', 'Beach - waterfall', 'Montain', 'Other'];
                             let selectPlaceTypeOptions = "";
                             for (let i = 0; i < place_type.length; i++) {
                                 selectPlaceTypeOptions += `<option value="${place_type[i]}">${place_type[i]}</option>`;
@@ -463,7 +495,6 @@
                         </script>
                     </select>
                 </div>
-
                 <div class="wrap-input100 validate-input" data-validate="Country">
                     <select name="cadastro_language" id="cadastro_language">
                         <option class="fa-optin-monster" value="" disabled selected>Select a Language...</option>
@@ -487,11 +518,6 @@
                     <input class="file_out" style="display:none" type="file" id="cadastro_img" name="cadastro_img"
                            value='Add Picture'>
                 </div>
-
-                <!--<div class="div_btn">
-                    <button type="button" class="button-53"  onclick="gravar()" id="btn_gravar" >Start Recorder</button>
-                    <input style="display:none" type="text" id="cadastro_audio">
-                </div>-->
                 <div class="div_btn">
                     <div class="div-audio-left">
                         <button type="button" class="button-53 button-audio" onclick="gravar()" id="btn_gravar"
@@ -513,7 +539,6 @@
                         Point
                     </button>
                 </div>
-
                 <div class="text-center p-t-25">
                     <a class="txt2" onclick="fechar_divs()" href="#">
                         Close
@@ -521,8 +546,7 @@
                 </div>
             </form>
         </div>
-
-        <div class="create_point wrap-login100 to_front" id="create_points_warning" style="display: none;">
+        <div id="create_points_warning" class="create_point wrap-login100 to_front"  style="display: none;">
             <div class="alert alert-danger" role="alert">
                 <p class="title alert-heading">Now You Can Create New Point</p>
                 <p class="p.erro">From now you are a Guide!</p><br/>
@@ -538,7 +562,7 @@
                 </a>
             </div>
         </div>
-        <div class="create_point wrap-login100 to_front" id="div_please_login" style="display: none;">
+        <div id="div_please_login" class="create_point wrap-login100 to_front"  style="display: none;">
             <div class="alert alert-danger" role="alert">
                 <p class="title alert-heading">You Must be Logged In</p>
                 <p class="p.erro"></p><br/>
@@ -552,8 +576,7 @@
                 </a>
             </div>
         </div>
-
-        <div class="create_point wrap-login100 to_front" id="info_div" style="display: none;">
+        <div id="info_div" class="create_point wrap-login100 to_front" style="display: none;">
             <div class="alert alert-danger" role="alert">
                 <p class="title alert-heading" id="info_title">New point added</p>
                 <p class="p.erro" id="info_highlight"></p><br/>
@@ -569,13 +592,15 @@
         </div>
 
     </div>
-    <div id="point_info"  style="display: none;">
+    <div id="point_info"  class="point_info" style="display: none;">
         <div>
-            <div style="display: inline-block; width: 90%;
-    ">
-            <h3 id="desc_title"></h3></div>
+            <div style="display: inline-block; width: 90%;">
+                <h3 id="desc_title"></h3>
+            </div>
             <div style="display: inline-block;" onclick="close_info()">
-                <p style="margin: 0;" class="link_go">X</p></div></div>
+                <img src="img/close.png" style="width: 20px; height: 20px;" onclick="close_info()"/>
+            </div>
+        </div>
 
         <div id="point_info_media" >
             <div id="point_info_img" class="photo" style="display: none"></div>
@@ -595,7 +620,8 @@
                         </audio>
                     </div>
                 </div>
-                <div onclick="draw_route()"><p class="link_go">Get The Route</p></div>
+                <div onclick="create_path()"><p class="link_go">Get The Route
+                    <img src="img/walk.png" alt="Get The Route" style="width: 20px; height: 20px;"></p></div>
             </div>
         </div>
         <div id="point_info_div_user_info">

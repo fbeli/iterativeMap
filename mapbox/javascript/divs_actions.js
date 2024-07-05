@@ -143,9 +143,6 @@ function add_logo() {
     div_left[0].innerHTML = "<a class=\"mapboxgl-ctrl-logo\" target=\"_blank\" rel=\"noopener nofollow\" href=\"https://www.mapbox.com/\" aria-label=\"Mapbox logo\"></a>" +
         "<a class=\"mapboxgl-ctrl-logo\"  href=\"https://www.guidemapper.com/img/name_logo.png\" aria-label=\"GuideMapper\"><img class=\"img_logo\" src=\"https://guidemapper.com/img/name_logo.png\"></a>";
 
-    let div_top_right = document.getElementsByClassName("mapboxgl-ctrl-top-right");
-    div_top_right[0].innerHTML = "<div class=\"zoom\" ><div class='inside_zoom' id='inside_zoom'>" + zoom + " </div></div>";
-    div_top_right[0].class = "mapboxgl-ctrl-top-right zoom";
 }
 
 
@@ -197,15 +194,16 @@ function show_infos(feature) {
 let altura_tela;
 
 function configScreen() {
+
     altura_tela = window.screen.height;
     largura_tela = window.screen.width;
-    mapa_height = 0.5;
+    mapa_height = "60%";
     altura_div_info = altura_tela - (altura_tela * (1 - mapa_height));
-    mapa_height = 100 * mapa_height;
-    alterar_altura_mapa(mapa_height + "%");
-    document.getElementById("point_info").style.position = "relative";
-    document.getElementById("point_info").style.top = altura_div_info + "px";
-    document.getElementById("point_info_media").style.width = largura_tela;
+
+    alterar_altura_mapa(mapa_height);
+    document.getElementById("point_info").style.display = "block";
+
+
 }
 
 function alterar_altura_mapa(altura) {
@@ -214,6 +212,7 @@ function alterar_altura_mapa(altura) {
 
 function close_info() {
 
+    alterar_altura_mapa("100%");
     document.getElementById("point_info").style.display = "none";
     document.getElementById("point_info_audio").style.display = "none";
     document.getElementById("point_info_audio_apple").style.display = "none";
@@ -221,6 +220,74 @@ function close_info() {
     document.getElementById("point_info_audio_all").style.display = "none";
     document.getElementById("point_info_img").style.display = "none";
 
-    alterar_altura_mapa("100%");
+
 
 }
+
+
+let search_value="";
+async function search_route(page) {
+
+    let url = config.env + config.get_routes_endpoint;// + "/route/search?longitude="+longitude+"&latitude="+latitude+"&distance=1000";
+    if (page < 1) {
+        search_value = document.getElementById("search_value").value;
+    }
+    if (search_value.length > 0) {
+        url = url + "&title=" + search_value;
+    }
+    fetch(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": accessToken
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if(data.roteiros.length > 0) {
+                let arrayPoints = [];
+                div_rota = document.getElementById("route_list");
+                for(let i = 0; i < data.roteiros.length; i++) {
+                    div_rota.innerHTML += ` <div id="linha_rota" class="linha_rota">
+                                                <div id="foto_rota" class="foto_rota">
+                                                    <img src="img/bola.png" style="width: 50px; height: 50px;">
+                                                </div>
+                                                <div id="info_rota" >
+                                                    <p id="rota_info" class="route_bar_form_title_rota">${data.roteiros[i].title}</p>
+                                                    <p id="rota_name">${data.roteiros[i].description}</p>
+                                                </div> 
+                                                <div id="rota_desenhar" onclick="show_route(${data.roteiros[i].roteiroId})" style=" margin-left: 25px;">
+                                                    <img src="img/walk.png" alt="Get The Route" style="width: 20px; height: 20px;">
+                                                </div>
+                                            </div>`;
+                    for(let j = 0; j < data.roteiros[i].points.length; j++) {
+                            arrayPoints = data.roteiros[i].points;
+                            new Ponto(data.roteiros[i].points[j].latitude, data.roteiros[i].points[j].longitude,
+                                data.roteiros[i].points[j].pointId, data.roteiros[i].points[j].title, data.roteiros[i].points[j].position);
+                    }
+
+                    mapaRotas.set(data.roteiros[i].roteiroId,arrayPoints);
+                }
+
+            }else{
+                error_div_event(booming_places,"Any route found for this search");
+
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            error_div_event(booming_places, data.error);
+
+        });
+}
+
+class Ponto {
+    constructor(latitude, longitude, pointId, title, position){
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.pointId = pointId;
+        this.title = title;
+        this.position = position;
+    }
+}
+const mapaRotas = new Map();
