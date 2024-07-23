@@ -44,7 +44,7 @@ public class MapService {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String inputLine;
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
 
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
@@ -61,9 +61,7 @@ public class MapService {
             logger.error("trying connect with:  {} ", url);
 
         }
-        finally {
-            return point;
-        }
+        return point;
     }
 
     private void configPoint(String json, Point point) {
