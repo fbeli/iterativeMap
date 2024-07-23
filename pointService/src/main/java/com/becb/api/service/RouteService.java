@@ -27,7 +27,7 @@ public class RouteService {
 
         String url = newPointServerUrl + "/routes";
         url+="?page="+page+"&size="+size+"&instagram="+instagram+"&title="+title+"&city="+city;
-        HttpURLConnection connection = Support.getConnection(url);
+        HttpURLConnection connection = PointSupport.getConnection(url);
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Content-Type", "application/json");
 

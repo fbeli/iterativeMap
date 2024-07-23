@@ -3,6 +3,7 @@ package com.becb.processnewpoint.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.becb.processnewpoint.service.SuportService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -113,25 +114,7 @@ public class Point {
     }
 
     public void setLanguage(String language) {
-        language = language.toUpperCase();
-        switch (language) {
-            case "ENGLISH":
-            case "EN":
-                this.language = LanguageEnum.EN;
-                break;
-            case "ESPANHOL":
-            case "ESPAÑOL":
-            case "SPANISH":
-            case "SP":
-            case "ES":
-                this.language = LanguageEnum.ES;
-                break;
-
-
-            default:
-                this.language = LanguageEnum.PT;
-
-        }
+        this.language = SuportService.getLanguage(language);
     }
 
     public void setLanguage(LanguageEnum language) {
@@ -149,9 +132,9 @@ public class Point {
         StringBuilder photosStr = new StringBuilder();
         if (photos != null) {
             photosStr.append("{");
-            photos.forEach(photo -> {
-                photosStr.append(photo).append(",");
-            });
+            photos.forEach(ph ->
+                photosStr.append(ph).append(",")
+            );
             photosStr.append("}");
             photosStr.deleteCharAt(photosStr.length() - 2);
         }

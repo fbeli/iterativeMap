@@ -74,44 +74,6 @@ class PointServiceTest {
         assertEquals(3, lista.size());
     }
 
-
-
-    @Test
-    void savePoint() {
-        when(dynamodbClient.savePoint(any())).thenReturn(new Item());
-
-        assertNotNull(pointService.savePoint(getMessageFromStack()));
-    }
-
-    @Test
-    void savePointAudioEmpty() {
-        when(dynamodbClient.savePoint(any())).thenReturn(new Item());
-        Assert.assertNotNull(pointService.savePoint(getMessageFromStackAudioEmpty()));
-
-    }
-
-    @Test
-    void savePointAudioNull() {
-
-        when(dynamodbClient.savePoint(any())).thenReturn(new Item());
-        Item item = pointService.savePoint(getMessageFromStackAudioNull());
-        Assert.assertNotNull(item);
-    }
-    @Test
-    void savePointWithAudio() {
-        when(dynamodbClient.savePoint(any())).thenReturn(new Item());
-        Assert.assertNotNull(pointService.savePoint(getMessageFromStackWithAudio()));
-    }
-
-    @Test
-    void savePointWrongJson() {
-        when(dynamodbClient.savePoint(any())).thenReturn(new Item());
-        assertThrows(Exception.class,
-                ()->{
-                    pointService.savePoint("[B@20976331");
-                });
-    }
-
     @Test
     void updatePointObject() throws IllegalAccessException {
         String title = "new Title Here!";

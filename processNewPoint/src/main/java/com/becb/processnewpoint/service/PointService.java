@@ -95,23 +95,23 @@ public class PointService {
         return point;
     }
 
-    public Item savePoint(String message) {
+   /* public Item savePoint(String message) {
         Point point = messageToPoint(message);
         if (point != null)
             return savePointDynamo(point);
         return null;
-    }
+    }*/
 
-    @Deprecated
+    /*@Deprecated
     public Item savePointDynamo(Point point) {
         return dynamoDbClient.savePoint(point);
-    }
+    }*/
 
     public Point savePointDb(Point point) {
 
         if (point != null) {
             if (point.getAproved() == null)
-                point.setAproved("false");
+                point.setAproved("true");
             if (point.getCountry() == null)
                 mapService.setPlace(point);
             pointRepository.save(point);
@@ -288,8 +288,7 @@ public class PointService {
         String pointId = (String) jsonObject.get("point_id");
         String path = (String) jsonObject.get("link");
 
-        addFileToPointDb(pointId, path);
-        return addFileLinkToPointDynamo(pointId, path);
+        return addFileToPointDb(pointId, path);
 
     }
 
@@ -376,14 +375,14 @@ public class PointService {
     }
 
     public List<Point> createPointsFromParent(Point parentPoint) throws Exception{
-        List<Point> createdPoints = new ArrayList();
+        List<Point> createdPoints = new ArrayList<>();
         createdPoints.add(createAudioToParent(parentPoint));
 
         Point localPoint;
         String audioEndpoint;
         for (LanguageEnum language : LanguageEnum.values()){
             localPoint = translate(parentPoint, language.getValue());
-            if(localPoint != null) {
+            if(localPoint != null && !localPoint.getDescription().equals(parentPoint.getTitle())) {
                 if(audioService.needCreateAudio(localPoint)) {
                     audioEndpoint = audioService.saveAudio(localPoint.getPointId(), localPoint.getDescription(), localPoint.getLanguage());
                     localPoint.setAudio(audioEndpoint);
@@ -405,7 +404,7 @@ public class PointService {
             parentPoint.setAudio(audioService.saveAudio(parentPoint.getPointId(), parentPoint.getDescription(), parentPoint.getLanguage()));
         }
         if(parentPoint != null)
-            pointRepository.save(parentPoint);
+            this.savePointDb(parentPoint);
         return parentPoint;
     }
 

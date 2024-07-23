@@ -4,9 +4,7 @@ public enum LanguageEnum {
 
     PT("PT"),
     EN("EN"),
-    ES("ES"),
-    FR("FR"),
-    DE("DE");
+    ES("ES");
 
     private final String value;
 

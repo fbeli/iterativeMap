@@ -1,6 +1,7 @@
 package com.becb.processnewpoint.service;
 
 
+import com.becb.processnewpoint.domain.LanguageEnum;
 import com.github.f4b6a3.ulid.Ulid;
 
 import org.json.JSONException;
@@ -30,6 +31,28 @@ public class SuportService {
         return true;
     }
 
+    public static LanguageEnum getLanguage(String language){
+        language = language.toUpperCase();
+        switch (language) {
+            case "ENGLISH":
+            case "EN":
+                return  LanguageEnum.EN;
+
+            case "ESPANHOL":
+            case "ESPAÑOL":
+            case "SPANISH":
+            case "SP":
+            case "ES":
+               return LanguageEnum.ES;
+
+
+
+            default:
+               return LanguageEnum.PT;
+
+        }
+
+    }
     public static String unicodeEscapeToUtf8(String unicodeEscapeString) {
         Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
         Matcher matcher = pattern.matcher(unicodeEscapeString);

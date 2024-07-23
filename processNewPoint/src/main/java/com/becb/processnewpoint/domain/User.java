@@ -25,10 +25,10 @@ public class User {
     @Column private Boolean share;
     @Column private Boolean guide;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Point> points;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userOwner")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userOwner")
     private Set<Roteiro> roteiros;
 
     public String getInstagram(){

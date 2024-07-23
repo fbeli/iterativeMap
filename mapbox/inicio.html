@@ -87,7 +87,7 @@
             </div>
             <div class="div_side_bar" onclick="option_create_points()">
                 <img class="image" src="img/ico_mapa_.png">
-                <p class="menu_name" id="a_create_points">Add Spot</p>
+                <p class="menu_name" id="a_create_points">AddSpot</p>
             </div>
 
             <div class="div_side_bar" onclick="open_boomings()">
@@ -137,7 +137,7 @@
                 <div class="div_bloom"  onclick="close_boomings('valencia')">Valencia</div>
             </div>
         </div>
-        <div id="lang_div" class="lang_style" >
+        <div id="lang_div" class="lang_style" style="display: none;">
             <form class="lang_form">
                 <input type="text" id="zoom" class="select_language" value="Zoom:" readonly>
                 <select name="loc_language" id="loc_language" class="select_language" onchange="change_language()">
@@ -592,6 +592,28 @@
         </div>
 
     </div>
+    <div id="div_add_route" style="display: none;">
+        <form class="route_bar_form">
+            <p>Route: <input  type="text" id="add_route_title" value="Title"></p>
+            <p>New Route:   <select name="select_route_to_add" id="select_route_to_add">
+                <option value="" disabled selected>Select a country...</option>
+                <script>
+                    var route_name = ['Rota pra lá',
+                        'Rota pra cá', 'aquela rota', 'Other'];
+                    var route_id = ['1', '2', '3', '4'];
+
+                    let selectRouteOptions = "";
+                    for (let i = 0; i < countries.length; i++) {
+                        selectRouteOptions += `<option value="${route_id[i]}">${route_name[i]}</option>`;
+                    }
+
+                    const selectElementRoute = document.getElementById("select_route_to_add");
+                    selectElementRoute.innerHTML = selectOptions;
+                </script>
+            </select>
+
+        </form>
+    </div>
     <div id="point_info"  class="point_info" style="display: none;">
         <div>
             <div style="display: inline-block; width: 90%;">
@@ -620,8 +642,16 @@
                         </audio>
                     </div>
                 </div>
-                <div onclick="create_path()"><p class="link_go">Get The Route
-                    <img src="img/walk.png" alt="Get The Route" style="width: 20px; height: 20px;"></p></div>
+                <div style="display: flex; width: 90%;">
+                    <div onclick="create_path()">
+                        <p class="link_go">
+                            <img src="img/walk.png" alt="Get The Route" style="width: 40px; height: 40px;">
+                        </p>
+                    </div>
+                    <div onclick="add_to_route()" style="margin-left: 20%;">
+                    <img src="img/add_rota.png" alt="Add to route" style="width: 40px; height: 40px;">
+                    </div>
+                </div>
             </div>
         </div>
         <div id="point_info_div_user_info">
@@ -641,6 +671,12 @@
 <script src="/javascript/save_audio.js"></script>
 <script src="/javascript/start_divs.js"></script>
 <script src="/javascript/miscelanius.js"></script>
+<script>
+    setTimeout(function() {
+        manage_itens_position();
+        lang_div.style.display = 'block';
+    }, 2000);
+</script>
 
 
 </body>

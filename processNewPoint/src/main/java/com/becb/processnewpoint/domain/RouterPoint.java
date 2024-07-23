@@ -2,11 +2,14 @@ package com.becb.processnewpoint.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 @Entity
-@Data
+@Getter
+@Setter
 public class RouterPoint {
 
     public RouterPoint() {}

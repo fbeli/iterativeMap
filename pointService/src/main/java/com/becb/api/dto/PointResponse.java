@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
 @Setter
-@Data
+
 public class PointResponse {
     private String message;
     private String error;

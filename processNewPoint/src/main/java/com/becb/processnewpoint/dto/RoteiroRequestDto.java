@@ -2,8 +2,11 @@ package com.becb.processnewpoint.dto;
 
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class RoteiroRequestDto {
 
     private String instagram;

@@ -163,7 +163,6 @@ public class SqsService {
                 pointService.updatePointObject(point0, point);
                 point.setUser(userService.getUserByPointId(point.getPointId()));
                 pointService.savePointDb(point);
-                pointService.savePointDynamo(point);
 
                 if (point.getUser().getInstagram() != null) {
                     Runnable runnable = () -> {
@@ -199,9 +198,10 @@ public class SqsService {
     }
 
     @JmsListener(destination = "add-roteiro-queue")
-    public void addRoteiro(String message) throws Exception {
+    public void addRoteiro(String message){
         log.info("Received message on sqs.add-roteiro-queue: {}", message);
-        roteiroService.addNewRoute(message);
+        log.info("Message: "+roteiroService.addNewRoute(message).toString());
+
 
     }
 

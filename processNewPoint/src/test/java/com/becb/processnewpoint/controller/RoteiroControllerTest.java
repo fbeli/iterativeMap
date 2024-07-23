@@ -51,7 +51,7 @@ class RoteiroControllerTest extends RoteiroTests {
 
         when(userRepository.save(any(User.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
-        when(roteiroService.createRoteiro(any(),any(), any(), any(), any())).thenCallRealMethod();
+        when(roteiroService.createRoteiro(any(),any(), any(), any(), any(), any(), any())).thenCallRealMethod();
         when(roteiroRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
         when(roteiroService.saveRoteiro(any())).thenReturn(null);
 
@@ -78,17 +78,15 @@ class RoteiroControllerTest extends RoteiroTests {
 
         when(userRepository.save(any(User.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
-        when(roteiroService.createRoteiro(any(),any(), any(), any(), any())).thenCallRealMethod();
+        when(roteiroService.createRoteiro(any(),any(), any(), any(), any(), any(), any())).thenCallRealMethod();
         when(roteiroRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
         when(roteiroService.saveRoteiro(any())).thenReturn(null);
-
 
         roteiroService.setRoteiroRepository(roteiroRepository);
         setServices(userService, roteiroService);
         saveRoteiro("Lisbon", "userId_1");
         saveRoteiro("Lisbon", "userId_2");
         saveRoteiro("Porto", "userId_1");
-
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                                                       .get("/routes")

@@ -169,6 +169,10 @@ class RoteiroServiceDataTest extends RoteiroTests {
         pointList.add(new Point("01HSY0X5X91GP1DH2F00BX576B"));
         pointList.get(0).setCity("Lisbon");
     }
+
+    private String createRoteiro() {
+        return "{\"description\":\"Adicionei pelo Postman e, 11-07\",\"pointId\":\"01HSW785CZ2WS98V88FES87ARN\",\"title\":\"Adicionei pelo Postman e, 11-07\",\"user_id\":\"38e54c6d-ec9a-49bb-84de-b1a809b0401e\"}";
+    }
     private String jsonRoteiro() {
         String mensagem =
                 "{" +

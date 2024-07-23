@@ -34,7 +34,7 @@ public class PointService {
     public PointDto getPointById(String id) throws IOException {
 
         String url = newPointServerUrl + getPointByIdEndpoint + id;
-        HttpURLConnection connection = Support.getConnection(url);
+        HttpURLConnection connection = PointSupport.getConnection(url);
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Content-Type", "application/json");
 
@@ -61,7 +61,7 @@ public class PointService {
     public void sendMessageToReadFromQueue() throws IOException {
 
             String url = newPointServerUrl + lerDaQueueEndpoint;
-            HttpURLConnection connection = Support.getConnection(url);
+            HttpURLConnection connection = PointSupport.getConnection(url);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");
 
@@ -82,7 +82,7 @@ public class PointService {
         if (page != null)
             url += "&page=" + page;
         try {
-            HttpURLConnection connection = Support.getConnection(url);
+            HttpURLConnection connection = PointSupport.getConnection(url);
 
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");

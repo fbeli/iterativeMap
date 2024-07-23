@@ -18,6 +18,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.becb.processnewpoint.service.dynamodb.DynamoDbClient;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 
 
@@ -66,11 +68,11 @@ public class ProcessNewPointApplication {
 	}
 
 
-
+	@Autowired
 	MigrationService migrationService;
-	//@PostConstruct
+	@PostConstruct
 	public void migrate() throws IOException {
-		migrationService.migrate();
+	//	migrationService.setupChilds(0);
 	}
 
 }

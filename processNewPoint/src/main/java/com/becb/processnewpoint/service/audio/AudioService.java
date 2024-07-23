@@ -29,13 +29,14 @@ public class AudioService {
     private String vssKey;
 
     public boolean needCreateAudio(Point point){
-        return point != null && (point.getAudio() == null || point.getAudio().isBlank()) && point.getDescription() !=null || point.getDescription().isBlank();
+        return point != null && (point.getAudio() == null || point.getAudio().isBlank()) && (point.getDescription() !=null && !point.getDescription().isBlank());
     }
 
     public String saveAudio(String point_id, String text, LanguageEnum languageEnum) {
 
         if(text!=null && !text.isBlank()) {
             VoiceProvider tts = new VoiceProvider(vssKey);
+            //https://www.voicerss.org/personel/
 
             VoiceParameters params = new VoiceParameters(text, getLanguage(languageEnum));
             params.setCodec(AudioCodec.WAV);

@@ -73,7 +73,7 @@ select{
 }
 .menu_name{
     font-family: Poppins-Regular;
-    font-size: 14px;
+    font-size: 11px;
     line-height: 1.7;
     color: #fff;
 }
@@ -105,7 +105,6 @@ select{
 }
 
 .lang_style{
-    bottom: 12%;
     right: 12%;
     position: absolute;
     z-index: 1;
@@ -118,6 +117,7 @@ select{
     font-family: Poppins-Regular;
     font-size: 14px;
     height: 31px;
+    border-radius: 5px;
 
 }
 
@@ -155,7 +155,7 @@ margin: 0px;
 .route_bar_list{
     padding: 2px;
     display: inline-block;
-    height: 80%;
+    height: 75%;
 }
 .foto_rota{
     height: 50px;
@@ -315,7 +315,7 @@ label {
 }
 
 .photo{
-    width: 34%;;
+    width: 34%;
 }
 #point_info{
     top: 60%;
@@ -330,6 +330,7 @@ label {
 }
 #point_info_route {
     width: 324px;
+    margin-left: 5px;
 }
 
 

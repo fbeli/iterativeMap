@@ -28,11 +28,11 @@ function option_create_points() {
     if(accessToken !== undefined && accessToken!== null && accessToken !== "") {
     if (create_point) {
         create_point = false;
-        document.getElementById("a_create_points").innerHTML = 'Add Spot';
+        document.getElementById("a_create_points").innerHTML = 'AddSpot';
     } else {
         create_point = true;
         show_create_points_warning();
-        document.getElementById("a_create_points").innerHTML = 'Stop Add';
+        document.getElementById("a_create_points").innerHTML = 'StopAdd';
 
     }
     }else{

@@ -64,18 +64,18 @@ map.on('load', () => {
         // Use a URL for the value for the data property.
         data: 'https://www.guidemapper.com/file/mapFile_pt_.geojson',
         cluster: true,
-        clusterMaxZoom: 16, // Max zoom to cluster points on
+        clusterMaxZoom: 19, // Max zoom to cluster points on
         clusterRadius: 10, // Radius of each cluster when clustering points (defaults to 50)
-        clusterMinPoints: 4
+        clusterMinPoints: 2
     });
     map.addSource('s_mapfile_en', {
         type: 'geojson',
         // Use a URL for the value for the data property.
         data: 'https://www.guidemapper.com/file/mapFile_en_.geojson',
         cluster: true,
-        clusterMaxZoom: 16, // Max zoom to cluster points on
+        clusterMaxZoom: 19, // Max zoom to cluster points on
         clusterRadius: 10, // Radius of each cluster when clustering points (defaults to 50)
-        clusterMinPoints: 4
+        clusterMinPoints: 2
     });
     map.addSource('s_mapfile_lisboasecreta', {
         type: 'geojson',
@@ -85,7 +85,11 @@ map.on('load', () => {
     map.addSource('s_mapfile_sp', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_sp_.geojson'
+        data: 'https://www.guidemapper.com/file/mapFile_sp_.geojson',
+        cluster: true,
+        clusterMaxZoom: 19, // Max zoom to cluster points on
+        clusterRadius: 10, // Radius of each cluster when clustering points (defaults to 50)
+        clusterMinPoints: 2
     });
 
     add_layers();

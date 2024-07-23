@@ -115,16 +115,14 @@ class TranslateServiceInterfaceImplTest {
 
         childPT.setLanguage(LanguageEnum.PT);
         childSP.setLanguage(LanguageEnum.ES);
-        childFR.setLanguage(LanguageEnum.FR);
+
 
         childEN.setLanguage(LanguageEnum.EN);
-        Assert.assertTrue(translateService.canChildForThatLanguage(fatherPoint, LanguageEnum.DE.toString()));
         Assert.assertTrue(translateService.canChildForThatLanguage(fatherPoint, "PT"));
         fatherPoint.addChildPoint(childSP);
         fatherPoint.addChildPoint(childPT);
         fatherPoint.addChildPoint(childFR);
 
-        Assert.assertTrue(translateService.canChildForThatLanguage(fatherPoint, LanguageEnum.DE.toString()));
         Assert.assertFalse(translateService.canChildForThatLanguage(fatherPoint, LanguageEnum.PT.toString()));
         Assert.assertFalse(translateService.canChildForThatLanguage(fatherPoint, LanguageEnum.EN.toString()));
 

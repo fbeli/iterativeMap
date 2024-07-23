@@ -31,6 +31,10 @@ public interface PointRepository extends PagingAndSortingRepository<Point,String
     @Query(value = "SELECT p FROM Point p WHERE p.aproved = ?1")
     List<Point> findAllByAproved(String aproved);
 
+    @Query(value = "SELECT p FROM Point p WHERE p.pointParent = null and p.pointId not in(" +
+            "select distinct (p2.pointParent) from Point p2 where p2.pointParent != null) ")
+    Page<Point> findAllFatherWithoutSon(Pageable pageable);
+
 
 
 }

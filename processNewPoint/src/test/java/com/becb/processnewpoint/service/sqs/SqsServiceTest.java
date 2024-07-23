@@ -55,7 +55,7 @@ class SqsServiceTest {
         when(pointService.getPointById(any())).thenReturn(point);
         when(pointService.updatePointObject(any(), any())).thenCallRealMethod();
         when(pointService.savePointDb(any())).thenReturn(point);
-        when(pointService.savePointDynamo(any())).thenReturn(null);
+
 
         sqsService.updadePoint(null, message);
         assertTrue(point.getDescription().contains("Vista do Castelo da Pena para o Castelo dos Mouros"));

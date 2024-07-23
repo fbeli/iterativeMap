@@ -25,11 +25,11 @@ function option_create_points() {
     if (accessToken !== undefined && accessToken !== null && accessToken !== "") {
         if (create_point) {
             create_point = false;
-            document.getElementById("a_create_points").innerHTML = 'Add Spot';
+            document.getElementById("a_create_points").innerHTML = 'AddSpot';
         } else {
             create_point = true;
             show_create_points_warning();
-            document.getElementById("a_create_points").innerHTML = 'Stop Add';
+            document.getElementById("a_create_points").innerHTML = 'StopAdd';
             map.setZoom(17);
         }
     } else {
@@ -114,6 +114,7 @@ function fechar_divs() {
     document.getElementById("booming_places").style.display = 'none';
     if (document.getElementsByClassName("mapboxgl-popup").length > 0)
         document.getElementsByClassName("mapboxgl-popup").item(0).style.display = 'none';
+    document.getElementById("div_add_route").style.display = 'none';
 
 }
 
@@ -157,6 +158,9 @@ function show_infos(feature) {
 
     document.getElementById("desc_title").innerHTML = feature.properties.title;
     document.getElementById("point_info").style.display = "block";
+    document.getElementById("point_info_img").style.display = "none";
+    document.getElementById("point_info_audio_apple").style.display = "none";
+    document.getElementById("point_info_audio_all").style.display = "none";
 
     coords = feature.geometry.coordinates;
 
@@ -270,13 +274,13 @@ async function search_route(page) {
                 }
 
             }else{
-                error_div_event(booming_places,"Any route found for this search");
+                error_div_event("booming_places","Any route found for this search");
 
             }
         })
         .catch(error => {
             console.log(error);
-            error_div_event(booming_places, data.error);
+            error_div_event("booming_places", data.error);
 
         });
 }
@@ -291,3 +295,13 @@ class Ponto {
     }
 }
 const mapaRotas = new Map();
+
+
+function manage_itens_position() {
+    document.getElementById("lang_div").style.top =
+        document.getElementsByClassName("mapboxgl-ctrl-icon")[0].getBoundingClientRect().y +'px'
+}
+
+function add_to_route(){
+    document.getElementById("div_add_route").style.display = 'block';
+}

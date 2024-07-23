@@ -22,5 +22,6 @@ public class SQSProperties {
     public String reset_password;
     public String point_vote;
     public String update_point;
+    public String add_route;
 
 }
