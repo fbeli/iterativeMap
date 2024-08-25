@@ -14,5 +14,5 @@
     list_points_by_user: "http://localhost:8081/point/users?userId=",
     update_point: "http://localhost:8081/v2/point?pointId=",
     translate_point: "http://localhost:8081/v2/point/translate?pointId=",
-    get_routes_endpoint: "/routes?",
+    get_routes_endpoint: "/routes",
 }

@@ -22,7 +22,7 @@ function show_create_points_warning() {
 
 function option_create_points() {
     fechar_divs();
-    if (accessToken !== undefined && accessToken !== null && accessToken !== "") {
+    if (is_logged()) {
         if (create_point) {
             create_point = false;
             document.getElementById("a_create_points").innerHTML = 'AddSpot';
@@ -163,7 +163,7 @@ function show_infos(feature) {
     document.getElementById("point_info_audio_all").style.display = "none";
 
     coords = feature.geometry.coordinates;
-
+    pointId = feature.properties.pointId;
     //test audio
     if (feature.properties.audio !== undefined && feature.properties.audio.length > 2) {
         audio_link = feature.properties.audio;
@@ -224,20 +224,23 @@ function close_info() {
     document.getElementById("point_info_audio_all").style.display = "none";
     document.getElementById("point_info_img").style.display = "none";
 
-
-
 }
-
 
 let search_value="";
 async function search_route(page) {
+
+    document.getElementById("route_list").innerHTML = "";
 
     let url = config.env + config.get_routes_endpoint;// + "/route/search?longitude="+longitude+"&latitude="+latitude+"&distance=1000";
     if (page < 1) {
         search_value = document.getElementById("search_value").value;
     }
-    if (search_value.length > 0) {
-        url = url + "&title=" + search_value;
+    if (search_value.length > 2) {
+        url = url + "?title=" + search_value;
+    }else {
+        error_div_event("booming_places","At least 3 characters");
+        return;
+
     }
     fetch(url, {
         method: "GET",
@@ -257,8 +260,8 @@ async function search_route(page) {
                                                     <img src="img/bola.png" style="width: 50px; height: 50px;">
                                                 </div>
                                                 <div id="info_rota" >
-                                                    <p id="rota_info" class="route_bar_form_title_rota">${data.roteiros[i].title}</p>
-                                                    <p id="rota_name">${data.roteiros[i].description}</p>
+                                                    <p id="rota_title" class="route_bar_form_title_rota">${data.roteiros[i].title}</p>
+                                                    <p id="rota_description">${data.roteiros[i].description}</p>
                                                 </div> 
                                                 <div id="rota_desenhar" onclick="show_route(${data.roteiros[i].roteiroId})" style=" margin-left: 25px;">
                                                     <img src="img/walk.png" alt="Get The Route" style="width: 20px; height: 20px;">
@@ -274,13 +277,16 @@ async function search_route(page) {
                 }
 
             }else{
-                error_div_event("booming_places","Any route found for this search");
+                document.getElementById("route_list").innerHTML =  ` <div id="linha_rota" class="linha_rota">
+                         No Route found</div>`;
+                /*error_div_event("booming_places","Any route found for this search");*/
 
             }
         })
         .catch(error => {
             console.log(error);
-            error_div_event("booming_places", data.error);
+            /*error_div_event("booming_places", data.error);*/
+            document.getElementById("route_list").innerHTML = "No router found.";
 
         });
 }
@@ -302,6 +308,11 @@ function manage_itens_position() {
         document.getElementsByClassName("mapboxgl-ctrl-icon")[0].getBoundingClientRect().y +'px'
 }
 
-function add_to_route(){
-    document.getElementById("div_add_route").style.display = 'block';
+function open_div_to_add_route(){
+    if (is_logged()) {
+        getMyRoutes();
+        document.getElementById("div_add_route").style.display = 'block';
+    }else{
+        document.getElementById("div_please_login").style.display = 'flex';
+    }
 }
