@@ -3,6 +3,7 @@ package com.becb.processnewpoint.service.sqs;
 import com.becb.processnewpoint.core.BecbProperties;
 import com.becb.processnewpoint.domain.AprovedEnum;
 import com.becb.processnewpoint.domain.Point;
+import com.becb.processnewpoint.domain.Roteiro;
 import com.becb.processnewpoint.exception.SQSMessageException;
 import com.becb.processnewpoint.service.PointService;
 import com.becb.processnewpoint.service.RoteiroService;
@@ -200,8 +201,13 @@ public class SqsService {
     @JmsListener(destination = "add-roteiro-queue")
     public void addRoteiro(String message){
         log.info("Received message on sqs.add-roteiro-queue: {}", message);
-        log.info("Message: "+roteiroService.addNewRoute(message).toString());
 
+        Roteiro roteiro = roteiroService.addNewRoute(message);
+
+        if (roteiro != null)
+            log.info("Roteiro atualizado: "+roteiro.getTitle());
+        else
+            log.error("Erro para incluir ponto a rota : {}", message);
 
     }
 

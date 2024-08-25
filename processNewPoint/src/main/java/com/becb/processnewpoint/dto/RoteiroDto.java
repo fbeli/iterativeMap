@@ -26,7 +26,7 @@ public class RoteiroDto {
 
     public RoteiroDto(Roteiro roteiro) {
         this.title = roteiro.getTitle();
-        this.city = roteiro.getCity();
+        this.city = roteiro.getPlace();
         this.instagram = roteiro.getUserOwner().getInstagram();
         this.publico = roteiro.isPublico();
         this.description = roteiro.getDescription();

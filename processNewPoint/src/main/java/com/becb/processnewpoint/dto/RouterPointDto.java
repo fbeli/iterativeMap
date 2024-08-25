@@ -22,7 +22,7 @@ public class RouterPointDto {
         latitude = point.getLatitude();
         longitude = point.getLongitude();
         pointId = point.getPointId();
-        setChildrens(point.getChildrenPoints());
+       // setChildrens(point.getChildrenPoints());
     }
 
     private String id;

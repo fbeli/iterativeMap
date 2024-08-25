@@ -57,11 +57,11 @@ public class Point {
     @JsonIgnore
     private Point pointParent;
 
-    @OneToMany(mappedBy = "pointParent", fetch = FetchType.EAGER, cascade = {CascadeType.DETACH}, targetEntity = Point.class)
+    @OneToMany(mappedBy = "pointParent", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH}, targetEntity = Point.class)
     private List<Point> childrenPoints;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;

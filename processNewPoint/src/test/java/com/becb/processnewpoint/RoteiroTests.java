@@ -54,7 +54,7 @@ public class RoteiroTests {
 
         Roteiro roteiro = roteiroService.createRoteiro(null,routerPoints, user, null, "Roteiro "+city, "Essa é a descrição para um roteiro na cidade de "+city, "Português");
         Assertions.assertEquals(3, roteiro.getPoints().size());
-        Assertions.assertEquals(city, roteiro.getCity());
+        Assertions.assertEquals(city, roteiro.getPlace());
         roteiroList.add(roteiro);
     }
 

@@ -1,6 +1,5 @@
 package com.becb.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import lombok.Getter;
@@ -15,9 +14,9 @@ public class RouteDto {
     String title;
     String description;
     String pointId;
-    String user_id;
+    String userId;
     String language;
-    String city;
+    String place;
     String roteiroId;
 
 

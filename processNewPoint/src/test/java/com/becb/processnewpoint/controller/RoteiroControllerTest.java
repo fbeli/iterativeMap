@@ -6,7 +6,6 @@ import com.becb.processnewpoint.repository.RoteiroRepository;
 import com.becb.processnewpoint.repository.UserRepository;
 import com.becb.processnewpoint.service.RoteiroService;
 import com.becb.processnewpoint.service.UserService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

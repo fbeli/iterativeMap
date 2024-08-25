@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Roteiro {
         this.title=title;
         userOwner = user;
         this.points = points;
-        this.city = city;
+        this.place = city;
     }
 
     @Id
@@ -31,7 +32,7 @@ public class Roteiro {
     private String title;
 
     @Column
-    private String city;
+    private String place;
 
     @Column
     private String description;
@@ -44,8 +45,10 @@ public class Roteiro {
 
     @Column
     private String language;
+    @Column
+    private LocalDateTime createTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "user_owner_id")
     private User userOwner;
@@ -54,7 +57,7 @@ public class Roteiro {
         return "Roteiro{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
-                ", city='" + city + '\'' +
+                ", city='" + place + '\'' +
                 ", description='" + description + '\'' +
                 ", points=" + points +
                 ", publico=" + publico +
