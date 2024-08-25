@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -83,7 +84,7 @@ public class PointService {
             point.setLanguage(jsonObject.optString("language"));
             point.setType(jsonObject.optString("type"));
 
-            if (jsonObject.optString("photo") != "")
+            if (!jsonObject.optString("photo").equals(""))
                 point.addPhoto(jsonObject.optString("photo"));
 
             point.getUser().setGuide(jsonObject.optBoolean("guide"));
@@ -140,34 +141,29 @@ public class PointService {
         return point;
     }
 
-    public void gerarArquivoParaMapa(String message) {
-
-        Point point = new Point();
+    public List<String>  gerarArquivoParaMapa(String message) {
+        List<String> fileNames = new ArrayList<>();
         JSONObject jsonObject = new JSONObject(message);
-        point.setUser(new User());
-        point.getUser().setUserId(jsonObject.optString("user_id"));
-        point.getUser().setUserName(jsonObject.optString("user_name"));
-        point.getUser().setUserEmail(jsonObject.optString("user_email"));
 
-        List<Point> points = getApprovedPoints();
-
-        points.parallelStream().forEach(p -> {
-            if (p.getCountry() == null) {
-                this.savePointDb(p);
-            }
+        var langs = Arrays.stream(LanguageEnum.values());
+        langs.forEach(lang -> {
+            List<Point> points = getApprovedPoints(lang);
+            points.parallelStream().forEach(p -> {
+                if (p.getCountry() == null) {
+                    this.savePointDb(p);
+                }
+            });
+            fileNames.add(fileService.createFileToMap(points, jsonObject.getString("file_name")).get(0));
         });
 
-        try {
-            fileService.createFileToMap(points, jsonObject.getString("file_name"));
-        } catch (Exception e) {
-            logger.info(
-                    "Error to create file for not approved points: {}", e.getMessage());
-        }
+        return fileNames;
     }
 
     public List<Point> getApprovedPoints() {
         return pointRepository.findAllByAproved(AprovedEnum.asTrue.getValue());
-
+    }
+    public List<Point> getApprovedPoints(LanguageEnum languageEnum) {
+        return pointRepository.findAllByAprovedAndLanguage(AprovedEnum.asTrue.getValue(), languageEnum);
     }
 
     public void gerarArquivoParaAprovacao(String message) {
@@ -186,7 +182,7 @@ public class PointService {
     }
 
     public ArrayList<Point> convertItemsToPoints(ItemCollection<ScanOutcome> ic) {
-        ArrayList<Point> points = new ArrayList<Point>();
+        ArrayList<Point> points = new ArrayList<>();
 
         ic.iterator().forEachRemaining(item -> {
             points.add(convertItemToPoint(item));
@@ -237,7 +233,7 @@ public class PointService {
         photosArray = photosArray.replace("}", "");
 
         String[] array = photosArray.split(",");
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         Collections.addAll(list, array);
         return list;
     }
@@ -309,13 +305,19 @@ public class PointService {
     }
 
 
-
     public Page<Point> getPointsByUserId(Pageable pageable, String userId) {
         Page<Point> page = pointRepository.findAllByUserNotBlocked(pageable, userId);
         page.stream().filter(p -> p.getCountry() == null)
                 .forEach(p -> this.savePointDb(p));
         return page;
     }
+    public List<Point> getPointsByUserId(String userId) {
+        List<Point> page = pointRepository.findAllByUser(userId);
+        page.stream().filter(p -> p.getCountry() == null)
+                .forEach(p -> this.savePointDb(p));
+        return page;
+    }
+
     public Page<Point> getFatherPointsByUserId(Pageable pageable, String userId) {
         Page<Point> page = pointRepository.findFathersByUserNotBlocked(pageable, userId);
         page.stream().filter(p -> p.getCountry() == null)
@@ -340,25 +342,41 @@ public class PointService {
         return copyPoint(newPoint, oldPoint);
     }
 
+    @Transactional
     public Point copyPoint(Point pointFrom, Point pointTo) {
         Field[] fields = Point.class.getDeclaredFields();
+        String fieldsXvalue = "";
         try {
             for (Field field : fields) {
-                field.setAccessible(true);
-                Object newValue = field.get(pointFrom);
-
-                if (newValue != null && !newValue.toString().isBlank() && !field.getName().equals("id")
-                        && !field.getName().equals("pointId")) {
-
-                    field.set(pointTo, newValue);
-
+                if (isUpdatedField(field)) {
+                    field.setAccessible(true);
+                    Object newValue = field.get(pointFrom);
+                    if (newValue != null && !newValue.toString().isBlank()) {
+                        fieldsXvalue += field.getName() + "=" + newValue + " \n";
+                        field.set(pointTo, newValue);
+                    }
                 }
             }
         } catch (IllegalAccessException e) {
+            logger.info("Erro em point parent: {}: ", pointFrom.getPointId());
+            logger.info(e.getMessage());
+            logger.info(fieldsXvalue);
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.info("Erro em point parent: {}: ", pointFrom.getPointId());
+            logger.info(e.getMessage());
+            logger.info(fieldsXvalue);
             throw new RuntimeException(e);
         }
 
         return pointTo;
+    }
+
+    private boolean isUpdatedField(Field field) {
+        if (field.getName().equals("id")
+                || field.getName().equals("pointId") || field.getName().equals("childrenPoints"))
+            return false;
+        return true;
     }
 
     public List<Point> createPointsFromParent(String message) throws Exception {
@@ -368,22 +386,22 @@ public class PointService {
         jsonObject = new JSONObject(message);
         pointId = jsonObject.optString("pointId");
         Point parentPoint = this.getPointById(pointId);
-        if(parentPoint != null)
-            return  createPointsFromParent(parentPoint);
+        if (parentPoint != null)
+            return createPointsFromParent(parentPoint);
         return null;
 
     }
 
-    public List<Point> createPointsFromParent(Point parentPoint) throws Exception{
+    public List<Point> createPointsFromParent(Point parentPoint) throws Exception {
         List<Point> createdPoints = new ArrayList<>();
         createdPoints.add(createAudioToParent(parentPoint));
 
         Point localPoint;
         String audioEndpoint;
-        for (LanguageEnum language : LanguageEnum.values()){
+        for (LanguageEnum language : LanguageEnum.values()) {
             localPoint = translate(parentPoint, language.getValue());
-            if(localPoint != null && !localPoint.getDescription().equals(parentPoint.getTitle())) {
-                if(audioService.needCreateAudio(localPoint)) {
+            if (localPoint != null && !localPoint.getDescription().equals(parentPoint.getTitle())) {
+                if (audioService.needCreateAudio(localPoint)) {
                     audioEndpoint = audioService.saveAudio(localPoint.getPointId(), localPoint.getDescription(), localPoint.getLanguage());
                     localPoint.setAudio(audioEndpoint);
                 }
@@ -400,10 +418,10 @@ public class PointService {
 
     public Point createAudioToParent(Point parentPoint) {
 
-        if(audioService.needCreateAudio(parentPoint)){
+        if (audioService.needCreateAudio(parentPoint)) {
             parentPoint.setAudio(audioService.saveAudio(parentPoint.getPointId(), parentPoint.getDescription(), parentPoint.getLanguage()));
         }
-        if(parentPoint != null)
+        if (parentPoint != null)
             this.savePointDb(parentPoint);
         return parentPoint;
     }
@@ -411,24 +429,27 @@ public class PointService {
 
     public Point translate(Point parentPoint, String languageDestino) throws IOException {
 
-        if(parentPoint == null)
+        if (parentPoint == null)
             throw new ObjectNotFoundException(Point.class,
                     "Parent point not found, try again latter ");
 
-        Point childPoint =  new Point(UlidCreator.getUlid().toString());
-        copyPoint(parentPoint,childPoint );
+        parentPoint.setChildrenPoints(getChildren(parentPoint.getPointId()));
+        Point childPoint = new Point(UlidCreator.getUlid().toString());
+        copyPoint(parentPoint, childPoint);
         childPoint.setChildrenPoints(null);
 
         if (!translateService.canChildForThatLanguage(parentPoint, languageDestino))
             return null;
 
-        childPoint = translateService.translate(parentPoint,childPoint, languageDestino);
+        childPoint = translateService.translate(parentPoint, childPoint, languageDestino);
 
         this.savePointDb(childPoint);
         return childPoint;
     }
 
-
+    public List<Point> getChildren(String pointId){
+        return pointRepository.findPointByParentId(pointId);
+    }
 
     public void adiantarChron() {
         //chron.receberMensagens();

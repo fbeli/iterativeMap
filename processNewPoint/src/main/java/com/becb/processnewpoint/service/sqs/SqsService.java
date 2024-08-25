@@ -81,7 +81,7 @@ public class SqsService {
     @JmsListener(destination = "new-file-to-map-queue")
     public void gerarArquivoParaMapa(@Headers Map<String, Object> headers, String message) {
         log.info("Received message to create mapfile!");
-        pointService.gerarArquivoParaMapa(message);
+        log.info("Files created: {}", pointService.gerarArquivoParaMapa(message));
     }
 
     /**

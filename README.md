@@ -45,6 +45,14 @@ docker-compose run --service-ports point_service
 Startar o html executar os comandos python dentro da pasta mapbox 
 python -m SimpleHTTPServer 8000 ou python -m http.server 8000
 
+# Create version and push
+
+1 -  mvn compile package dependency:copy-dependencies -DincludeScope=runtime.
+
+2 - docker build -t fbeli/becb-point-service:0.0.x . 
+
+3 - docker push fbeli/becb-point-service:0.0.x
+
 
 ## DynamoDb
 

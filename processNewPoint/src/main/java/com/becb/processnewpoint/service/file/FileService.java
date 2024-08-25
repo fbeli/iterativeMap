@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -26,57 +24,27 @@ public class FileService {
     String appEndpoint;
     @Value("${service.endpoint}")
     String serviceEndpoint;
-    @Value("${file.filetomap.master}")
-    String masters;
 
     @Value("${becb.storage.s3.users_directory}")
     private String usersDirectory;
 
-    @Value("${file.filetomap.lang}")
-    String languages;
 
     @Autowired
     AmazonS3Service amazonS3Service;
 
     public List<String> createFileToMap(List<Point> points, String fileName) {
 
-        List<String> masterList = Arrays.asList(masters.split(","));
-
         List<String> filesCreated = new ArrayList<>();
 
-        masterList.forEach(l -> {
-                    List<Point> lista = points.parallelStream()
-                            .filter((Point point) -> {
-                                return point.getUser().getInstagram().equals(l);
-                            }).collect(Collectors.toList());
-                    StringBuilder sb = createInputToFile(lista);
-
-                    String version = createFile(configFilename(fileName, l.replace("@", "")), sb);
-
-                    if (version != null) {
-                        logger.info("Map file created : {}", configFilename(fileName, l.replace("@", "")));
-                        filesCreated.add(configFilename(fileName, l.replace("@", "")) + " - " + lista.size());
-                        points.removeAll(lista);
-                    }
-                }
-        );
-
-        List<String> languagesList = Arrays.asList(languages.split(","));
-        languagesList.forEach(l -> {
-            List<Point> lista = points.stream()
-                    .filter((Point point) -> {
-                        return point.getLanguage().getValue().equalsIgnoreCase(l);
-                    }).collect(Collectors.toList());
-            StringBuilder sb = createInputToFile(lista);
-
-            String version = createFile(configFilename(fileName, l.replace("@", "")), sb);
+            StringBuilder sb = createInputToFile(points);
+            String sufix = points.get(0).getLanguage().getValue().toLowerCase();
+            String version = createFile(configFilename(fileName, sufix), sb);
 
             if (version != null) {
-                logger.info("Map file created : {}", configFilename(fileName, l.replace("@", "")));
-                filesCreated.add(configFilename(fileName, l.replace("@", "")) + " - " + lista.size());
+                logger.info("Map file created : {}", configFilename(fileName, sufix));
+                filesCreated.add(configFilename(fileName, sufix) + " - " + points.size());
             }
 
-        });
         return filesCreated;
     }
 
@@ -147,26 +115,13 @@ public class FileService {
     }
 
     private String createFile(String fileName, StringBuilder sb) {
-
-
-        File file = null;
-        String env = System.getenv("ENVIRONMENT");
-        /*if ( env.equals("docker") || env.equals("dev") ) {
-           file = createLocalFile(fileName, sb);
-           return file;
-        }else {*/
-
         PutObjectResult result = amazonS3Service.saveAdminFile(fileName, createTempFile(sb));
         return result.getVersionId();
-        //}
     }
 
 
     private InputStream createTempFile(StringBuilder sb) {
-
-        InputStream inputStream = new ByteArrayInputStream(sb.toString().getBytes());
-        return inputStream;
-
+        return new ByteArrayInputStream(sb.toString().getBytes());
     }
 
     private File createLocalFile(String fileName, StringBuilder sb) {
@@ -257,14 +212,10 @@ public class FileService {
         String audioEndpoint = "";
         String photoEndpoint = "";
         if (point.getAudio() != null && !point.getAudio().isBlank()) {
-            if (appEndpoint.startsWith("https")) {
-                audioEndpoint = appEndpoint.trim() + "/" + point.getAudio();
-            } else {
-                audioEndpoint = "https://" + appEndpoint.trim() + "/" + point.getAudio();
-            }
+           audioEndpoint = "https://" + appEndpoint.replace("https://", "").trim() + "/" + point.getAudio();
         }
         if (point.getPhoto() != null) {
-                photoEndpoint = "https://" + appEndpoint.trim() + "/" + point.getPhoto();
+                photoEndpoint = "https://" + appEndpoint.replace("https://", "").trim()  + "/" + point.getPhoto();
         }
 
 

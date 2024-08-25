@@ -34,7 +34,6 @@ public class TranslateService {
     @Autowired
     SuportService suporteService;
 
-
     private Language getLanguage(String language){
         if(language.equals("EN"))
             return Language.ENGLISH;
@@ -97,8 +96,8 @@ public class TranslateService {
             return "";
         JSONObject jsonObject = new JSONObject(str);
         JSONObject translatedTextObject = jsonObject.getJSONObject("translated_text");
-        String ptValue = translatedTextObject.getString(lang.toLowerCase());
-        return ptValue;
+        return translatedTextObject.getString(lang.toLowerCase());
+
     }
 
     public boolean canChildForThatLanguage(Point point, String language){

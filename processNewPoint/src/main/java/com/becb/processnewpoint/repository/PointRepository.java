@@ -1,5 +1,6 @@
 package com.becb.processnewpoint.repository;
 
+import com.becb.processnewpoint.domain.LanguageEnum;
 import com.becb.processnewpoint.domain.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,11 @@ public interface PointRepository extends PagingAndSortingRepository<Point,String
             "select distinct (p2.pointParent) from Point p2 where p2.pointParent != null) ")
     Page<Point> findAllFatherWithoutSon(Pageable pageable);
 
+    @Query(value = "SELECT p FROM Point p WHERE p.aproved = ?1 and p.language =?2")
+    List<Point> findAllByAprovedAndLanguage(String aproved, LanguageEnum language);
+
+    @Query(value = "select p from Point p where p.pointParent.pointId =:parentId")
+    List<Point> findPointByParentId(String parentId);
 
 
 }

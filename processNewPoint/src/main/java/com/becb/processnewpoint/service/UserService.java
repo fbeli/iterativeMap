@@ -102,6 +102,7 @@ public class UserService {
     public boolean createUserMap(User user) throws IOException {
 
         List<Point> points = pointService.convertItemsToPoints(dynamoDbClient.getPointsByUserId(user.getUserId()));
+        pointService.getPointsByUserId(user.getUserId());
         Point point = points.stream().sorted((p1,p2) -> p2.getPointId().compareTo(p2.getPointId())).findFirst().get();
         fileService.createFileToUserMap(points, user.getInstagram());
         fileService.copyUserFiles(user.getInstagram());

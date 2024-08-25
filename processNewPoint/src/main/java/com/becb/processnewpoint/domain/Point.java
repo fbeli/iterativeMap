@@ -61,7 +61,7 @@ public class Point {
     private List<Point> childrenPoints;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
@@ -119,6 +119,12 @@ public class Point {
 
     public void setLanguage(LanguageEnum language) {
         this.language = language;
+    }
+
+    public LanguageEnum language(){
+        if(language == null)
+            return LanguageEnum.PT;
+        return language;
     }
 
     public void addPhoto(String photo) {
