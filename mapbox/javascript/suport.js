@@ -105,3 +105,22 @@ async function translate_point(point_id) {
 
         });
 }
+
+function is_logged() {
+    if (accessToken !== undefined && accessToken !== null && accessToken !== "") {
+        configPersonalInfo();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function criarOpcoesSelect(dados) {
+
+    const selectElementRoute = document.getElementById("select_route_to_add");
+    let selectRouteOptions = "";
+    dados.forEach(item => {
+        selectRouteOptions += `<option value="${item.roteiroId}">${item.title}</option>`;
+    });
+    selectElementRoute.innerHTML = selectRouteOptions;
+}

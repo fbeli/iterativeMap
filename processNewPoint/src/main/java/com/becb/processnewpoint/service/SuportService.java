@@ -31,28 +31,30 @@ public class SuportService {
         return true;
     }
 
-    public static LanguageEnum getLanguage(String language){
+    public static LanguageEnum getLanguage(String language) {
         language = language.toUpperCase();
         switch (language) {
             case "ENGLISH":
             case "EN":
-                return  LanguageEnum.EN;
+            case "Inglês":
+            case "ingles":
+            case "INGLES":
+                return LanguageEnum.EN;
 
             case "ESPANHOL":
             case "ESPAÑOL":
             case "SPANISH":
             case "SP":
             case "ES":
-               return LanguageEnum.ES;
-
-
+                return LanguageEnum.ES;
 
             default:
-               return LanguageEnum.PT;
+                return LanguageEnum.PT;
 
         }
 
     }
+
     public static String unicodeEscapeToUtf8(String unicodeEscapeString) {
         Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
         Matcher matcher = pattern.matcher(unicodeEscapeString);
@@ -72,8 +74,8 @@ public class SuportService {
         }
     }
 
-    public static String getCode(){
-        Random gerador=  new Random();
+    public static String getCode() {
+        Random gerador = new Random();
 
         String resp = Integer.toString(gerador.nextInt(9999));
         while (resp.length() < 4) {
@@ -81,6 +83,7 @@ public class SuportService {
         }
         return resp;
     }
+
     public static LocalDateTime ulidToLocalDateTime(String ulidString) {
         //String ulid = "01HTX5G45H9BACTSAPYTRXF8NC";
 
@@ -89,13 +92,14 @@ public class SuportService {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(time),
                 TimeZone.getDefault().toZoneId());
     }
+
     private static final Pattern ULID_PATTERN = Pattern.compile("^[0-9A-Fa-f]{10}-?[0-9A-Fa-f]{1,13}(-[0-9A-Fa-f]{1,13})?$");
 
     public static boolean isValidUlid(String ulid) {
         return ULID_PATTERN.matcher(ulid).matches();
     }
 
-    public  HttpURLConnection getConnection(String fullUrl) throws IOException {
+    public HttpURLConnection getConnection(String fullUrl) throws IOException {
         URL url = new URL(fullUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");

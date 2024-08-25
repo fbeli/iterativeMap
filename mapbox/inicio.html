@@ -37,6 +37,7 @@
     <link rel="shortcut icon" type="imagex/png" href="../../favicon.ico">
     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
     <script src="./javascript/const.js"></script>
+    <script src="/javascript/routes.js"></script>
     <script src="/javascript/suport.js"></script>
     <script src="/javascript/posicao.js"></script>
     <meta name='viewport' content="width=device-width, initial-scale=1.0 ,maximum-scale=1,user-scalable=no"/>
@@ -107,25 +108,15 @@
             </div>
             <div id='routes' class="route_bar_form">
                 <form class="route_bar_form">
-                    <p>Route: <input id="search_value"  type="text"  label="Route" style="width: 68%" class="input100"/>
-                        <img src="img/search.png" alt="search" class="search_icon" onclick="search_route(0)" style="width: 25px" ></p>
+                    <p>Route: <input id="search_value"  type="text"  label="Route" style="width: 68%" />
+                        <img src="img/search.png" alt="search" class="search_icon" onclick="search_route(0)" style="width: 28px;position: absolute;top: 35px;" ></p>
                 </form>
             </div>
             <div id="route_list" class="route_bar_list" >
-                <!--
-                <div id="linha_rota" class="linha_rota">
-                   <div id="foto_rota" class="foto_rota">
-                        <img src="img/bola.png" style="width: 50px; height: 50px;" alt="See Route">
-                   </div>
-                    <div id="info_rota" >
-                        <p id="rota_info" class="route_bar_form_title_rota">Um dia em Lisboa</p>
-                        <p id="rota_name">comece sua rota aqui e termine </p>
-                    </div>
-                    <div id="rota_desenhar" onclick="show_route()" style=" margin-left: 25px;">
-                        <img src="img/walk.png" alt="Get The Route" style="width: 20px; height: 20px;">
-                    </div>
-                </div>
-                -->
+
+            </div>
+            <div class="route_bar_left">
+                previous next
             </div>
             <div class="route_bar_left">
                 <hr>
@@ -279,8 +270,9 @@
                         </span>
 
                 <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
-                    <input class="input100" type="text" id="login_email" value="Email" onfocus="this.value='';"
-                           onblur="if (this.value=='') this.value='Email'">
+
+                    <label for="login_email">Email: </label><input type="text" id="login_email"   value="Email" onfocus="this.value='';"
+                                                                   onblur="if (this.value=='') this.value='Email'"><br>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate="Enter password">
@@ -288,12 +280,13 @@
                                   onclick="tipo_pass = document.getElementById('login_password'); if(tipo_pass.type=='text') {tipo_pass.type='login_password'}else tipo_pass.type='text' ">
                                 <i class="zmdi zmdi-eye"></i>
                             </span>
-                    <label for="login_password">Password (min 8 digits)</label>
-                    <input class="input100" type="password" id="login_password" minlength="8">
+                    <label for="login_password">Password (min 8 digits):</label>
+
+                    <input type="password" id="login_password"  minlength="8" ><br>
                 </div>
 
                 <div class="div_btn">
-                    <button type="button" class="button-53" onclick="execute_login()" id="btn-login-get-token">Login
+                    <button type="button" class="button" onclick="execute_login()" id="btn-login-get-token">Login
                     </button>
                 </div>
 
@@ -341,13 +334,17 @@
                             Welcome
                         </span>
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" id="sign_up_name" minlength="8" value="Name"
+                    <label for="sign_up_name">Name: </label>
+                    <input type="text" id="sign_up_name" minlength="8" value="Name"
                            onfocus="this.value='';"
                            onblur="if (this.value=='') this.value='Name'">
                 </div>
                 <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
-                    <input class="input100" type="text" id="sign_up_email" value="Email" onfocus="this.value='';"
+                    <label for="sign_up_email">Email: </label>
+                    <input  type="text" id="sign_up_email" value="Email" onfocus="this.value='';"
                            onblur="if (this.value=='') this.value='Email'">
+
+                    <br>
                 </div>
                 <div class="wrap-input100 validate-input" data-validate="Enter password">
                             <span class="btn-show-pass"
@@ -355,27 +352,32 @@
                                 <i class="zmdi zmdi-eye"></i>
                             </span>
                     <label for="sign_up_password">Password (min 8 digits)</label>
-                    <input class="input100" type="password" id="sign_up_password" minlength="8">
+                    <input  type="password" id="sign_up_password" minlength="8">
+
                 </div>
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" id="sign_up_phone" value="Phone (+xxx xxxxxxxxx)"
+                    <label for="sign_up_phone">Phone (+xxx xxxxxxxxx)</label>
+                    <input  type="text" id="sign_up_phone" value="Phone (+xxx xxxxxxxxx)"
                            onfocus="this.value='';"
                            onblur="if (this.value=='') this.value='Phone'">
                 </div>
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" id="sign_up_description" value="Descript Yourself"
+                    <label for="sign_up_description">Descript Yourself</label>
+                    <input type="text" id="sign_up_description" value="Descript Yourself"
                            onfocus="this.value='';"
                            onblur="if (this.value=='') this.value='Descript Yourself'">
                 </div>
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" id="sign_up_instagram"
-                           value="Instagram - add it if you want your own map link" onfocus="this.value='';"
+                    <label for="sign_up_instagram">Instagram - add it if you want your own map link</label>
+                    <input type="text" id="sign_up_instagram" onfocus="this.value='';"
                            onblur="if (this.value=='') this.value='Instagram - add it if you want your own map link'">
                 </div>
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="date" id="sign_up_born_date" minlength="6">
+                    <label for="sign_up_born_date">Born Date</label>
+                    <!--<input class="input100" type="date" id="sign_up_born_date" minlength="6">-->
+                    <input type="date" id="sign_up_born_date" minlength="6">
                 </div>
-                <div class="wrap-input100 validate-input" data-validate="Country">
+                <div class="wrap-input100 validate-input" style="width: 90%;" data-validate="Country">
 
                     <select name="country" id="sign_up_country">
                         <option value="" disabled selected>Select a country...</option>
@@ -398,18 +400,9 @@
                         </script>
                     </select>
                 </div>
-                <div class="wrap-input100 validate-input">
-                    <div><input type="checkbox" id="sign_up_guide">
-                        <label for="sign_up_guide">I'm a guide - Can we share your contact with users to
-                            business</label></div>
-                    <div><input type="checkbox" id="sign_up_user">
-                        <label for="sign_up_user">I'm a user and maybe I will share my knowledge</label>
-                    </div>
-                    <div><input type="checkbox" id="sign_up_share">
-                        <label for="sign_up_guide">Can show my instagram to users</label></div>
-                </div>
+
                 <div class="div_btn">
-                    <button type="button" class="button-53" onclick="execute_sign_in()">Sign Up</button>
+                    <button type="button" class="button" onclick="execute_sign_in()">Sign Up</button>
                 </div>
                 <div class="text-center p-t-25">
                     <a class="txt2" onclick="fechar_divs()" href="#">
@@ -431,7 +424,7 @@
                 </a>
             </div>
         </div>
-        <div id="welcome_div_id" class=" wrap-login100 to_front" style="display: none;">
+        <div id="welcome_div_id" class=" wrap-login100 to_front" style="height: 366px; display: none;">
             <div class=" welcome_div validate-input">
                         <span class="welcome_div login100-form-title p-b-26">
                             Welcome,
@@ -452,7 +445,7 @@
 
                         </span>
             </div>
-            <div class="text-center p-t-25">
+            <div class="text-center ">
                 <a class="txt2" onclick="fechar_divs()" href="#">
                     Close
                 </a>
@@ -461,25 +454,31 @@
         <div id="cadastro_div" class="wrap-login100 to_front" style="display: none;">
             <form class="login100-form validate-form" enctype="multipart/form-data">
                         <span class="login100-form-title p-b-26">
-                            Novo Cadastro
+                            New Place
                         </span>
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" id="cadastro_lng" readonly=“true”>
+
+                    <label for="cadastro_lng">Longitude: </label><input type="text" id="cadastro_lng"  readonly=“true”><br>
                 </div>
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" id="cadastro_lat" readonly=“true”>
+
+                    <label for="cadastro_lat">Latitute: </label><input type="text" id="cadastro_lat"  readonly=“true”><br>
                 </div>
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" id="cadastro_titulo" value='Title'
-                           onfocus="clearOnFocus(this.id,'Title')"
-                           onblur="if (this.value=='') this.value='Title'">
+
+                    <label for="cadastro_titulo">Title: </label><input type="text" id="cadastro_titulo"  onfocus="clearOnFocus(this.id,'Title')"
+                                                                     onblur="if (this.value=='') this.value='Title'"><br>
+
                 </div>
                 <div class="wrap-input100 validate-input">
-                    <textarea rows="1" class="input100" id="cadastro_description" value='Description'
+
+                    <label for="cadastro_description">Description: </label>
+                    <textarea rows="3"  id="cadastro_description" value='Description'
                               onfocus="clearOnFocus(this.id,'Description')"
-                              onblur="if (this.value=='') this.value='Description'">Description</textarea>
+                              onblur="if (this.value=='') this.value='Description'"></textarea>
+
                 </div>
-                <div class="wrap-input100 validate-input" data-validate="Type">
+                <div class="wrap-input100 validate-input" style="width: 90%;"data-validate="Type">
                     <select name="cadastro_place_type" id="cadastro_place_type">
                         <option class="fa-optin-monster" value="" disabled selected>Select Place Type...</option>
                         <script>
@@ -495,7 +494,7 @@
                         </script>
                     </select>
                 </div>
-                <div class="wrap-input100 validate-input" data-validate="Country">
+                <div class="wrap-input100 validate-input" style="width: 90%;" data-validate="Country">
                     <select name="cadastro_language" id="cadastro_language">
                         <option class="fa-optin-monster" value="" disabled selected>Select a Language...</option>
                         <script>
@@ -512,21 +511,21 @@
                     </select>
                 </div>
                 <div style="border-bottom: 0" class="div_btn">
-                    <button type="button" class="button-53" id="btn_cadastro_img"
+                    <button type="button" class="button" id="btn_cadastro_img"
                             onclick="uploadClick('cadastro_img', 'btn_cadastro_img')">Select Image
                     </button>
                     <input class="file_out" style="display:none" type="file" id="cadastro_img" name="cadastro_img"
                            value='Add Picture'>
                 </div>
-                <div class="div_btn">
+                <div>
                     <div class="div-audio-left">
-                        <button type="button" class="button-53 button-audio" onclick="gravar()" id="btn_gravar"
+                        <button type="button" class="button button-audio" onclick="gravar()" id="btn_gravar"
                                 style="font-size: 12px;">Start Recorder
                         </button>
                         <input style="display:none" type="text" id="cadastro_audio">
                     </div>
                     <div class="div-audio-right">
-                        <button type="button" class="button-53 button-audio" id="btn_upload_audio"
+                        <button type="button" class="button button-audio" id="btn_upload_audio"
                                 style="font-size: 12px;"
                                 onclick="uploadClick('cadastro_audio_upload', 'btn_upload_audio')">Upload Audio
                         </button>
@@ -534,8 +533,8 @@
                                name="cadastro_audio_upload" value='Add Audio'>
                     </div>
                 </div>
-                <div class="div_btn" style="margin-top: 95px">
-                    <button type="button" class="button-53" onclick="create_new_point()" id="btn_criar_ponto">Create
+                <div class="div_btn" >
+                    <button type="button" class="button" onclick="create_new_point()" id="btn_criar_ponto">Create
                         Point
                     </button>
                 </div>
@@ -592,26 +591,38 @@
         </div>
 
     </div>
-    <div id="div_add_route" style="display: none;">
+    <div id="div_add_route" class ="route_bar" style="display: none; height: 60% ">
+        <div style="display: inline-block; margin-left: 90%;" onclick="close_info()">
+            <img src="img/close.png" style="width: 20px; height: 20px;" onclick="fechar_divs()">
+        </div>
         <form class="route_bar_form">
-            <p>Route: <input  type="text" id="add_route_title" value="Title"></p>
-            <p>New Route:   <select name="select_route_to_add" id="select_route_to_add">
-                <option value="" disabled selected>Select a country...</option>
-                <script>
-                    var route_name = ['Rota pra lá',
-                        'Rota pra cá', 'aquela rota', 'Other'];
-                    var route_id = ['1', '2', '3', '4'];
+            <div id="div_add_route_select">
+                <p>Add to Route:</p>
+                <select name="select_route_to_add" id="select_route_to_add">
 
-                    let selectRouteOptions = "";
-                    for (let i = 0; i < countries.length; i++) {
-                        selectRouteOptions += `<option value="${route_id[i]}">${route_name[i]}</option>`;
-                    }
+                    <script>
 
-                    const selectElementRoute = document.getElementById("select_route_to_add");
-                    selectElementRoute.innerHTML = selectOptions;
-                </script>
-            </select>
+                        let selectRouteOptions = "";
+                        for (let i = 0; i < arrayRouteTitles.length; i++) {
+                            selectRouteOptions += `<option value="${arrayRouteIds[i]}">${arrayRouteTitles[i]}</option>`;
+                        }
 
+                        const selectElementRoute = document.getElementById("select_route_to_add");
+                        selectElementRoute.innerHTML = selectRouteOptions;
+                    </script>
+                </select>
+                <br>
+                <button class="button" onclick="addToRoute()">Add to Route</button>
+            </div>
+            <br>
+            <div id="div_add_route_input">
+            <p>Create New Route: <br>
+                <label for="add_route_title">Title: </label><input type="text" id="add_route_title" ><br>
+                <label for="add_route_description">Description: </label><textarea rows="3"  id="add_route_description" ></textarea>
+                <br>
+                <label for="add_route_place">Place: </label><input type="text" id="add_route_place" ><br>
+                <button class="button" onclick="addRoute()">Create and Add Route</button>
+            </div>
         </form>
     </div>
     <div id="point_info"  class="point_info" style="display: none;">
@@ -648,7 +659,7 @@
                             <img src="img/walk.png" alt="Get The Route" style="width: 40px; height: 40px;">
                         </p>
                     </div>
-                    <div onclick="add_to_route()" style="margin-left: 20%;">
+                    <div onclick="open_div_to_add_route()" style="margin-left: 20%;">
                     <img src="img/add_rota.png" alt="Add to route" style="width: 40px; height: 40px;">
                     </div>
                 </div>

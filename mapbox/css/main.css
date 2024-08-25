@@ -89,7 +89,7 @@ ul, li {
 
 
 /*---------------------------------------------*/
-input {
+/*input {
 	outline: none;
 	border: none;
 }
@@ -97,7 +97,7 @@ input {
 textarea {
   outline: none;
   border: none;
-}
+}*/
 
 textarea:focus, input:focus {
   border-color: transparent !important;
@@ -205,7 +205,7 @@ iframe {
   font-family: Poppins-Bold;
   font-size: 30px;
   color: #333333;
-  line-height: 1.2;
+  line-height: 1.0;
   text-align: center;
 }
 .login100-form-title i {
@@ -218,8 +218,8 @@ iframe {
 .wrap-input100 {
   width: 100%;
   position: relative;
-  border-bottom: 2px solid #adadad;
-  margin-bottom: 22px;
+ /* border-bottom: 2px solid #adadad;*/
+  margin-bottom: 10px;
 }
 
 .input100 {
