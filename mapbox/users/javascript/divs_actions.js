@@ -25,16 +25,16 @@ function show_create_points_warning() {
 
 function option_create_points() {
     fechar_divs();
-    if(accessToken !== undefined && accessToken!== null && accessToken !== "") {
-    if (create_point) {
-        create_point = false;
-        document.getElementById("a_create_points").innerHTML = 'AddSpot';
-    } else {
-        create_point = true;
-        show_create_points_warning();
-        document.getElementById("a_create_points").innerHTML = 'StopAdd';
+    if(is_logged()) {
+        if (create_point) {
+            create_point = false;
+            document.getElementById("a_create_points").innerHTML = 'AddSpot';
+        } else {
+            create_point = true;
+            show_create_points_warning();
+            document.getElementById("a_create_points").innerHTML = 'StopAdd';
 
-    }
+        }
     }else{
         document.getElementById("div_please_login").style.display = 'flex';
     }

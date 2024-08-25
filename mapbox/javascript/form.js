@@ -9,25 +9,30 @@ let formattedPhoneNumber;
 let zoom = 16;
 let link;
 let firstTime = true;
+let my_instagram;
+let pointId;
 
 function afterLogin(){
     fechar_divs();
+    configPersonalInfo()
 
-    const decode =  decodeURIComponent(atob(accessToken.split('.')[1].replace('-', '+').replace('_', '/')).split('').map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`).join(''));
-    //console.log(decode);
-    let nome = JSON.parse(decode)["nome_completo"];
-    let instagram = JSON.parse(decode)["usuario_instagram"];
-    document.getElementById("welcome_name").innerHTML =  nome;
-    if(instagram !== undefined || instagram !== "" || instagram != "@null") {
-        link = "https://www.mygmap.com/" + instagram.replace("@", "");
+    document.getElementById("welcome_name").innerHTML =  userName;
+    if(my_instagram !== undefined || my_instagram !== "" || my_instagram != "@null") {
+        link = "https://www.mygmap.com/" + my_instagram.replace("@", "");
         document.getElementById("span_msg").innerHTML = "Now you have your own map <br>" + link +
             "<br><a href='#' onclick='copyLink()' title='Copy'> <img alt='Copy' aria-label='copy' src='img/copy.png' id='copy' style='width:20px'/></a>";
         document.getElementById("span_msg").style.fontSize = "small"
     }
-    get_li_after_login(nome);
+    get_li_after_login(userName);
     save_cookies("token", accessToken);
-    save_cookies("name", nome);
+    save_cookies("name", userName);
     welcome_div_show();
+}
+function configPersonalInfo(){
+    const decode =  decodeURIComponent(atob(accessToken.split('.')[1].replace('-', '+').replace('_', '/')).split('').map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`).join(''));
+    //console.log(decode);
+    userName = JSON.parse(decode)["nome_completo"];
+    my_instagram = JSON.parse(decode)["usuario_instagram"];
 }
 
 function copyLink(){
@@ -159,8 +164,8 @@ function execute_sign_in(){
         name: document.getElementById("sign_up_name").value,
         born_date: document.getElementById("sign_up_born_date").value,
         instagram: document.getElementById("sign_up_instagram").value,
-        share: document.getElementById("sign_up_share").value,
-        guide: document.getElementById("sign_up_guide").value,
+       /* share: document.getElementById("sign_up_share").value,
+        guide: document.getElementById("sign_up_guide").value,*/
         description: document.getElementById("sign_up_description").value
 
     };
