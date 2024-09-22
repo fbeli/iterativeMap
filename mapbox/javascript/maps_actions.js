@@ -62,7 +62,7 @@ map.on('load', () => {
     map.addSource('s_mapfile_pt', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_pt_.geojson',
+        data: 'https://m.guidemapper.com/file/mapFile_pt_.geojson',
         cluster: true,
         clusterMaxZoom: 19, // Max zoom to cluster points on
         clusterRadius: 10, // Radius of each cluster when clustering points (defaults to 50)
@@ -71,7 +71,7 @@ map.on('load', () => {
     map.addSource('s_mapfile_en', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_en_.geojson',
+        data: 'https://m.guidemapper.com/file/mapFile_en_.geojson',
         cluster: true,
         clusterMaxZoom: 19, // Max zoom to cluster points on
         clusterRadius: 10, // Radius of each cluster when clustering points (defaults to 50)
@@ -80,12 +80,12 @@ map.on('load', () => {
     map.addSource('s_mapfile_lisboasecreta', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_lisboasecreta_.geojson'
+        data: 'https://m.guidemapper.com/file/mapFile_lisboasecreta_.geojson'
     });
     map.addSource('s_mapfile_sp', {
         type: 'geojson',
         // Use a URL for the value for the data property.
-        data: 'https://www.guidemapper.com/file/mapFile_sp_.geojson',
+        data: 'https://m.guidemapper.com/file/mapFile_sp_.geojson',
         cluster: true,
         clusterMaxZoom: 19, // Max zoom to cluster points on
         clusterRadius: 10, // Radius of each cluster when clustering points (defaults to 50)
@@ -135,9 +135,7 @@ map.on('click', (event) => {
 
         setLatLong(feature.geometry.coordinates);
         if(feature.layer.id.indexOf("cluster") == -1){
-
             console.log(feature.properties.pointId + " " + feature.properties.title);
-
             show_infos(feature);
         }else{
             map.flyTo({center: [feature.geometry.coordinates[0],feature.geometry.coordinates[1]], zoom: map.getZoom()+2 });
@@ -352,4 +350,11 @@ function create_path(){
     draw_route();
 
 }
+function copy_point_link(){
+    navigator.clipboard.writeText(point_link);
+    document.getElementById("small_info_txt").innerHTML = "Link copied.";
+    document.getElementById("small_info").style.display="block";
+
+}
+
 getAtualLocation();

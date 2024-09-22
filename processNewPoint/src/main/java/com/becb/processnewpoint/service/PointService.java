@@ -110,6 +110,8 @@ public class PointService {
 
     public Point savePointDb(Point point) {
 
+        if(point.getDescription().length()>5000 )
+            point.setDescription(point.getDescription().substring(0, 5000));
         if (point != null) {
             if (point.getAproved() == null)
                 point.setAproved("true");

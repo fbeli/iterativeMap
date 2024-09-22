@@ -274,9 +274,9 @@ async function create_new_point() {
                         upload_point_photo(data.pointId, audioInput)
                     }
                     console.log(data.pointId +" "+ document.getElementById("cadastro_titulo").value);
+                    point_link = "https://www.guidemapper.com/?point="+data.pointId;
                     fechar_divs();
-                    document.getElementById("info_info").innerHTML = "This point will be reviwed and add after it. It" +
-                        " can take some minutes, hours or day";
+                    document.getElementById("info_info").innerHTML = "Press here to copy point link and share it";
                     document.getElementById("info_title").innerHTML = "New point added";
                     document.getElementById("info_highlight").innerHTML = "";
                     document.getElementById("info_div").style.display = 'flex';

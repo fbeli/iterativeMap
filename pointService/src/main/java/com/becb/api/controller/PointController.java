@@ -158,7 +158,6 @@ public class PointController {
 
     }
 
-    @PreAuthorize("isAuthenticated()")
     @ResponseBody
     @GetMapping("/point/{pointId}")
     public PointDto getPoint(@PathVariable String pointId) throws IOException {

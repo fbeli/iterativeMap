@@ -384,8 +384,6 @@ textarea {
     margin-left: 5px;
 }
 
-
-
 audio:hover, audio:focus, audio:active
 {
     -webkit-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
@@ -609,5 +607,20 @@ h3{
     -webkit-transform: none;
     transform: none;
 
+}
+
+#small_info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1;
+    font-family: Poppins-Regular;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #666666;
 
 }

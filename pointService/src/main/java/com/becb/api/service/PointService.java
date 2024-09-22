@@ -50,7 +50,7 @@ public class PointService {
                 response.append(line);
             }
             reader.close();
-
+            if(response.toString().isBlank()) { return null; }
             JSONObject jsonResponse = new JSONObject(response.toString());
 
             return getPointDtoFromJson(jsonResponse);
@@ -144,6 +144,7 @@ public class PointService {
         pointDto.setAproved(jsonObject.optString("aproved"));
         pointDto.setCreatedAt(jsonObject.optString("createTime"));
         pointDto.setChildren(setChildren(jsonObject));
+
 
 
         return pointDto;

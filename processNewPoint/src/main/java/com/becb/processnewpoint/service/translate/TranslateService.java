@@ -52,12 +52,15 @@ public class TranslateService {
         Language languageTo = getLanguage(languageDestino);
         point.setLanguage(languageDestino);
 
-        point.setDescription(Translator.translate(getLanguage(parentPoint.getLanguage().getValue()),
-                                                  languageTo, point.getDescription()));
         point.setTitle(Translator.translate(getLanguage(parentPoint.getLanguage().getValue()),
                                              languageTo,
                                              point.getTitle()));
-
+        if(point.getDescription() == null)
+            point.setDescription(point.getTitle());
+        else{
+            point.setDescription(Translator.translate(getLanguage(parentPoint.getLanguage().getValue()),
+                    languageTo, point.getDescription()));
+        }
         point.setPointParent(parentPoint);
         //TODO create audio
         parentPoint.addChildPoint(point);

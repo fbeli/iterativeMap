@@ -68,7 +68,7 @@ public class FileService {
         StringBuilder sb = new StringBuilder();
         instagram = instagram.replace("@", "");
         sb.append("const config = {\n" +
-                "    map_file:\"https://www.guidemapper.com/file/" + instagram + "_map_.geojson\",\n" +
+                "    map_file:\"https://m.guidemapper.com/file/" + instagram + "_map_.geojson\",\n" +
                 "    latitude:\"" + latitude + "\",\n" +
                 "    longitude:\"" + longitude + "\"\n" +
                 "}");

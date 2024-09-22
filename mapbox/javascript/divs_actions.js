@@ -115,6 +115,7 @@ function fechar_divs() {
     if (document.getElementsByClassName("mapboxgl-popup").length > 0)
         document.getElementsByClassName("mapboxgl-popup").item(0).style.display = 'none';
     document.getElementById("div_add_route").style.display = 'none';
+    document.getElementById("small_info").style.display = 'none';
 
 }
 
@@ -142,7 +143,7 @@ function show_div(el) {
 function add_logo() {
     let div_left = document.getElementsByClassName("mapboxgl-ctrl-bottom-left");
     div_left[0].innerHTML = "<a class=\"mapboxgl-ctrl-logo\" target=\"_blank\" rel=\"noopener nofollow\" href=\"https://www.mapbox.com/\" aria-label=\"Mapbox logo\"></a>" +
-        "<a class=\"mapboxgl-ctrl-logo\"  href=\"https://www.guidemapper.com/img/name_logo.png\" aria-label=\"GuideMapper\"><img class=\"img_logo\" src=\"https://guidemapper.com/img/name_logo.png\"></a>";
+        "<a class=\"mapboxgl-ctrl-logo\"  href=\"https://m.guidemapper.com/img/name_logo.png\" aria-label=\"GuideMapper\"><img class=\"img_logo\" src=\"https://guidemapper.com/img/name_logo.png\"></a>";
 
 }
 
@@ -154,7 +155,7 @@ function myFunction() {
     save_cookies("longitude", map.getCenter.lng);
 }
 
-function show_infos(feature) {
+async function show_infos(feature) {
 
     document.getElementById("desc_title").innerHTML = feature.properties.title;
     document.getElementById("point_info").style.display = "block";
@@ -164,6 +165,7 @@ function show_infos(feature) {
 
     coords = feature.geometry.coordinates;
     pointId = feature.properties.pointId;
+    point_link = "https://www.guidemapper.com/?point="+pointId;
     //test audio
     if (feature.properties.audio !== undefined && feature.properties.audio.length > 2) {
         audio_link = feature.properties.audio;

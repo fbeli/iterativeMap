@@ -6,6 +6,7 @@ import com.becb.processnewpoint.service.PointService;
 import com.becb.processnewpoint.service.translate.TranslateService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,10 @@ public class EditPointController {
 
     @Autowired
     TranslateService translateService;
+
+
+    @Value("${app.endpoint}")
+    String appEndpoint;
 
     @GetMapping( value = "/point/users")
     @ResponseBody
@@ -49,7 +54,11 @@ public class EditPointController {
     @GetMapping( value = "/point/")
     @ResponseBody
     public Point getByPointId(@RequestParam("pointId") String pointId) {
-        return pointService.getPointById(pointId);
+        Point point = pointService.getPointById(pointId);
+
+        point.setPhoto(appEndpoint+"/"+point.getPhoto());
+        point.setAudio(appEndpoint+"/"+point.getAudio());
+        return point;
     }
     @GetMapping( value = "/point2/{pointId}")
     @ResponseBody

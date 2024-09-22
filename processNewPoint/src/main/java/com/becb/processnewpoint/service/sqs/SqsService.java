@@ -48,9 +48,9 @@ public class SqsService {
             if (point0.getCreateTime() == null)
                 point0.setCreateTime(LocalDateTime.now());
 
-
             userService.saveUser(point0.getUser());
             pointService.savePointDb(point0);
+            gerarArquivoParaMapa(null,"{\"file_name\":\"mapFile_.geojson\"}");
 
             if (point0.getUser().getInstagram() != null) {
                 Runnable runnable = () -> {

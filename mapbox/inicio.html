@@ -83,7 +83,7 @@
             </div>
             <div class="div_side_bar" onclick="document.getElementById('li_introduce_a_link').click()">
                 <img class="image" src="img/ico_about.png">
-                <a href="https://www.guidemapper.com/landing/index.html" id="li_introduce_a_link"></a>
+                <a href="https://m.guidemapper.com/landing/index.html" id="li_introduce_a_link"></a>
                 <p class="menu_name">About Us</p>
             </div>
             <div class="div_side_bar" onclick="option_create_points()">
@@ -126,6 +126,14 @@
                 <div class="div_bloom"  onclick="close_boomings('porto')">Porto</div>
                 <div class="div_bloom" onclick="close_boomings('rio_de_janeiro')">Rio de Janeiro</div>
                 <div class="div_bloom"  onclick="close_boomings('valencia')">Valencia</div>
+            </div>
+        </div>
+        <div id="small_info" style="display: none;">
+            <div style="display: inline-block;     margin-left: 96%;" onclick="fechar_divs()">
+                <img src="img/close.png" style="width: 20px; height: 20px;"></p>
+            </div>
+            <div id="small_info_txt">
+
             </div>
         </div>
         <div id="lang_div" class="lang_style" style="display: none;">
@@ -580,8 +588,7 @@
                 <p class="title alert-heading" id="info_title">New point added</p>
                 <p class="p.erro" id="info_highlight"></p><br/>
                 <hr>
-                <p class="mb-0" id="info_info">This point will be reviwed and add after it. It can take some
-                    minutes, hours or day</p>
+                <p class="mb-0" id="info_info" onclick="copy_point_link()">Press here to copy point link and share it</p>
             </div>
             <div class="text-center p-t-25">
                 <a class="txt2" onclick="fechar_divs()" href="#">
@@ -659,9 +666,16 @@
                             <img src="img/walk.png" alt="Get The Route" style="width: 40px; height: 40px;">
                         </p>
                     </div>
-                    <div onclick="open_div_to_add_route()" style="margin-left: 20%;">
+                    <div onclick="open_div_to_add_route()" style="margin-left:5%;">
                     <img src="img/add_rota.png" alt="Add to route" style="width: 40px; height: 40px;">
                     </div>
+
+                    <div onclick="copy_point_link()" style="margin-left: 5%;">
+                        <p class="link_go">
+                            <img src="img/link.png" alt="Get Link" style="width: 40px; height: 40px;">
+                        </p>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -677,6 +691,8 @@
     </div>
 </div>
 <script src="/javascript/reset_pass.js"></script>
+
+<script src="/javascript/point.js"></script>
 <script src="/javascript/maps_actions.js"></script>
 <script src="/javascript/divs_actions.js"></script>
 <script src="/javascript/save_audio.js"></script>

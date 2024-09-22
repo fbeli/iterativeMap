@@ -18,7 +18,7 @@ public class ArquivoService {
 
     public String configArquivo(ArquivoDto arquivoDto, HttpServletRequest request, String fileName) {
 
-        if(request.getHeader("Authorization") != null ) {
+        if( request!=null && request.getHeader("Authorization") != null ) {
             String token = request.getHeader("Authorization").replace("Bearer ", "");
 
             String[] chunks = token.split("\\.");

@@ -6,6 +6,16 @@ let latitude;
 let longitude;
 let user_id;
 
+//Received_ vieram de um link direto de ponto ou rota
+let received_pointId;
+let received_lat;
+let received_long;
+let received_zoom;
+let received_routeId;
+let entrada = window.location.href;
+
+let point_link;
+
 async function read_cookies(){
 
     let token = "token=";
@@ -124,3 +134,55 @@ function criarOpcoesSelect(dados) {
     });
     selectElementRoute.innerHTML = selectRouteOptions;
 }
+
+async function readStartPageVariables(){
+
+    console.log(entrada)
+    const parts = entrada.split("#")[1].split("/");
+
+    received_zoom = parseFloat(parts[0]);
+    received_lat = parseFloat(parts[1]);
+    received_long = parseFloat(parts[2]);
+    const pointIdParam = parts.find(param => param.startsWith('pointId='));
+    if (pointIdParam) {
+        received_pointId = pointIdParam.split('=')[1];
+        if(received_pointId != undefined){
+            getPoint(received_pointId).then ( feature => {
+                console.info("Feature: "+feature);
+                show_infos(feature);
+            });
+            return true;
+        }
+    }else{
+        return false;
+    }
+}
+
+class Feature {
+    constructor(audio, description, photo, pointId, shortDescription, title, user_guide, user_id, user_instagram, user_name, user_share, long, lat) {
+        this.properties = new Propeties(audio, description, photo, pointId, shortDescription, title, user_guide, user_id, user_instagram, user_name, user_share);
+        this.geometry = new Geometry(long, lat);
+    }
+
+}
+class Geometry{
+    constructor(long, lat) {
+        this.coordenates = [long,lat];
+    }
+}
+class Propeties{
+    constructor(audio, description, photo, pointId, shortDescription, title, user_guide, user_id, user_instagram, user_name, user_share) {
+        this.audio = audio;
+        this.description = description;
+        this.photo = photo;
+        this.pointId = pointId;
+        this.shortDescription = shortDescription;
+        this.title = title;
+        this.user_guide = user_guide;
+        this.user_id = user_id;
+        this.user_instagram = user_instagram;
+        this.user_name = user_name;
+        this.user_share = user_share;
+    }
+}
+

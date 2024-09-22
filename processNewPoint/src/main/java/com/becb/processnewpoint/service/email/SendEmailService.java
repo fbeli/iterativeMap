@@ -25,7 +25,7 @@ public interface SendEmailService {
         sb.append("</b>.</p>");
         sb.append("<p>No changes have been made to your account yet.</p>");
         sb.append("<p>You can reset your password by clicking the link below:</p>");
-        sb.append("<p><a href=\"www.guidemapper.com/reset/reset.html\">Reset Password</a></p>");
+        sb.append("<p><a href=\"m.guidemapper.com/reset/reset.html\">Reset Password</a></p>");
         sb.append("<p>Use this Code as Validation: <b> ");
         sb.append(code);
         sb.append("</b></p>");
