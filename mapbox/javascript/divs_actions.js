@@ -116,6 +116,7 @@ function fechar_divs() {
         document.getElementsByClassName("mapboxgl-popup").item(0).style.display = 'none';
     document.getElementById("div_add_route").style.display = 'none';
     document.getElementById("small_info").style.display = 'none';
+    document.getElementById("route_detail").style.display = 'none';
 
 }
 
@@ -228,70 +229,6 @@ function close_info() {
 
 }
 
-let search_value="";
-async function search_route(page) {
-
-    document.getElementById("route_list").innerHTML = "";
-
-    let url = config.env + config.get_routes_endpoint;// + "/route/search?longitude="+longitude+"&latitude="+latitude+"&distance=1000";
-    if (page < 1) {
-        search_value = document.getElementById("search_value").value;
-    }
-    if (search_value.length > 2) {
-        url = url + "?title=" + search_value;
-    }else {
-        error_div_event("booming_places","At least 3 characters");
-        return;
-
-    }
-    fetch(url, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": accessToken
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            if(data.roteiros.length > 0) {
-                let arrayPoints = [];
-                div_rota = document.getElementById("route_list");
-                for(let i = 0; i < data.roteiros.length; i++) {
-                    div_rota.innerHTML += ` <div id="linha_rota" class="linha_rota">
-                                                <div id="foto_rota" class="foto_rota">
-                                                    <img src="img/bola.png" style="width: 50px; height: 50px;">
-                                                </div>
-                                                <div id="info_rota" >
-                                                    <p id="rota_title" class="route_bar_form_title_rota">${data.roteiros[i].title}</p>
-                                                    <p id="rota_description">${data.roteiros[i].description}</p>
-                                                </div> 
-                                                <div id="rota_desenhar" onclick="show_route(${data.roteiros[i].roteiroId})" style=" margin-left: 25px;">
-                                                    <img src="img/walk.png" alt="Get The Route" style="width: 20px; height: 20px;">
-                                                </div>
-                                            </div>`;
-                    for(let j = 0; j < data.roteiros[i].points.length; j++) {
-                            arrayPoints = data.roteiros[i].points;
-                            new Ponto(data.roteiros[i].points[j].latitude, data.roteiros[i].points[j].longitude,
-                                data.roteiros[i].points[j].pointId, data.roteiros[i].points[j].title, data.roteiros[i].points[j].position);
-                    }
-
-                    mapaRotas.set(data.roteiros[i].roteiroId,arrayPoints);
-                }
-
-            }else{
-                document.getElementById("route_list").innerHTML =  ` <div id="linha_rota" class="linha_rota">
-                         No Route found</div>`;
-                /*error_div_event("booming_places","Any route found for this search");*/
-
-            }
-        })
-        .catch(error => {
-            console.log(error);
-            /*error_div_event("booming_places", data.error);*/
-            document.getElementById("route_list").innerHTML = "No router found.";
-
-        });
-}
 
 class Ponto {
     constructor(latitude, longitude, pointId, title, position){

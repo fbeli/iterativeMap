@@ -123,7 +123,6 @@ select{
     height: 84%;
     margin-top: 70px;
     background-color: #fff;
-    color: #fff;
     padding: 6px 12px;
     font-family: monospace;
     position: absolute;
@@ -154,6 +153,7 @@ margin: 0px;
     display: inline-block;
     height: 75%;
     overflow: auto;
+    color: #0c5460;
 }
 .foto_rota{
     height: 50px;

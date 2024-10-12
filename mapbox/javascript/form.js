@@ -276,7 +276,7 @@ async function create_new_point() {
                     console.log(data.pointId +" "+ document.getElementById("cadastro_titulo").value);
                     point_link = "https://www.guidemapper.com/?point="+data.pointId;
                     fechar_divs();
-                    document.getElementById("info_info").innerHTML = "Press here to copy point link and share it";
+                    document.getElementById("info_info").innerHTML = "Press <b>here</b> to copy point link and share it";
                     document.getElementById("info_title").innerHTML = "New point added";
                     document.getElementById("info_highlight").innerHTML = "";
                     document.getElementById("info_div").style.display = 'flex';

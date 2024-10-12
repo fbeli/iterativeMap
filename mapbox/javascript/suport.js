@@ -137,7 +137,7 @@ function criarOpcoesSelect(dados) {
 
 async function readStartPageVariables(){
 
-    console.log(entrada)
+    console.log(entrada);
     const parts = entrada.split("#")[1].split("/");
 
     received_zoom = parseFloat(parts[0]);
