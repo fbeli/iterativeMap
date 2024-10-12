@@ -39,6 +39,9 @@ function copyLink(){
     navigator.clipboard.writeText(link);
 }
 
+function copy_value_to_clipboard(value){
+    navigator.clipboard.writeText(value);
+}
 
 function open_div_login(){
     fechar_divs();
